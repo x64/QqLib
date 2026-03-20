@@ -9,6 +9,7 @@ qt_add_executable(QqLib
     examples/main.cpp
     export/QqLib/Macros/Cat.M.h
     export/QqLib/Macros/Expand.M.h
+    export/QqLib/Macros/Variadic/Size.M.h
 
 )
 
