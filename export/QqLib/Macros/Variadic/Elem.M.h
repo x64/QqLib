@@ -16,7 +16,7 @@
 # /* See http://www.boost.org for most recent version. */
 #
 
-#include "../Cat.M"
+#include "../Cat.M.h"
 
 
 # if QQ_PP_VARIADICS_MSVC
