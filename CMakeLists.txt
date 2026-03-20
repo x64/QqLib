@@ -10,6 +10,7 @@ qt_add_executable(QqLib
     export/QqLib/Macros/Cat.M.h
     export/QqLib/Macros/Expand.M.h
     export/QqLib/Macros/Variadic/Size.M.h
+    export/QqLib/Macros/Variadic/Elem.M.h
 
 )
 
