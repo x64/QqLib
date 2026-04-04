@@ -27,3 +27,5 @@ public:
 
 
 } // end of namespace Qq::Enum
+
+#include "./MetadataInitializierT.h"
