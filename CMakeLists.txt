@@ -12,6 +12,7 @@ qt_add_executable(QqLib
     export/QqLib/Macros/Variadic/Size.M.h
     export/QqLib/Macros/Variadic/Elem.M.h
     export/QqLib/Macros/Variadic/ForEach.M.h
+    export/QqLib/QqEnum/QqEnum.M.h
 
 )
 
