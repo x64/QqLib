@@ -16,6 +16,10 @@ qt_add_executable(QqLib
     export/QqLib/QqEnum/MetadataT.h
     export/QqLib/QqEnum/Helper.h
     export/QqLib/QqEnum/MetadataInitializierT.h
+    export/QqLib/QqEnum/_CompileConfig.h
+    export/QqLib/QqEnum/EnumItemT.h
+    export/QqLib/QqEnum/CoreT.h
+
 
 )
 
