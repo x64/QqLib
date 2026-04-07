@@ -19,6 +19,7 @@ qt_add_executable(QqLib
     export/QqLib/QqEnum/_CompileConfig.h
     export/QqLib/QqEnum/EnumItemT.h
     export/QqLib/QqEnum/CoreT.h
+    export/QqLib/QqEnum/EatAssignT.h
 
 
 )
