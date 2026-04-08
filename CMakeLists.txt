@@ -40,3 +40,4 @@ install(TARGETS QqLib
 )
 add_subdirectory(tests/MacrosTests)
 add_subdirectory(tests/QqEnumStringLiteralTests)
+add_subdirectory(tests/QqThreadTests)
