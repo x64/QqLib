@@ -125,4 +125,4 @@ void MacrosTests::test_case1()
 
 QTEST_APPLESS_MAIN(MacrosTests)
 
-#include "tst_macrostests.moc"
+#include "tst_Macros.moc"

@@ -20,6 +20,7 @@ qt_add_executable(QqLib
     export/QqLib/QqEnum/EnumItemT.h
     export/QqLib/QqEnum/CoreT.h
     export/QqLib/QqEnum/EatAssignT.h
+    export/QqLib/QqEnum/QqEnumStringLiteral.h
 
 
 )
@@ -36,4 +37,5 @@ install(TARGETS QqLib
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
-add_subdirectory(tests/QqLibTests)
+add_subdirectory(tests/MacrosTests)
+add_subdirectory(tests/QqEnumStringLiteralTests)

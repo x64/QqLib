@@ -1,6 +1,8 @@
 #include <QCoreApplication>
 
 #include <QList>
+#include <iostream>
+
 
 #include "../export/QqLib/QqEnum/_CompileConfig.h"
 #include QQ_ENUM_QQ_STRING_INCLUDE
@@ -42,9 +44,25 @@ QList<TEnum>   enums{ TEnum::a0, TEnum::b0, TEnum::c0, TEnum::d0, TEnum::e0, TEn
 QList<QString> names{ "TEnum::a0", "TEnum::b0", "TEnum::c0", "TEnum::d0", "TEnum::e0", "TEnum::f0", "TEnum::g0" };
 
 
+#include "P:/Projects/Free/QqLib/export/QqLib/QqEnum/QqEnumStringLiteral.h"
+void getArgNum_test()
+{
+    using Qq::Enum::QqEnumStringLiteral;
+    using std::cout;
+    using std::endl;
+
+    QqEnumStringLiteral sl{ "%1 function %2 %1 lambda %3" };
+    sl.arg(__FUNCTION__).arg("#2").arg("#3");
+
+    cout << sl.toLatin1() << endl;
+}
+
 
 int main(int argc, char *argv[])
 {
+    getArgNum_test();
+    return 0;
+
     //Qq_string s{ "" };
 
     QCoreApplication a(argc, argv);

@@ -11,10 +11,12 @@
     #define QqMap                      std::map
     #define QqList                     std::vector
     #define Qq_string                  std::string
+    #define Qq_stringLiteral(TEXT)     QqEnumStringLiteral(TEXT)
     #define QQ_ENUM_QQ_STRING_INCLUDE  <string>
 #else
     #define QqMap                      QMap
     #define QqList                     QList
     #define Qq_string                  QString
+    #define Qq_stringLiteral(TEXT)     QStringLiteral(TEXT)
     #define QQ_ENUM_STRING_INCLUDE     <QString>
 #endif

@@ -14,7 +14,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(MacrosTests tst_macrostests.cpp)
+add_executable(MacrosTests tst_Macros.cpp)
 add_test(NAME MacrosTests COMMAND MacrosTests)
 
 target_link_libraries(MacrosTests PRIVATE Qt${QT_VERSION_MAJOR}::Test)

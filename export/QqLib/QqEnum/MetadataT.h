@@ -81,14 +81,14 @@ public:
     }
 
     static inline constexpr TEnum
-    value(int index) noexcept
+    valueAt(int index) noexcept
     {
         // TODO: add bounds checking
         return m_values[index];
     }
 
     static inline constexpr Qq_string const &
-    name(int index) noexcept
+    nameAt(int index) noexcept
     {
         // TODO: add bounds checking
         return m_names[index];
