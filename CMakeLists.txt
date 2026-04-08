@@ -21,6 +21,7 @@ qt_add_executable(QqLib
     export/QqLib/QqEnum/CoreT.h
     export/QqLib/QqEnum/EatAssignT.h
     export/QqLib/QqEnum/QqEnumStringLiteral.h
+    export/QqLib/QqThread/QqMutexGuard.h
 
 
 )
