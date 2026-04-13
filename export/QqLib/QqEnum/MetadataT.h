@@ -9,6 +9,8 @@
 #include QQ_ENUM_QQ_STRING_INCLUDE
 
 #include "./Helper.h"
+#include "../QqThread/qq_lock.M.h"
+#include "./EnumItemWrapperT.h"
 
 
 namespace Qq::Enum
@@ -22,11 +24,13 @@ struct MetadataT
 // Types
 //
 protected:
-    using H             = Helper;
+    using H               = Helper;
 public:
-    using ValueList     = std::vector<TEnum>;       //QList<TEnum>;
-    using NameList      = std::vector<Qq_string>;   //QStringList;
-    using EIMap         = std::map   <TEnum,int>;   //QMap<TEnum,int>;
+    using ValueList       = std::vector<TEnum>;                   //QList<TEnum>;
+    using NameList        = std::vector<Qq_string>;               //QStringList;
+    using EIMap           = std::map   <TEnum,int>;               //QMap<TEnum,int>;
+    using EnumItemWrapper = EnumItemWrapperT<TEnum>;
+    using WrapperList     = std::vector<EnumItemWrapper>;
 
 //
 // Friends
@@ -37,6 +41,9 @@ private:
 
     template <typename T_Class, typename T_Enum, typename T_Int>
     friend class CoreT;
+
+    template <typename T_Class, typename T_Enum, typename T_Int>
+    friend class InvalidValueSetterT;
 
 //
 // Ctors & Dtor
@@ -50,6 +57,11 @@ public:
         m_values      = std::move(valueList);
         m_names       = std::move(nameList );
         m_enumToIndex = std::move(H::makeEnumToIndexMap<TEnum>(m_values));
+
+        m_wrappers.reserve(nameList.size());
+
+        for (int i = 0; i < nameList.size(); ++i)
+            m_wrappers.push_back(EnumItemWrapper{ m_values[i], m_names[i] });
     }
 
 //
@@ -58,7 +70,18 @@ public:
 protected:
     static inline constexpr int
     indexOf(TEnum const e) noexcept {
-        return m_enumToIndex[e];
+        return eiMap()[e];
+    }
+
+    static inline constexpr void
+    setInvalidValue(TEnum const newInvalidValue)
+    {
+        qq_lock
+        {
+            m_invalidValueDefined = true;
+            m_invalidValue        = newInvalidValue;
+            m_invalidValueIndex   = indexOf(newInvalidValue);
+        }
     }
 
 //
@@ -80,32 +103,59 @@ public:
         return m_enumToIndex;
     }
 
+    static inline constexpr WrapperList const &
+    wrappers() noexcept {
+        return m_wrappers;
+    }
+
     static inline constexpr TEnum
-    valueAt(int index) noexcept
+    valueAt(int index) /*noexcept*/
     {
         // TODO: add bounds checking
         return m_values[index];
     }
 
     static inline constexpr Qq_string const &
-    nameAt(int index) noexcept
+    nameAt(int index) /*noexcept*/
     {
         // TODO: add bounds checking
         return m_names[index];
     }
 
+    static inline constexpr EnumItemWrapper const &
+    wrapperAt(int index) /*noexcept*/
+    {
+        // TODO: add bounds checking
+        return m_wrappers[index];
+    }
+
     static inline constexpr int
-    valueCount() noexcept {
+    count() noexcept
+    {
         return m_values.size();
+    }
+
+    static inline constexpr int
+    allValueCount() noexcept
+    {
+        return m_invalidValueDefined
+            ? 1 + valueCount()
+            :     valueCount();
     }
 
 //
 // Fields:
 //
-protected:
-    static inline ValueList m_values;
-    static inline NameList  m_names;
-    static inline EIMap     m_enumToIndex;
+private: //~ protected:
+    static inline ValueList   m_values;
+    static inline NameList    m_names;
+    static inline EIMap       m_enumToIndex;
+    static inline WrapperList m_wrappers;
+
+    static inline bool        m_invalidValueDefined = false;
+    static inline TEnum       m_invalidValue;
+    static inline int         m_invalidValueIndex;
+
 };
 
 
