@@ -4,6 +4,7 @@
 #include "./_CompileConfig.h"
 #include QQ_ENUM_QQ_STRING_INCLUDE
 
+#include "./QqEnumStringLiteral.h"
 #include "./MetadataT.h"
 
 
@@ -18,29 +19,41 @@ namespace Qq::Enum
 template <typename TClass, typename TEnum, typename TInt =int>
 class CoreT
 {
-protected:
-    static constexpr EnumMetadata &
-    d() noexcept {
-        return TClsas::_d;
-    }
+//
+// Types
+//
+public:
+    using EnumMetadata = MetadataT<TClass,TEnum,TInt>;
 
-    static TEnum
+//
+// Internal API
+//
+protected:
+    using D = MetadataT<TClass,TEnum,TInt>;
+
+    //- static inline constexpr EnumMetadata &
+    //- d() noexcept {
+    //-     return TClsas::_d;
+    //- }
+
+    static inline TEnum
     at(int index) {
-        return d().valueAt(index);
+        //- return d().valueAt(index);
+        return D::valueAt(index);
     }
 
     // ret: if index in range then don't throws the exception
     static constexpr void
-    ifNotRangeDoThrow(
+    ifIndexNotValidDoThrow(
         int       const   index,
         Qq_string const & methodName,
-        Qq_string const & paramName = Qq_stringLiteral("index"))
+        Qq_string const & paramName = Qq_stringLiteral{ "index" })
     {
-        if (inRange(index)) //-V3504
+        if (indexIsValid(index)) //-V3504
             return;
 
         throw std::out_of_range{
-            Qq_stringLiteral("%1: the `%2` is out of range.")
+            Qq_stringLiteral{ "%1: the `%2` is out of range." }
                 .arg(methodName)
                 .arg(paramName)
                 .toLatin1()
@@ -48,22 +61,18 @@ protected:
 
     }
 
-
-
-///////////////////////
 //
-// :: API ::
-//
-///////////////////////
-
-//
-// Types
+// Public API
 //
 public:
-    using EnumMetadata = MetadataT<TClass,TEnum,TInt>;
+    static inline constexpr bool
+    indexIsValid(int index)
+    {
+        int minRangeIndex = D::m_invalidValueDefined ? 1 : 0;
+        int maxRangeIndex = D::valueCount()-1;
 
-public:
-
+        return Qq::Helper::inMinMax(minRangeIndex, index, maxRangeIndex);
+    }
 
 
 };
