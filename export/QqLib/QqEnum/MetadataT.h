@@ -135,13 +135,13 @@ public:
         return m_values.size();
     }
 
-    static inline constexpr int
-    allValueCount() noexcept
-    {
-        return m_invalidValueDefined
-            ? 1 + valueCount()
-            :     valueCount();
-    }
+    // static inline constexpr int
+    // allValueCount() noexcept
+    // {
+    //     return m_invalidValueDefined
+    //         ? 1 + count()
+    //         :     count();
+    // }
 
 //
 // Fields:
