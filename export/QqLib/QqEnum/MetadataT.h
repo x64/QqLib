@@ -89,12 +89,12 @@ protected:
 //
 public:
     static inline constexpr ValueList const &
-    values() noexcept {
+    valueList() noexcept {
         return m_values;
     }
 
     static inline constexpr NameList const &
-    names() noexcept {
+    nameList() noexcept {
         return m_names;
     }
 
@@ -109,21 +109,21 @@ public:
     }
 
     static inline constexpr TEnum
-    valueAt(int index) /*noexcept*/
+    value(int index) /*noexcept*/
     {
         // TODO: add bounds checking
         return m_values[index];
     }
 
     static inline constexpr Qq_string const &
-    nameAt(int index) /*noexcept*/
+    name(int index) /*noexcept*/
     {
         // TODO: add bounds checking
         return m_names[index];
     }
 
     static inline constexpr EnumItemWrapper const &
-    wrapperAt(int index) /*noexcept*/
+    wrapper(int index) /*noexcept*/
     {
         // TODO: add bounds checking
         return m_wrappers[index];

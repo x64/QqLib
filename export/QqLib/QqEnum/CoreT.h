@@ -37,9 +37,9 @@ protected:
     //- }
 
     static inline TEnum
-    at(int index) {
+    value(int index) {
         //- return d().valueAt(index);
-        return D::valueAt(index);
+        return D::value(index);
     }
 
     // ret: if index in range then don't throws the exception
