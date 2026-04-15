@@ -2,9 +2,9 @@
 
 
 #include "./_CompileConfig.h"
-#include QQ_ENUM_QQ_STRING_INCLUDE
-
+#include "./QqEnumString.h"
 #include "./QqEnumStringLiteral.h"
+
 #include "./MetadataT.h"
 
 
@@ -31,29 +31,23 @@ public:
 protected:
     using D = MetadataT<TClass,TEnum,TInt>;
 
-    //- static inline constexpr EnumMetadata &
-    //- d() noexcept {
-    //-     return TClsas::_d;
-    //- }
-
     static inline TEnum
     value(int index) {
-        //- return d().valueAt(index);
         return D::value(index);
     }
 
     // ret: if index in range then don't throws the exception
     static constexpr void
     ifIndexNotValidDoThrow(
-        int       const   index,
-        Qq_string const & methodName,
-        Qq_string const & paramName = Qq_stringLiteral{ "index" })
+        int          const   index,
+        QqEnumString const & methodName,
+        QqEnumString const & paramName = StringLiteral{ "index" })
     {
         if (indexIsValid(index)) //-V3504
             return;
 
         throw std::out_of_range{
-            Qq_stringLiteral{ "%1: the `%2` is out of range." }
+            StringLiteral{ "%1: the `%2` is out of range." }
                 .arg(methodName)
                 .arg(paramName)
                 .toLatin1()

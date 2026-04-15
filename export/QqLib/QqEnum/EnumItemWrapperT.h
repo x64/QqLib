@@ -1,7 +1,8 @@
 #pragma once
 
 #include "./_CompileConfig.h"
-#include QQ_ENUM_QQ_STRING_INCLUDE
+#include "./QqEnumString.h"
+
 
 namespace Qq::Enum
 {
@@ -11,45 +12,45 @@ namespace Qq::Enum
 // \brief Tuple for the enum value and the name enum.
 //
 template <typename TEnum>
-class EnumItemT
+class EnumItemWrapperT
 {
-    TEnum             m_value;
-    Qq_string const * m_pName;
+    TEnum                m_value;
+    QqEnumString const * m_pName;
 
 public:
-    EnumItemT(TEnum aValue, Qq_string const & aName)
+    EnumItemWrapperT(TEnum aValue, QqEnumString const & aName)
         : m_value{ aValue  }
         , m_pName{ & aName }
     {}
 
-    EnumItemT() = default;
+    EnumItemWrapperT() = default;
 
-    bool operator == (const EnumItemT & other) const noexcept {
+    bool operator == (const EnumItemWrapperT & other) const noexcept {
         return m_value == other.m_value;
     }
     bool operator == (TEnum const & otherEnum) const noexcept {
         return m_value == otherEnum;
     }
 
-    bool operator < (const EnumItemT & other) const noexcept {
-         return m_value < other.m_value;
+    bool operator < (const EnumItemWrapperT & other) const noexcept {
+        return m_value < other.m_value;
     }
     bool operator < (TEnum const & otherEnum) const noexcept {
-         return m_value < otherEnum;
+        return m_value < otherEnum;
     }
 
-    bool operator > (const EnumItemT & other) const noexcept {
-         return m_value > other.m_value;
+    bool operator > (const EnumItemWrapperT & other) const noexcept {
+        return m_value > other.m_value;
     }
     bool operator > (TEnum const & otherEnum) const noexcept {
-         return m_value > otherEnum;
+        return m_value > otherEnum;
     }
 
     TEnum value() const noexcept {
         return m_value;
     }
 
-    Qq_string const & name() const noexcept {
+    QqEnumString const & name() const noexcept {
         return * m_pName;
     }
 };

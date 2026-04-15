@@ -50,8 +50,8 @@ void MacrosTests::initTestCase()
 //     //TEnum e2 = getEnum(1);
 // }
 
-#include "P:/Projects/Free/QqLib/export/QqLib/QqEnum/_CompileConfig.h"
-#include QQ_ENUM_QQ_STRING_INCLUDE
+#include "../../export/QqLib/QqEnum/_CompileConfig.h"
+#include "../../export/QqLib/QqEnum/QqEnumString.h"
 
 
 //
@@ -61,10 +61,10 @@ template < typename TEnum >
 class EnumItemT
 {
     TEnum             m_value;
-    Qq_string const * m_pName;
+    QqEnumString const * m_pName;
 
 public:
-    EnumItemT(TEnum aValue, Qq_string const & aName)
+    EnumItemT(TEnum aValue, QqEnumString const & aName)
         : m_value{ aValue   }
         , m_pName{ & aName  }
     {}
@@ -96,7 +96,7 @@ public:
         return m_value;
     }
 
-    Qq_string const & name() const noexcept {
+    QqEnumString const & name() const noexcept {
         return * m_pName;
     }
 };

@@ -6,7 +6,7 @@
 
 
 #include "./_CompileConfig.h"
-#include QQ_ENUM_QQ_STRING_INCLUDE
+#include "./QqEnumString.h"
 
 #include "./Helper.h"
 #include "../QqThread/qq_lock.M.h"
@@ -27,7 +27,7 @@ protected:
     using H               = Helper;
 public:
     using ValueList       = std::vector<TEnum>;                   //QList<TEnum>;
-    using NameList        = std::vector<Qq_string>;               //QStringList;
+    using NameList        = std::vector<QqEnumString>;               //QStringList;
     using EIMap           = std::map   <TEnum,int>;               //QMap<TEnum,int>;
     using EnumItemWrapper = EnumItemWrapperT<TEnum>;
     using WrapperList     = std::vector<EnumItemWrapper>;
@@ -104,7 +104,7 @@ public:
     }
 
     static inline constexpr WrapperList const &
-    wrappers() noexcept {
+    wrapperList() noexcept {
         return m_wrappers;
     }
 
@@ -115,7 +115,7 @@ public:
         return m_values[index];
     }
 
-    static inline constexpr Qq_string const &
+    static inline constexpr QqEnumString const &
     name(int index) /*noexcept*/
     {
         // TODO: add bounds checking
@@ -134,14 +134,6 @@ public:
     {
         return m_values.size();
     }
-
-    // static inline constexpr int
-    // allValueCount() noexcept
-    // {
-    //     return m_invalidValueDefined
-    //         ? 1 + count()
-    //         :     count();
-    // }
 
 //
 // Fields:

@@ -8,14 +8,14 @@
 #include "../Macros/Expand.M.h"
 #include "../Macros/Cat.M.h"
 
-#include "./EnumItemT.h"
+#include "./EnumItemWrapperT.h"
 #include "./CoreT.h"
 #include "./EatAssignT.h"
 
 
 
-#define QP_GET_VALUE_FROM_ENUM_ITEM(ITEM)   _EatAssign{}         << ITEM  , //-V2561
-#define QP_GET_NAME_FROM_ENUM_ITEM(ITEM)    _H::parseEnumValueName(#ITEM) ,
+#define QP_GET_VALUE_FROM_ITEM(ITEM)          _EatAssign{}         << ITEM  , //-V2561
+#define QP_GET_NAME_FROM_ITEM(ITEM)           _H::parseEnumValueName(#ITEM) ,
 
 
 #define QQ_ENUM_CORE_AS(Int,Class,...)                                      \
@@ -36,7 +36,7 @@ public:                                                                     \
         #endif                                                              \
     }                                                                       \
                                                                             \
-    using _EnumItem = Qq::Enum::EnumItemT<TEnum>;                           \
+    using _Wrapper = Qq::Enum::EnumItemWrapperT<TEnum>;                     \
                                                                             \
 protected:                                                                  \
     template <typename T_Class, typename T_Enum, typename T_Int>            \
@@ -50,13 +50,13 @@ protected:                                                                  \
     static inline _D _d {                                                   \
         std::vector<_Enum> {                                                \
             QQ_PP_FOREACH(                                                  \
-                QP_GET_VALUE_FROM_ENUM_ITEM,                                \
+                QP_GET_VALUE_FROM_ITEM,                                     \
                 __VA_ARGS__                                                 \
             )                                                               \
         },                                                                  \
-        std::vector<Qq_string> {                                            \
+        std::vector<QqEnumString> {                                            \
             QQ_PP_FOREACH(                                                  \
-                QP_GET_NAME_FROM_ENUM_ITEM,                                 \
+                QP_GET_NAME_FROM_ITEM,                                      \
                 __VA_ARGS__                                                 \
             )                                                               \
         }                                                                   \

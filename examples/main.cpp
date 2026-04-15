@@ -5,7 +5,7 @@
 
 
 #include "../export/QqLib/QqEnum/_CompileConfig.h"
-#include QQ_ENUM_QQ_STRING_INCLUDE
+#include "../export/QqLib/QqEnum/QqEnumString.h"
 
 
 enum TEnum : int
@@ -47,11 +47,11 @@ QList<QString> names{ "TEnum::a0", "TEnum::b0", "TEnum::c0", "TEnum::d0", "TEnum
 #include "P:/Projects/Free/QqLib/export/QqLib/QqEnum/QqEnumStringLiteral.h"
 void getArgNum_test()
 {
-    using Qq::Enum::QqEnumStringLiteral;
+    using Qq::Enum::StringLiteral;
     using std::cout;
     using std::endl;
 
-    QqEnumStringLiteral sl{ "%1 function %2 %1 lambda %3" };
+    StringLiteral sl{ "%1 function %2 %1 lambda %3" };
     sl.arg(__FUNCTION__).arg("#2").arg("#3");
 
     cout << sl.toLatin1() << endl;

@@ -3,7 +3,7 @@
 #include <QThread>
 #include <QDebug>
 
-#include "../../export/QqLib/QqThread/QqMutexGuard.h"
+#include "../../export/QqLib/QqThread/qq_lock.M.h"
 
 
 class WorkerThread02 : public QThread
@@ -11,7 +11,12 @@ class WorkerThread02 : public QThread
     Q_OBJECT
 
 public:
-    WorkerThread02(int workerNum, int volatile * value, int delta, QObject * parent = nullptr)
+    WorkerThread02(
+        int            workerNum,
+        int volatile * value,
+        int            delta,
+        QObject      * parent = nullptr
+    )
         : QThread(parent)
         , m_workerNum{ workerNum }
         , m_pValue   { value     }

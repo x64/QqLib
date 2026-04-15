@@ -27,11 +27,11 @@ QqEnumStringLiteralTests::~QqEnumStringLiteralTests() {}
 
 void QqEnumStringLiteralTests::getArgNum_test()
 {
-    using Qq::Enum::QqEnumStringLiteral;
+    using Qq::Enum::StringLiteral;
     using std::cout;
     using std::endl;
 
-    QqEnumStringLiteral sl{ "%1 function %2 %1 lambda %3" };
+    StringLiteral sl{ "%1 function %2 %1 lambda %3" };
     sl.arg(__FUNCTION__).arg("#2").arg("#3");
 
     cout << sl.toLatin1() << endl;

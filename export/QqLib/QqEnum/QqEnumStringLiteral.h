@@ -2,17 +2,12 @@
 
 
 #include "./_CompileConfig.h"
-#include QQ_ENUM_QQ_STRING_INCLUDE
-
-#include "./MetadataT.h"
 
 
+#ifdef QQ_DONT_USE_QT
 namespace Qq::Enum
 {
-
-
-#ifdef QQ_DONT_USE_QT_CONTAINERS
-    class QqEnumStringLiteral
+    class StringLiteral
     {
     protected:
         std::string m_str;
@@ -22,7 +17,7 @@ namespace Qq::Enum
     // ctor & dtor
     //
     public:
-        QqEnumStringLiteral(char const * str)
+        StringLiteral(char const * str)
             : m_str{ str }
         {
             m_str.reserve(m_str.size() * 2);
@@ -37,7 +32,7 @@ namespace Qq::Enum
             return m_str.c_str();
         }
 
-        QqEnumStringLiteral & arg(char const * argStr) noexcept
+        StringLiteral & arg(char const * argStr) noexcept
         {
             return * replaceAllEntries(m_currentArgNum++, argStr, this);
         }
@@ -46,8 +41,8 @@ namespace Qq::Enum
     // Non public API
     //
     protected:
-        static QqEnumStringLiteral *
-        replaceAllEntries(int argNum, char const * replaceStr, QqEnumStringLiteral * esl)
+        static StringLiteral *
+        replaceAllEntries(int argNum, char const * replaceStr, StringLiteral * esl)
         {
             auto & sl  = * esl;
             auto & str = sl.m_str;
@@ -77,24 +72,27 @@ namespace Qq::Enum
             buff.reserve(8);
 
             char ch;
-            while ( std::isdigit(ch = str[i]) ) {
+            while ( std::isdigit(ch = str[i]) )
+            {
                 buff.push_back(ch);
                 ++i;
             }
 
-            if (replaceCharCount != nullptr)
+            if (nullptr != replaceCharCount)
                 * replaceCharCount = buff.size();
 
             return std::atoi(buff.data());
         }
 
     };
-#elif
-    using QqEnumStringLiteral = QStringLiteral;
-#endif
-
-
-
 
 
 } // namespace Qq::Enum
+
+using QqEnumStringLiteral = Qq::Enum::StringLiteral;
+
+#else
+
+using QqEnumStringLiteral = QStringLiteral;
+
+#endif

@@ -17,11 +17,15 @@ qt_add_executable(QqLib
     export/QqLib/QqEnum/Helper.h
     export/QqLib/QqEnum/MetadataInitializierT.h
     export/QqLib/QqEnum/_CompileConfig.h
-    export/QqLib/QqEnum/EnumItemT.h
+    export/QqLib/QqEnum/EnumItemWrapperT.h
     export/QqLib/QqEnum/CoreT.h
     export/QqLib/QqEnum/EatAssignT.h
     export/QqLib/QqEnum/QqEnumStringLiteral.h
     export/QqLib/QqThread/QqMutexGuard.h
+    export/QqLib/Helper.h
+    export/QqLib/QqEnum/InvalidValueSetterT.h
+    export/QqLib/QqThread/qq_lock.M.h
+    export/QqLib/QqEnum/QqEnumString.h
 
 
 )
@@ -41,3 +45,6 @@ install(TARGETS QqLib
 add_subdirectory(tests/MacrosTests)
 add_subdirectory(tests/QqEnumStringLiteralTests)
 add_subdirectory(tests/QqThreadTests)
+add_subdirectory(tests/QqHelperTests)
+add_subdirectory(tests/QqEnumHelperTests)
+add_subdirectory(tests/QqEnumCoreT_Tests)
