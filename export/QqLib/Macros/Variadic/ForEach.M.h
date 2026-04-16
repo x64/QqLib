@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../_MainMacro.M.h"
 
 // BASED ON: https://www.scs.stanford.edu/~dm/blog/va-opt.html
 // On MSVC 2017  you need to add the "/experimental:preprocessor" compiler option

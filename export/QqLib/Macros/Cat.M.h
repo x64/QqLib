@@ -1,5 +1,7 @@
 #pragma once
 
+#include "_MainMacro.M.h"
+
 
 #define QQ_PP_CAT(a, b) QP_PP_CAT_I(a, b)
 
