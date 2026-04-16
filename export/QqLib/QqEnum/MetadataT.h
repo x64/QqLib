@@ -62,6 +62,8 @@ public:
 
         for (int i = 0; i < nameList.size(); ++i)
             m_wrappers.push_back(EnumItemWrapper{ m_values[i], m_names[i] });
+
+        calcAndSetMinMaxValues();
     }
 
 //
@@ -82,6 +84,22 @@ protected:
             m_invalidValue        = newInvalidValue;
             m_invalidValueIndex   = indexOf(newInvalidValue);
         }
+    }
+
+private:
+    static inline constexpr void
+    calcAndSetMinMaxValues() noexcept
+    {
+        TEnum min, max;
+
+        for (int i = 0; i < count(); ++i)
+        {
+            min = std::min(min, value(i));
+            max = std::max(max, value(i));
+        }
+
+        m_minValue = min;
+        m_maxValue = max;
     }
 
 //
@@ -147,6 +165,9 @@ private: //~ protected:
     static inline bool        m_invalidValueDefined = false;
     static inline TEnum       m_invalidValue;
     static inline int         m_invalidValueIndex;
+
+    static inline TEnum       m_minValue;
+    static inline TEnum       m_maxValue;
 
 };
 
