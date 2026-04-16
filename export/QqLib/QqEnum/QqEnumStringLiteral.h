@@ -2,6 +2,7 @@
 
 
 #include "./_CompileConfig.h"
+#include "./QqEnumString.h"
 
 
 #ifdef QQ_DONT_USE_QT
@@ -27,12 +28,60 @@ namespace Qq::Enum
     // Public API
     //
     public:
-        char const * toLatin1() const noexcept
+        inline char const * toLatin1() const noexcept
         {
             return m_str.c_str();
         }
 
-        StringLiteral & arg(char const * argStr) noexcept
+//
+// arg(*) methods
+//
+        inline StringLiteral & arg(int const arg) noexcept
+        {
+            return arg( H::toStdString(arg) );
+        }
+
+        inline StringLiteral & arg(unsigned int const arg)
+        {
+            return arg( std::to_string(arg).c_str() );
+        }
+
+        inline StringLiteral & arg(long const arg)
+        {
+            return arg( std::to_string(arg).c_str() );
+        }
+
+        inline StringLiteral & arg(unsigned long const arg)
+        {
+            return arg( std::to_string(arg).c_str() );
+        }
+
+        inline StringLiteral & arg(long long const arg)
+        {
+            return arg( std::to_string(arg).c_str() );
+        }
+
+        inline StringLiteral & arg(unsigned long long const arg)
+        {
+            return arg( std::to_string(arg).c_str() );
+        }
+
+        inline StringLiteral & arg(double const arg)
+        {
+            return arg( std::to_string(arg).c_str() );
+        }
+
+        inline StringLiteral & arg(float const arg)
+        {
+            return arg( std::to_string(arg).c_str() );
+        }
+
+        inline StringLiteral & arg(long double const arg)
+        {
+            return arg( std::to_string(arg).c_str() );
+        }
+
+        inline StringLiteral & arg(char const * argStr) noexcept
         {
             return * replaceAllEntries(m_currentArgNum++, argStr, this);
         }
