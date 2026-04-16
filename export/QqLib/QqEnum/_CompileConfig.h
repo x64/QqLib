@@ -10,7 +10,6 @@
 #ifdef QQ_DONT_USE_QT
     #define QqMap                      std::map
     #define QqList                     std::vector
-//-    #define QQ_ENUM_QQ_STRING_INCLUDE  <string>
 #else
     #define QqMap                      QMap
     #define QqList                     QList
