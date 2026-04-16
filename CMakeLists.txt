@@ -26,7 +26,7 @@ qt_add_executable(QqLib
     export/QqLib/QqEnum/InvalidValueSetterT.h
     export/QqLib/QqThread/qq_lock.M.h
     export/QqLib/QqEnum/QqEnumString.h
-    export/QqLib/Macros/MainMacro.M.h
+    export/QqLib/Macros/_MainMacro.M.h
 
 
 )
