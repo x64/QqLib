@@ -48,6 +48,9 @@ private:
     template <typename T_Class, typename T_Enum, typename T_Int>
     friend class InvalidValueSetterT;
 
+    template <typename T_Class, typename T_Enum, typename T_Int>
+    friend class DefaultValueSetterT;
+
 //
 // Ctors & Dtor
 //
@@ -84,10 +87,10 @@ protected:
         return it->second;
     }
 
-    static inline constexpr void
-    setInvalidValue(TEnum const newInvalidValue)
+    static inline constexpr int
+    ifEnumInNotRangeDoThrow(TEnum const e)
     {
-        auto it = eiMap().find(newInvalidValue);
+        auto it = eiMap().find(e);
         if (it == eiMap().end())
             throw std::out_of_range{
                 StringLiteral{ "%1: the `%2` is out of range of QqEnum." }
@@ -96,15 +99,34 @@ protected:
                     .toLatin1()
             };
 
+        return it->second();
+    }
+
+private:
+    static inline constexpr void
+    setInvalidValue(TEnum const newInvalidValue)
+    {
+        int index = ifEnumInNotRangeDoThrow(newInvalidValue);
         qq_lock
         {
             m_invalidValueDefined = true;
             m_invalidValue        = newInvalidValue;
-            m_invalidValueIndex   = it->second(); //- indexOf(newInvalidValue);
+            m_invalidValueIndex   = index;
         }
     }
 
-private:
+    static inline constexpr void
+    setDefaultValue(TEnum const newDefaultValue)
+    {
+        int index = ifEnumInNotRangeDoThrow(newDefaultValue);
+        qq_lock
+        {
+            m_defaultValueDefined = true;
+            m_defaultValue        = newDefaultValue;
+            m_defaultValueIndex   = index;
+        }
+    }
+
     static inline constexpr void
     calcAndSetMinMaxValues() noexcept
     {
@@ -183,6 +205,10 @@ private: //~ protected:
     static inline bool        m_invalidValueDefined = false;
     static inline TEnum       m_invalidValue;
     static inline int         m_invalidValueIndex = -1;
+
+    static inline bool        m_defaultValueDefined = false;
+    static inline TEnum       m_defaultValue;
+    static inline int         m_defaultValueIndex = -1;
 
     static inline TEnum       m_minValue;
     static inline TEnum       m_maxValue;
