@@ -56,3 +56,14 @@ protected:                                                                  \
             )                                                               \
         }                                                                   \
     };                                                                      \
+
+
+
+//
+// Define special values
+//
+#define QQ_ENUM_INVALID_VALUE(INVALID_VALUE)                        \
+protected:                                                          \
+    static inline Qq::Enum::InvalidValueSetterT<_Class,_Enum,_Int>  \
+    _invalidValueSetter{ INVALID_VALUE };                           \
+public:
