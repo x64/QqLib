@@ -13,3 +13,9 @@
 #     define QQ_PP_VARIADICS_MSVC 0
 # endif
 
+
+#if defined _MSC_VER
+    #define QQ_FULL_FUNC_SIG    __FUNCSIG__
+#else
+    #define QQ_FULL_FUNC_SIG    __PRETTY_FUNCTION__
+#endif

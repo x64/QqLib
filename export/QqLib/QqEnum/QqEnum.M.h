@@ -2,8 +2,9 @@
 
 
 #include "./_CompileConfig.h"
-#include QQ_ENUM_QQ_STRING_INCLUDE
+#include "./QqEnumString.h"
 
+#include "../Macros/_MainMacro.M.h"
 #include "../Macros/Variadic/ForEach.M.h"
 #include "../Macros/Expand.M.h"
 #include "../Macros/Cat.M.h"
@@ -25,15 +26,9 @@ public:                                                                     \
     using _Int   = Int;                                                     \
     enum  _Enum  : Int { __VA_ARGS__ };                                     \
                                                                             \
-    static char const * _className    () { return #Class };                 \
-    static char const * _intTypeName  () { return #Int   };                 \
-    static char const * _fullClassName()                                    \
-    {                                                                       \
-        #ifdef _MSC_VER                                                     \
-            return __FUNCTION__;                                            \
-        #elif                                                               \
-            return __func__                                                 \
-        #endif                                                              \
+    static char const * _className    () { return #Class            };      \
+    static char const * _intTypeName  () { return #Int              };      \
+    static char const * _fullClassName() { return QQ_FULL_FUNC_SIG; };      \
     }                                                                       \
                                                                             \
     using _Wrapper = Qq::Enum::EnumItemWrapperT<TEnum>;                     \
@@ -54,7 +49,7 @@ protected:                                                                  \
                 __VA_ARGS__                                                 \
             )                                                               \
         },                                                                  \
-        std::vector<QqEnumString> {                                            \
+        std::vector<QqEnumString> {                                         \
             QQ_PP_FOREACH(                                                  \
                 QP_GET_NAME_FROM_ITEM,                                      \
                 __VA_ARGS__                                                 \
