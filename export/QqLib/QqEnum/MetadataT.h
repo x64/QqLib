@@ -76,9 +76,8 @@ protected:
     static inline constexpr int
     indexOf(TEnum const e) noexcept
     {
-        auto & m = eiMap();
-
-        auto it = m.find(e);
+        auto & m  = eiMap();
+        auto   it = m.find(e);
         if (it == m.end())
             return -1;
 
