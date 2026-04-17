@@ -7,6 +7,9 @@
 
 #include "./_CompileConfig.h"
 #include "./QqEnumString.h"
+#include "./QqEnumStringLiteral.h"
+
+#include "../Macros/_MainMacro.M.h"
 
 #include "./Helper.h"
 #include "../QqThread/qq_lock.M.h"
@@ -71,18 +74,34 @@ public:
 //
 protected:
     static inline constexpr int
-    indexOf(TEnum const e) noexcept {
-        return eiMap()[e];
+    indexOf(TEnum const e) noexcept
+    {
+        auto & m = eiMap();
+
+        auto it = m.find(e);
+        if (it == m.end())
+            return -1;
+
+        return it->second;
     }
 
     static inline constexpr void
     setInvalidValue(TEnum const newInvalidValue)
     {
+        auto it = eiMap().find(newInvalidValue);
+        if (it == eiMap().end())
+            throw std::out_of_range{
+                StringLiteral{ "%1: the `%2` is out of range of QqEnum." }
+                    .arg(QQ_FULL_FUNC_SIG)
+                    .arg(static_cast<TInt>(newInvalidValue))
+                    .toLatin1()
+            };
+
         qq_lock
         {
             m_invalidValueDefined = true;
             m_invalidValue        = newInvalidValue;
-            m_invalidValueIndex   = indexOf(newInvalidValue);
+            m_invalidValueIndex   = it->second(); //- indexOf(newInvalidValue);
         }
     }
 
@@ -164,7 +183,7 @@ private: //~ protected:
 
     static inline bool        m_invalidValueDefined = false;
     static inline TEnum       m_invalidValue;
-    static inline int         m_invalidValueIndex;
+    static inline int         m_invalidValueIndex = -1;
 
     static inline TEnum       m_minValue;
     static inline TEnum       m_maxValue;

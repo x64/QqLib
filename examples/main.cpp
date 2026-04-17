@@ -44,6 +44,19 @@ QList<TEnum>   enums{ TEnum::a0, TEnum::b0, TEnum::c0, TEnum::d0, TEnum::e0, TEn
 QList<QString> names{ "TEnum::a0", "TEnum::b0", "TEnum::c0", "TEnum::d0", "TEnum::e0", "TEnum::f0", "TEnum::g0" };
 
 
+namespace NS0
+{
+
+struct Test
+{
+    static void funcName()
+    {
+        std::cout << __FUNCSIG__ << std::endl;
+    }
+};
+
+}
+
 #include "P:/Projects/Free/QqLib/export/QqLib/QqEnum/QqEnumStringLiteral.h"
 void getArgNum_test()
 {
@@ -52,9 +65,10 @@ void getArgNum_test()
     using std::endl;
 
     StringLiteral sl{ "%1 function %2 %1 lambda %3" };
-    sl.arg(__FUNCTION__).arg("#2").arg("#3");
+    sl.arg(__FUNCSIG__).arg("#2").arg("#3");
 
-    cout << sl.toLatin1() << endl;
+    //cout << sl.toLatin1() << endl;
+    NS0::Test::funcName();
 }
 
 
