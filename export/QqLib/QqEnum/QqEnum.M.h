@@ -67,3 +67,9 @@ protected:                                                          \
     static inline Qq::Enum::InvalidValueSetterT<_Class,_Enum,_Int>  \
     _invalidValueSetter{ INVALID_VALUE };                           \
 public:
+
+#define QQ_ENUM_DEFAULT_VALUE(DEFAULT_VALUE)                        \
+protected:                                                          \
+    static inline Qq::Enum::DefaultValueSetterT<_Class,_Enum,_Int>  \
+    _defaultValueSetter{ DEFAULT_VALUE };                           \
+public:
