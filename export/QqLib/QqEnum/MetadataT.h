@@ -101,13 +101,13 @@ protected:
     // \brief Searching \arg e in values and return its index. If e in not range then do throw.
     //
     static inline constexpr int
-    ifEnumInNotRangeDoThrow(TEnum const e)
+    ifEnumInNotRangeDoThrow(TEnum const e, char const * funcName)
     {
         auto it = eiMap().find(e);
         if (it == eiMap().end())
             throw std::out_of_range{
                 StringLiteral{ "%1: the `%2` is out of range of %3" }
-                    .arg(QQ_FULL_FUNC_SIG)
+                    .arg(funcName)
                     .arg(static_cast<TInt>(e))
                     .arg(className())
                     .toLatin1()
@@ -120,7 +120,7 @@ private:
     static inline constexpr void
     setInvalidValue(TEnum const newInvalidValue)
     {
-        int index = ifEnumInNotRangeDoThrow(newInvalidValue);
+        int index = ifEnumInNotRangeDoThrow(newInvalidValue, QQ_FULL_FUNC_SIG);
         if (index != 0)
         {
             if (isValidIndex(index))
@@ -153,7 +153,7 @@ private:
     static inline constexpr void
     setDefaultValue(TEnum const newDefaultValue)
     {
-        int index = ifEnumInNotRangeDoThrow(newDefaultValue);
+        int index = ifEnumInNotRangeDoThrow(newDefaultValue, QQ_FULL_FUNC_SIG);
         qq_lock
         {
             m_defaultValueDefined = true;
