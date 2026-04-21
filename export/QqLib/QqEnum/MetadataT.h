@@ -260,10 +260,28 @@ public:
     }
 
     static inline constexpr bool
-    isValidIndex(int index)
+    isValidIndex(int index) noexcept
     {
         return 0 <= index && index < count();
     }
+
+    static inline constexpr char *
+    className() noexcept {
+        return m_className;
+    }
+
+    static inline constexpr char *
+    intTypeName() noexcept {
+        return m_intTypeName;
+    }
+
+    static inline constexpr char *
+    fullClassName() noexcept {
+        return m_fullClassName;
+    }
+
+
+
 
 //
 // Fields:
