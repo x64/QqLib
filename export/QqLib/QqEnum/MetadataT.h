@@ -55,7 +55,16 @@ private:
 // Ctors & Dtor
 //
 public:
-    MetadataT(ValueList && valueList, NameList && nameList)
+    MetadataT(
+        char const *  className,
+        char const *  intTypeName,
+        char const *  fullClassName,
+        ValueList  && valueList,
+        NameList   && nameList
+    )
+        : m_className    { className     }
+        , m_intTypeName  { intTypeName   }
+        , m_fullClassName{ fullClassName }
     {
         if (nameList.size() != valueList.size())
             throw std::length_error("The lenght of value list is not equal lenght of the name list.");
@@ -97,9 +106,10 @@ protected:
         auto it = eiMap().find(e);
         if (it == eiMap().end())
             throw std::out_of_range{
-                StringLiteral{ "%1: the `%2` is out of range of QqEnum." }
+                StringLiteral{ "%1: the `%2` is out of range of %3" }
                     .arg(QQ_FULL_FUNC_SIG)
-                    .arg(static_cast<TInt>(newInvalidValue))
+                    .arg(static_cast<TInt>(e))
+                    .arg(className())
                     .toLatin1()
             };
 
@@ -160,6 +170,27 @@ private:
 // Public API
 //
 public:
+    //
+    // Meta-info
+    //
+    static inline const char *
+    className() {
+        return m_className;
+    }
+
+    static inline const char *
+    intTypeName() {
+        return m_intTypeName;
+    }
+
+    static inline const char *
+    fullClassName() {
+        return m_fullClassName;
+    }
+
+    //
+    // Access and info API
+    //
     static inline constexpr ValueList const &
     valueList() noexcept {
         return m_values;
@@ -229,7 +260,7 @@ public:
     }
 
     static inline constexpr bool
-    isValidIndex(index)
+    isValidIndex(int index)
     {
         return 0 <= index && index < count();
     }
@@ -259,6 +290,10 @@ private: //~ protected:
 //
 // Consts:
 //
+    static inline const char          * m_className     = nullptr;
+    static inline const char          * m_intTypeName   = nullptr;
+    static inline const char          * m_fullClassName = nullptr;
+
     static inline const QqEnumString    m_emptyString { "" };
     static inline const EnumItemWrapper m_emptyWrapper{ 0, m_emptyString };
 };

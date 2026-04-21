@@ -26,11 +26,6 @@ public:                                                                     \
     using _Int   = Int;                                                     \
     enum  _Enum  : Int { __VA_ARGS__ };                                     \
                                                                             \
-    static char const * _className    () { return #Class            };      \
-    static char const * _intTypeName  () { return #Int              };      \
-    static char const * _fullClassName() { return QQ_FULL_FUNC_SIG; };      \
-    }                                                                       \
-                                                                            \
     using _Wrapper = Qq::Enum::EnumItemWrapperT<TEnum>;                     \
                                                                             \
 protected:                                                                  \
@@ -43,6 +38,10 @@ protected:                                                                  \
     using _EatAssign = Qq::Enum::EatAssign<_Enum, _Int>;                    \
                                                                             \
     static inline _D _d {                                                   \
+        #Class,                                                             \
+        #Int,                                                               \
+        QQ_FULL_FUNC_SIG,                                                   \
+                                                                            \
         std::vector<_Enum> {                                                \
             QQ_PP_FOREACH(                                                  \
                 QP_GET_VALUE_FROM_ITEM,                                     \
