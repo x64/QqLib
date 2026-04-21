@@ -181,16 +181,25 @@ public:
     }
 
     static inline constexpr TEnum
-    value(int index) /*noexcept*/
+    value(int index)
     {
-        // TODO: add bounds checking
+        if (not isValidIndex(index))
+            throw std::out_of_range(
+                StringLiteral{ "%1: the index = %2 is out of range." }
+                    .arg(QQ_FULL_FUNC_SIG)
+                    .arg(index)
+                    .toLatin1()
+            );
+
         return m_values[index];
     }
 
     static inline constexpr QqEnumString const &
-    name(int index) /*noexcept*/
+    name(int index) noexcept
     {
-        // TODO: add bounds checking:
+        if (not isValidIndex(index))
+            return m_emptyString;
+
         return m_names[index];
     }
 
@@ -205,9 +214,11 @@ public:
     }
 
     static inline constexpr EnumItemWrapper const &
-    wrapper(int index) /*noexcept*/
+    wrapper(int index)
     {
-        // TODO: add bounds checking
+        if (not isValidIndex(index))
+            return m_emptyWrapper;
+
         return m_wrappers[index];
     }
 
@@ -215,6 +226,12 @@ public:
     count() noexcept
     {
         return m_values.size();
+    }
+
+    static inline constexpr bool
+    isValidIndex(index)
+    {
+        return 0 <= index && index < count();
     }
 
 //
@@ -242,7 +259,8 @@ private: //~ protected:
 //
 // Consts:
 //
-    static inline const QqEnumString m_emptyString{ "" };
+    static inline const QqEnumString    m_emptyString { "" };
+    static inline const EnumItemWrapper m_emptyWrapper{ 0, m_emptyString };
 };
 
 
