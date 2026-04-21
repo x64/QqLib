@@ -123,7 +123,7 @@ private:
         int index = ifEnumInNotRangeDoThrow(newInvalidValue, QQ_FULL_FUNC_SIG);
         if (index != 0)
         {
-            if (isValidIndex(index))
+            if (isIndexValid(index))
                 throw std::logic_error(
                     StringLiteral{ "%1: the enum '%2' must be the first string in the enum list." }
                         .arg(QQ_FULL_FUNC_SIG)
@@ -225,7 +225,7 @@ public:
     static inline constexpr TEnum
     value(int index)
     {
-        if (not isValidIndex(index))
+        if (not isIndexValid(index))
             throw std::out_of_range(
                 StringLiteral{ "%1: the index = %2 is out of range." }
                     .arg(QQ_FULL_FUNC_SIG)
@@ -239,7 +239,7 @@ public:
     static inline constexpr QqEnumString const &
     name(int index) noexcept
     {
-        if (not isValidIndex(index))
+        if (not isIndexValid(index))
             return m_emptyString;
 
         return m_names[index];
@@ -258,7 +258,7 @@ public:
     static inline constexpr EnumItemWrapper const &
     wrapper(int index)
     {
-        if (not isValidIndex(index))
+        if (not isIndexValid(index))
             return m_emptyWrapper;
 
         return m_wrappers[index];
@@ -271,7 +271,7 @@ public:
     }
 
     static inline constexpr bool
-    isValidIndex(int index) noexcept
+    isIndexValid(int index) noexcept
     {
         return 0 <= index && index < count();
     }
