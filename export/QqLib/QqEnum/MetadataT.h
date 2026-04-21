@@ -122,12 +122,23 @@ private:
     {
         int index = ifEnumInNotRangeDoThrow(newInvalidValue);
         if (index != 0)
-            throw std::logic_error(
-                StringLiteral{ "%1: the enum '%2' must be the first string in the enum list." }
-                    .arg(QQ_FULL_FUNC_SIG)
-                    .arg(name(index))
-                    .toLatin1()
-            );
+        {
+            if (isValidIndex(index))
+                throw std::logic_error(
+                    StringLiteral{ "%1: the enum '%2' must be the first string in the enum list." }
+                        .arg(QQ_FULL_FUNC_SIG)
+                        .arg(name(index))
+                        .toLatin1()
+                );
+            else
+                throw std::out_of_range{
+                    StringLiteral{ "%1: the `%2` is out of range of %3" }
+                        .arg(QQ_FULL_FUNC_SIG)
+                        .arg(static_cast<TInt>(e))
+                        .arg(className())
+                        .toLatin1()
+                };
+        }
 
         qq_lock
         {
