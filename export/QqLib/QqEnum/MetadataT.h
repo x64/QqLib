@@ -70,6 +70,7 @@ public:
             m_wrappers.push_back(EnumItemWrapper{ m_values[i], m_names[i] });
 
         calcAndSetMinMaxValues();
+        m_lastValidIndex = count() -1;
     }
 
 //
@@ -87,6 +88,9 @@ protected:
         return it->second;
     }
 
+    //
+    // \brief Searching \arg e in values and return its index. If e in not range then do throw.
+    //
     static inline constexpr int
     ifEnumInNotRangeDoThrow(TEnum const e)
     {
@@ -107,11 +111,21 @@ private:
     setInvalidValue(TEnum const newInvalidValue)
     {
         int index = ifEnumInNotRangeDoThrow(newInvalidValue);
+        if (index != 0)
+            throw std::logic_error(
+                StringLiteral{ "%1: the enum '%2' must be the first string in the enum list." }
+                    .arg(QQ_FULL_FUNC_SIG)
+                    .arg(name(index))
+                    .toLatin1()
+            );
+
         qq_lock
         {
             m_invalidValueDefined = true;
             m_invalidValue        = newInvalidValue;
             m_invalidValueIndex   = index;
+
+            m_firstValidIndex     = 1;
         }
     }
 
@@ -176,8 +190,18 @@ public:
     static inline constexpr QqEnumString const &
     name(int index) /*noexcept*/
     {
-        // TODO: add bounds checking
+        // TODO: add bounds checking:
         return m_names[index];
+    }
+
+    static inline constexpr QqEnumString const &
+    nameByValue(const TEnum e) noexcept
+    {
+        int index = indexOf(e);
+        if (index < 0)
+            return m_emptyString;
+
+        return name(index);
     }
 
     static inline constexpr EnumItemWrapper const &
@@ -202,6 +226,9 @@ private: //~ protected:
     static inline EIMap       m_enumToIndex;
     static inline WrapperList m_wrappers;
 
+    static inline TEnum       m_firstValidIndex;
+    static inline TEnum       m_lastValidIndex;
+
     static inline bool        m_invalidValueDefined = false;
     static inline TEnum       m_invalidValue;
     static inline int         m_invalidValueIndex = -1;
@@ -212,7 +239,10 @@ private: //~ protected:
 
     static inline TEnum       m_minValue;
     static inline TEnum       m_maxValue;
-
+//
+// Consts:
+//
+    static inline const QqEnumString m_emptyString{ "" };
 };
 
 
