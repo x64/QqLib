@@ -190,7 +190,7 @@ public:                                                                     \
     }                                                   \
                                                         \
     inline explicit Class(int index) noexcept {         \
-        m_index = _C::toValidRange(index);              \
+        m_index = _C::toRange(index);                   \
     }
 
 //

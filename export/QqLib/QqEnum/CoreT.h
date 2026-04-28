@@ -104,7 +104,7 @@ public:
         // );
 
         index = index < 0
-            ? lastIndex() + index +1
+            ? D::lastValidindex() + index +1
             : index;
     }
 };

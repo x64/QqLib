@@ -32,7 +32,7 @@ public:
     using ValueList       = std::vector<TEnum>;                   //QList<TEnum>;
     using NameList        = std::vector<QqEnumString>;               //QStringList;
     using EIMap           = std::map   <TEnum,int>;               //QMap<TEnum,int>;
-    using EnumItemgit asdasdWrapper = EnumItemWrapperT<TEnum>;
+    using EnumItemWrapper = EnumItemWrapperT<TEnum>;
     using WrapperList     = std::vector<EnumItemWrapper>;
 
 //
