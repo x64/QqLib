@@ -32,7 +32,7 @@ public:
     using ValueList       = std::vector<TEnum>;                   //QList<TEnum>;
     using NameList        = std::vector<QqEnumString>;               //QStringList;
     using EIMap           = std::map   <TEnum,int>;               //QMap<TEnum,int>;
-    using EnumItemWrapper = EnumItemWrapperT<TEnum>;
+    using EnumItemgit asdasdWrapper = EnumItemWrapperT<TEnum>;
     using WrapperList     = std::vector<EnumItemWrapper>;
 
 //
@@ -56,16 +56,26 @@ private:
 //
 public:
     MetadataT(
-        char const *  className,
-        char const *  intTypeName,
-        char const *  fullClassName,
+        char const  * className,
+        char const  * intTypeName,
+        char const  * fullClassName,
         ValueList  && valueList,
-        NameList   && nameList
-    )
-        : m_className    { className     }
-        , m_intTypeName  { intTypeName   }
-        , m_fullClassName{ fullClassName }
+        NameList   && nameList)
     {
+        if (m_isCreated)
+            throw std::logic_error(
+                StringLiteral{ "Qq::Enum::MetadataT<%1,%2,%3> already creadted." }
+                    .arg(className)
+                    .arg("TEnum")
+                    .arg(intTypeName)
+                    .toLatin1()
+            );
+
+        m_className     = className;
+        m_intTypeName   = intTypeName;
+        m_fullClassName = gfcn(fullClassName);
+
+
         if (nameList.size() != valueList.size())
             throw std::length_error("The lenght of value list is not equal lenght of the name list.");
 
@@ -73,19 +83,42 @@ public:
         m_names       = std::move(nameList );
         m_enumToIndex = std::move(H::makeEnumToIndexMap<TEnum>(m_values));
 
-        m_wrappers.reserve(nameList.size());
+        m_wrappers.reserve(m_values.size());
 
-        for (int i = 0; i < nameList.size(); ++i)
+        for (int i = 0; i < m_values.size(); ++i)
             m_wrappers.push_back(EnumItemWrapper{ m_values[i], m_names[i] });
 
         calcAndSetMinMaxValues();
         m_lastValidIndex = count() -1;
+
+        m_isCreated = true;
     }
 
 //
 // Internal API
 //
 protected:
+    static inline char const *
+    gfcn(char const * fcnStr)
+    {
+        static std::string res{ fcnStr };
+        if (not m_isCreated)
+        {
+            int i = res.length() -1;
+            for (; i > 2; --i)
+                if (':' == res[i] && ':' == res[i-1]) break;
+
+            --i;
+            int len = 0;
+            while (i > 0 && res[i] != ' ')
+                --i, ++len;
+
+            res = res.substr(i, len);
+        }
+
+        return res.c_str();
+    }
+
     static inline constexpr int
     indexOf(TEnum const e) noexcept
     {
@@ -113,7 +146,7 @@ protected:
                     .toLatin1()
             };
 
-        return it->second();
+        return it->second;
     }
 
 private:
@@ -124,17 +157,17 @@ private:
         if (index != 0)
         {
             if (isIndexValid(index))
-                throw std::logic_error(
+                throw std::logic_error{
                     StringLiteral{ "%1: the enum '%2' must be the first string in the enum list." }
                         .arg(QQ_FULL_FUNC_SIG)
-                        .arg(name(index))
+                        .arg(name(index).c_str())
                         .toLatin1()
-                );
+                };
             else
                 throw std::out_of_range{
                     StringLiteral{ "%1: the `%2` is out of range of %3" }
                         .arg(QQ_FULL_FUNC_SIG)
-                        .arg(static_cast<TInt>(e))
+                        .arg(static_cast<TInt>(newInvalidValue))
                         .arg(className())
                         .toLatin1()
                 };
@@ -142,8 +175,8 @@ private:
 
         qq_lock
         {
-            m_invalidValueDefined = true;
-            m_invalidValue        = newInvalidValue;
+            //- m_invalidValueDefined = true;
+            //- m_invalidValue        = newInvalidValue;
             m_invalidValueIndex   = index;
 
             m_firstValidIndex     = 1;
@@ -156,8 +189,8 @@ private:
         int index = ifEnumInNotRangeDoThrow(newDefaultValue, QQ_FULL_FUNC_SIG);
         qq_lock
         {
-            m_defaultValueDefined = true;
-            m_defaultValue        = newDefaultValue;
+            //- m_defaultValueDefined = true;
+            //- m_defaultValue        = newDefaultValue;
             m_defaultValueIndex   = index;
         }
     }
@@ -184,17 +217,17 @@ public:
     //
     // Meta-info
     //
-    static inline const char *
+    static inline char const *
     className() {
         return m_className;
     }
 
-    static inline const char *
+    static inline char const *
     intTypeName() {
         return m_intTypeName;
     }
 
-    static inline const char *
+    static inline char const *
     fullClassName() {
         return m_fullClassName;
     }
@@ -202,24 +235,9 @@ public:
     //
     // Access and info API
     //
-    static inline constexpr ValueList const &
-    valueList() noexcept {
-        return m_values;
-    }
-
-    static inline constexpr NameList const &
-    nameList() noexcept {
-        return m_names;
-    }
-
-    static inline constexpr EIMap const &
-    eiMap() noexcept {
-        return m_enumToIndex;
-    }
-
-    static inline constexpr WrapperList const &
-    wrapperList() noexcept {
-        return m_wrappers;
+    static inline constexpr int
+    count() noexcept {
+        return m_values.size();
     }
 
     static inline constexpr TEnum
@@ -246,7 +264,7 @@ public:
     }
 
     static inline constexpr QqEnumString const &
-    nameByValue(const TEnum e) noexcept
+    nameByValue(TEnum const e) noexcept
     {
         int index = indexOf(e);
         if (index < 0)
@@ -264,55 +282,102 @@ public:
         return m_wrappers[index];
     }
 
-    static inline constexpr int
-    count() noexcept
-    {
-        return m_values.size();
+    //
+    // List and map API
+    //
+    static inline constexpr ValueList const &
+    valueList() noexcept {
+        return m_values;
+    }
+
+    static inline constexpr NameList const &
+    nameList() noexcept {
+        return m_names;
+    }
+
+    static inline constexpr EIMap const &
+    eiMap() noexcept {
+        return m_enumToIndex;
+    }
+
+    static inline constexpr WrapperList const &
+    wrapperList() noexcept {
+        return m_wrappers;
+    }
+
+    //
+    // Invalid and Default value API
+    //
+    static inline constexpr bool
+    isInvalidValueDefined() noexcept {
+        return m_invalidValueIndex == 0;
     }
 
     static inline constexpr bool
-    isIndexValid(int index) noexcept
-    {
+    isDefaultValueDefined() noexcept {
+        return m_defaultValueIndex >= 0;
+    }
+
+    static inline constexpr TEnum
+    invalidValue() noexcept {
+        return value(m_invalidValueIndex);
+    }
+
+    static inline constexpr TEnum
+    defaultValue() noexcept {
+        return value(m_defaultValueIndex);
+    }
+
+    static inline constexpr int
+    defaultValueIndex() noexcept {
+        return m_defaultValueIndex;
+    }
+
+    static inline constexpr QqEnumString const &
+    invalidValueName() noexcept {
+        return name(m_invalidValueIndex);
+    }
+
+    static inline constexpr QqEnumString const &
+    defaultValueName() noexcept {
+        return name(m_defaultValueIndex);
+    }
+
+
+    //
+    // Other API
+    //
+    static inline constexpr bool
+    isIndexValid(int index) noexcept {
         return 0 <= index && index < count();
     }
 
-    static inline constexpr char *
-    className() noexcept {
-        return m_className;
+    static inline constexpr int
+    lastValidindex() noexcept {
+        return m_lastValidIndex;
     }
-
-    static inline constexpr char *
-    intTypeName() noexcept {
-        return m_intTypeName;
-    }
-
-    static inline constexpr char *
-    fullClassName() noexcept {
-        return m_fullClassName;
-    }
-
-
-
 
 //
 // Fields:
 //
 private: //~ protected:
+    static inline bool        m_isCreated = false;
+
     static inline ValueList   m_values;
     static inline NameList    m_names;
     static inline EIMap       m_enumToIndex;
     static inline WrapperList m_wrappers;
 
-    static inline TEnum       m_firstValidIndex;
-    static inline TEnum       m_lastValidIndex;
+    static inline int         m_firstValidIndex;
+    static inline int         m_lastValidIndex;
 
-    static inline bool        m_invalidValueDefined = false;
-    static inline TEnum       m_invalidValue;
+    //- static inline bool        m_invalidValueDefined = false;
+    //- static inline TEnum       m_invalidValue;
     static inline int         m_invalidValueIndex = -1;
 
-    static inline bool        m_defaultValueDefined = false;
-    static inline TEnum       m_defaultValue;
-    static inline int         m_defaultValueIndex = -1;
+    //- static inline bool        m_defaultValueDefined = false;
+    //- static inline TEnum       m_defaultValue;
+    static inline int         m_defaultValueIndex = 0;
 
     static inline TEnum       m_minValue;
     static inline TEnum       m_maxValue;
@@ -324,7 +389,7 @@ private: //~ protected:
     static inline const char          * m_fullClassName = nullptr;
 
     static inline const QqEnumString    m_emptyString { "" };
-    static inline const EnumItemWrapper m_emptyWrapper{ 0, m_emptyString };
+    static inline const EnumItemWrapper m_emptyWrapper{ TEnum{}, m_emptyString };
 };
 
 
