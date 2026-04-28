@@ -49,15 +49,56 @@ namespace NS0
 
 struct Test
 {
+    char const * m_str;
+
+    Test(char const * str)
+        : m_str{ str }
+    {}
+
     static void funcName()
     {
         std::cout << __FUNCSIG__ << std::endl;
     }
 };
 
+} // namespace NS0
+
+
+static bool m_isCreated;
+
+static char const *
+gfcn(char const * fcnStr)
+{
+    static std::string res{ fcnStr };
+    if (not m_isCreated)
+    { //  SS::S3::__fullName(void)
+        int i = res.length() -1;
+        for (; i > 2; --i)
+            if (':' == res[i] && ':' == res[i-1]) break;
+
+        --i;
+        int len = 0;
+        while (i > 0 && res[i] != ' ')
+            --i, ++len;
+        res = res.substr(i, len);
+    }
+    return res.c_str();
 }
 
-#include "P:/Projects/Free/QqLib/export/QqLib/QqEnum/QqEnumStringLiteral.h"
+#define QQ_TEST                                         \
+    static char const * __fullName() {                  \
+        return __FUNCSIG__;                             \
+    }                                                   \
+    static inline NS0::Test _t{ gfcn(__fullName()) };
+
+namespace SS {
+struct S3
+{
+    QQ_TEST
+};
+}
+
+#include "../export/QqLib/QqEnum/QqEnumStringLiteral.h"
 void getArgNum_test()
 {
     using Qq::Enum::StringLiteral;
@@ -69,12 +110,53 @@ void getArgNum_test()
 
     //cout << sl.toLatin1() << endl;
     NS0::Test::funcName();
+
 }
 
+void s3_test()
+{
+    using std::cout;
+    using std::endl;
+
+    SS::S3 s3;
+    cout << s3._t.m_str << endl;
+}
+
+#include "../export/QqLib/QqEnum/QqEnum.m.h"
+
+struct Enum1
+{
+    QQ_ENUM_CORE(Enum1,
+        Unknown = 0,
+
+        One,
+        Two,
+        Three
+    )
+
+    QQ_ENUM_INVALID_VALUE(Unknown)
+    QQ_ENUM_DEFAULT_VALUE(One)
+};
+
+void Enum1_test()
+{
+    using namespace std;
+
+    Enum1 e1;
+    cout << e1._invalidValue()     << endl;
+    cout << e1._defaultValue()     << endl;
+    cout << e1._count()            << endl;
+    cout << e1().name()            << endl;
+    cout << e1().value()           << endl;
+    cout << e1._invalidValueName() << endl;
+    cout << e1._defaultValueName() << endl;
+}
 
 int main(int argc, char *argv[])
 {
-    getArgNum_test();
+    Enum1_test();
+    //s3_test();
+    //getArgNum_test();
     return 0;
 
     //Qq_string s{ "" };
