@@ -59,16 +59,54 @@ protected:
 // Public API
 //
 public:
+    //
+    // Range API
+    //
     static inline constexpr bool
     indexIsValid(int index)
     {
-        int minRangeIndex = D::m_invalidValueDefined ? 1 : 0;
-        int maxRangeIndex = D::valueCount()-1;
+        int minRangeIndex = D::isInvalidValueDefined() ? 1 : 0;
+        int maxRangeIndex = D::lastValidindex();
 
         return Qq::Helper::inMinMax(minRangeIndex, index, maxRangeIndex);
     }
 
+    static inline int
+    toRange(int index, bool negativeIsAllow = true) noexcept {  //-V2565
+        return toRange<int>(index, negativeIsAllow);            //-V2565
+    }
 
+    template <typename TIndex>
+    static inline int
+    toRange(TIndex & index, bool negativeIsAllow = true) noexcept
+    {
+        // TODO:
+        // static_assert(
+        //     qqIsNonConstEnumIndexType<TIndex>,
+        //     "The type of the `index` is not non-const enum index type."
+        // );
+
+        if (negativeIsAllow)
+            toPositiveRange(index);
+
+        index = std::max( 0, std::min(index, D::lastValidindex()) );
+        return index;
+    }
+
+    template <typename TIndex>
+    static constexpr void
+    toPositiveRange(TIndex & index) noexcept
+    {
+        // TODO:
+        // static_assert(
+        //     qqIsNonConstEnumIndexType<TIndex>,
+        //     "The type of the `index` is not non-const enum index type."
+        // );
+
+        index = index < 0
+            ? lastIndex() + index +1
+            : index;
+    }
 };
 
 
