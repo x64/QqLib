@@ -12,6 +12,8 @@
 #include "../Macros/_MainMacro.M.h"
 
 #include "./Helper.h"
+#include "../Utils/qq_throw_l.M.h"
+
 #include "../QqThread/qq_lock.M.h"
 #include "./EnumItemWrapperT.h"
 
@@ -63,7 +65,8 @@ public:
         NameList   && nameList)
     {
         if (m_isCreated)
-            throw std::logic_error(
+            qq_throw_l(
+                std::logic_error,
                 StringLiteral{ "Qq::Enum::MetadataT<%1,%2,%3> already creadted." }
                     .arg(className)
                     .arg("TEnum")
@@ -71,27 +74,34 @@ public:
                     .toLatin1()
             );
 
-        m_className     = className;
-        m_intTypeName   = intTypeName;
-        m_fullClassName = gfcn(fullClassName);
+        qq_lock
+        {
+            m_className     = className;
+            m_intTypeName   = intTypeName;
+            m_fullClassName = gfcn(fullClassName);
 
 
-        if (nameList.size() != valueList.size())
-            throw std::length_error("The lenght of value list is not equal lenght of the name list.");
+            if (nameList.size() != valueList.size())
+                qq_throw_l(
+                    std::length_error,
+                    "The lenght of value list is not equal lenght of the name list."
+                );
 
-        m_values      = std::move(valueList);
-        m_names       = std::move(nameList );
-        m_enumToIndex = std::move(H::makeEnumToIndexMap<TEnum>(m_values));
+            m_values      = std::move(valueList);
+            // now the count() method is aviabled
+            m_names       = std::move(nameList );
+            m_enumToIndex = std::move(H::makeEnumToIndexMap<TEnum>(m_values));
 
-        m_wrappers.reserve(m_values.size());
+            m_wrappers.reserve(count());
 
-        for (int i = 0; i < m_values.size(); ++i)
-            m_wrappers.push_back(EnumItemWrapper{ m_values[i], m_names[i] });
+            for (int i = 0; i < count(); ++i)
+                m_wrappers.push_back(EnumItemWrapper{ m_values[i], m_names[i] });
 
-        calcAndSetMinMaxValues();
-        m_lastValidIndex = count() -1;
+            calcAndSetMinMaxValues();
+            m_lastValidIndex = count() -1;
 
-        m_isCreated = true;
+            m_isCreated = true;
+        }
     }
 
 //
@@ -138,13 +148,14 @@ protected:
     {
         auto it = eiMap().find(e);
         if (it == eiMap().end())
-            throw std::out_of_range{
+            qq_throw_l(
+                std::out_of_range,
                 StringLiteral{ "%1: the `%2` is out of range of %3" }
                     .arg(funcName)
                     .arg(static_cast<TInt>(e))
                     .arg(className())
                     .toLatin1()
-            };
+            );
 
         return it->second;
     }
@@ -157,20 +168,22 @@ private:
         if (index != 0)
         {
             if (isIndexValid(index))
-                throw std::logic_error{
+                qq_throw_l(
+                    std::logic_error,
                     StringLiteral{ "%1: the enum '%2' must be the first string in the enum list." }
                         .arg(QQ_FULL_FUNC_SIG)
                         .arg(name(index).c_str())
                         .toLatin1()
-                };
+                );
             else
-                throw std::out_of_range{
+                qq_throw_l(
+                    std::out_of_range,
                     StringLiteral{ "%1: the `%2` is out of range of %3" }
                         .arg(QQ_FULL_FUNC_SIG)
                         .arg(static_cast<TInt>(newInvalidValue))
                         .arg(className())
                         .toLatin1()
-                };
+                );
         }
 
         qq_lock
@@ -244,7 +257,8 @@ public:
     value(int index)
     {
         if (not isIndexValid(index))
-            throw std::out_of_range(
+            qq_throw_l(
+                std::out_of_range,
                 StringLiteral{ "%1: the index = %2 is out of range." }
                     .arg(QQ_FULL_FUNC_SIG)
                     .arg(index)
@@ -350,6 +364,11 @@ public:
     static inline constexpr bool
     isIndexValid(int index) noexcept {
         return 0 <= index && index < count();
+    }
+
+    static inline constexpr int
+    firstValidindex() noexcept {
+        return m_firstValidIndex; //1 + m_invalidValueIndex;
     }
 
     static inline constexpr int
