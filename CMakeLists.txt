@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 3.19)
 project(QqLib LANGUAGES CXX)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if (MSVC)
+    add_compile_options(/Zc:preprocessor)
+endif()
+
+
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core)
 
 qt_standard_project_setup()
@@ -28,6 +36,7 @@ qt_add_executable(QqLib
     export/QqLib/QqEnum/QqEnumString.h
     export/QqLib/Macros/_MainMacro.M.h
     export/QqLib/QqEnum/DefaultValueSetterT.h
+    export/QqLib/Utils/qq_throw_l.M.h
 
 
 )
