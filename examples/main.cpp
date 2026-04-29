@@ -134,7 +134,7 @@ struct Enum1
         Three
     )
 
-    QQ_ENUM_INVALID_VALUE(Unknown)
+    QQ_ENUM_INVALID_VALUE(/*Unknown*/One)
     QQ_ENUM_DEFAULT_VALUE(One)
 };
 

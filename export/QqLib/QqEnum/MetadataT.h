@@ -72,7 +72,7 @@ public:
                     .arg("TEnum")
                     .arg(intTypeName)
                     .toLatin1()
-            );
+            )
 
         qq_lock
         {
@@ -85,7 +85,7 @@ public:
                 qq_throw_l(
                     std::length_error,
                     "The lenght of value list is not equal lenght of the name list."
-                );
+                )
 
             m_values      = std::move(valueList);
             // now the count() method is aviabled
@@ -150,12 +150,12 @@ protected:
         if (it == eiMap().end())
             qq_throw_l(
                 std::out_of_range,
-                StringLiteral{ "%1: the `%2` is out of range of %3" }
+                StringLiteral{ "The '%2' is out of range of '%3'\nMETHOD: %1" }
                     .arg(funcName)
                     .arg(static_cast<TInt>(e))
                     .arg(className())
                     .toLatin1()
-            );
+            )
 
         return it->second;
     }
@@ -170,20 +170,20 @@ private:
             if (isIndexValid(index))
                 qq_throw_l(
                     std::logic_error,
-                    StringLiteral{ "%1: the enum '%2' must be the first string in the enum list." }
+                    StringLiteral{ "The enum '%2' must be the first string in the enum list (QQ_ENUM).\nMETHOD: %1" }
                         .arg(QQ_FULL_FUNC_SIG)
                         .arg(name(index).c_str())
                         .toLatin1()
-                );
+                )
             else
                 qq_throw_l(
                     std::out_of_range,
-                    StringLiteral{ "%1: the `%2` is out of range of %3" }
+                    StringLiteral{ "The '%2' is out of range of '%3'.\nMETHOD:%1" }
                         .arg(QQ_FULL_FUNC_SIG)
                         .arg(static_cast<TInt>(newInvalidValue))
                         .arg(className())
                         .toLatin1()
-                );
+                )
         }
 
         qq_lock
