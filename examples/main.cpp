@@ -6,6 +6,7 @@
 
 #include "../export/QqLib/QqEnum/_CompileConfig.h"
 #include "../export/QqLib/QqEnum/QqEnumString.h"
+#include "../export/QqLib/QqEnum/Index.h"
 
 
 enum TEnum : int
@@ -134,7 +135,7 @@ struct Enum1
         Three
     )
 
-    QQ_ENUM_INVALID_VALUE(/*Unknown*/One)
+    QQ_ENUM_INVALID_VALUE(Unknown)
     QQ_ENUM_DEFAULT_VALUE(One)
 };
 
@@ -142,7 +143,7 @@ void Enum1_test()
 {
     using namespace std;
 
-    Enum1 e1;
+    Enum1 e1, e2;
     cout << e1._invalidValue()     << endl;
     cout << e1._defaultValue()     << endl;
     cout << e1._count()            << endl;
@@ -152,9 +153,28 @@ void Enum1_test()
     cout << e1._defaultValueName() << endl;
 }
 
+void Index_test()
+{
+    using namespace std;
+
+    Qq::Enum::Index i1{0}, i2{2};
+
+    cout << "0. i1: " << i1 << endl;
+    cout << "0. i2: " << i2 << endl;
+
+    i1 = i2;
+    cout << "i1 = i2;" << endl;
+
+    cout << "1. i1: " << i1 << endl;
+    cout << "1. i2: " << i2 << endl;
+
+}
+
 int main(int argc, char *argv[])
 {
-    Enum1_test();
+    Index_test();
+
+    //Enum1_test();
     //s3_test();
     //getArgNum_test();
     return 0;

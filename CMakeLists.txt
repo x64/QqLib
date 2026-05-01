@@ -37,6 +37,7 @@ qt_add_executable(QqLib
     export/QqLib/Macros/_MainMacro.M.h
     export/QqLib/QqEnum/DefaultValueSetterT.h
     export/QqLib/Utils/qq_throw_l.M.h
+    export/QqLib/QqEnum/Index.h
 
 
 )
