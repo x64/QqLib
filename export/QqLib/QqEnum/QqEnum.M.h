@@ -14,6 +14,7 @@
 #include "./EatAssignT.h"
 #include "./InvalidValueSetterT.h"
 #include "./DefaultValueSetterT.h"
+#include "./Index.h"
 
 
 
@@ -33,7 +34,7 @@ public:                                                                     \
     using _Int   = Int;                                                     \
     enum  _Enum  : Int { __VA_ARGS__ };                                     \
                                                                             \
-    using _Wrapper = Qq::Enum::EnumItemWrapperT<_Enum>;                     \
+    using _Wrapper = Qq::Enum::EnumItemWrapperT<_Enum,_Int>;                \
                                                                             \
 private:                                                                    \
     static inline char const * __gfcn() {                                   \
@@ -67,7 +68,11 @@ protected:                                                                  \
         }                                                                   \
     };                                                                      \
                                                                             \
-    int m_index;                                                            \
+/*                                                                          \
+ * Fields                                                                   \
+ */                                                                         \
+protected:                                                                  \
+    Qq::Enum::Index m_index;                                                \
                                                                             \
 /**********************                                                     \
  *                                                                          \
@@ -183,7 +188,9 @@ public:                                                                     \
     }                                                                       \
 
 
-
+//
+// CTORS
+//
 #define QP_ENUM_CTORS_IMPL_AS(Int,Class)                \
     inline Class() noexcept {                           \
         m_index = _D::defaultValueIndex();              \
@@ -192,6 +199,20 @@ public:                                                                     \
     inline explicit Class(int index) noexcept {         \
         m_index = _C::toRange(index);                   \
     }
+
+
+//
+// Operators
+//
+#define QP_ENUM_OPERATORS_IMPL_AS(Int,Class)        \
+                                                    \
+    /* Assignment operators */                      \
+                                                    \
+    constexpr inline Class &                        \
+    operator = (_Enum const e) {                    \
+        return _C::op_assignmentEnum(& m_index, e); \
+    }
+
 
 //
 // Define special values

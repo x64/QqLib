@@ -34,7 +34,7 @@ public:
     using ValueList       = std::vector<TEnum>;                   //QList<TEnum>;
     using NameList        = std::vector<QqEnumString>;               //QStringList;
     using EIMap           = std::map   <TEnum,int>;               //QMap<TEnum,int>;
-    using EnumItemWrapper = EnumItemWrapperT<TEnum>;
+    using EnumItemWrapper = EnumItemWrapperT<TEnum,TInt>;
     using WrapperList     = std::vector<EnumItemWrapper>;
 
 //
@@ -167,10 +167,10 @@ private:
         int index = ifEnumInNotRangeDoThrow(newInvalidValue, QQ_FULL_FUNC_SIG);
         if (index != 0)
         {
-            if (isIndexValid(index))
+            if (indexIsValid(index))
                 qq_throw_l(
                     std::logic_error,
-                    StringLiteral{ "The enum '%2' must be the first string in the enum list (QQ_ENUM).\nMETHOD: %1" }
+                    StringLiteral{ "The invalid enum '%2' must be the first string in the enum list (QQ_ENUM).\nMETHOD: %1" }
                         .arg(QQ_FULL_FUNC_SIG)
                         .arg(name(index).c_str())
                         .toLatin1()
@@ -256,7 +256,7 @@ public:
     static inline constexpr TEnum
     value(int index)
     {
-        if (not isIndexValid(index))
+        if (not indexIsValid(index))
             qq_throw_l(
                 std::out_of_range,
                 StringLiteral{ "%1: the index = %2 is out of range." }
@@ -271,7 +271,7 @@ public:
     static inline constexpr QqEnumString const &
     name(int index) noexcept
     {
-        if (not isIndexValid(index))
+        if (not indexIsValid(index))
             return m_emptyString;
 
         return m_names[index];
@@ -290,7 +290,7 @@ public:
     static inline constexpr EnumItemWrapper const &
     wrapper(int index)
     {
-        if (not isIndexValid(index))
+        if (not indexIsValid(index))
             return m_emptyWrapper;
 
         return m_wrappers[index];
@@ -362,7 +362,16 @@ public:
     // Other API
     //
     static inline constexpr bool
-    isIndexValid(int index) noexcept {
+    indexIsValid(int const index) noexcept
+    {
+        int minIndex = isInvalidValueDefined() ? 1 : 0;
+
+        return minIndex <= index && index < count();
+    }
+
+    static inline constexpr bool
+    indexInRange(int const index) noexcept
+    {
         return 0 <= index && index < count();
     }
 
@@ -372,9 +381,15 @@ public:
     }
 
     static inline constexpr int
-    lastValidindex() noexcept {
+    lastValidIndex() noexcept {
         return m_lastValidIndex;
     }
+
+    static inline constexpr int
+    beyondIndex() noexcept {
+        return count();
+    }
+
 
 //
 // Fields:

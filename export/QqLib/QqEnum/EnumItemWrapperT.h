@@ -11,12 +11,15 @@ namespace Qq::Enum
 //
 // \brief Tuple for the enum value and the name enum.
 //
-template <typename TEnum>
+template <typename TEnum, typename TInt>
 class EnumItemWrapperT
 {
     TEnum                m_value;
-    QqEnumString const * m_pName;
+    QqEnumString const * m_pName = nullptr;
 
+//
+// CTORs
+//
 public:
     EnumItemWrapperT(TEnum aValue, QqEnumString const & aName)
         : m_value{ aValue  }
@@ -25,33 +28,62 @@ public:
 
     EnumItemWrapperT() = default;
 
-    bool operator == (const EnumItemWrapperT & other) const noexcept {
+//
+// Operators
+//
+public:
+    inline constexpr bool
+    operator == (EnumItemWrapperT const & other) const noexcept
+    {
         return m_value == other.m_value;
     }
-    bool operator == (TEnum const & otherEnum) const noexcept {
+
+    inline constexpr bool
+    operator == (TEnum const & otherEnum) const noexcept
+    {
         return m_value == otherEnum;
     }
 
-    bool operator < (const EnumItemWrapperT & other) const noexcept {
+    inline constexpr bool
+    operator < (EnumItemWrapperT const & other) const noexcept
+    {
         return m_value < other.m_value;
     }
-    bool operator < (TEnum const & otherEnum) const noexcept {
+
+    inline constexpr bool
+    operator < (TEnum const & otherEnum) const noexcept
+    {
         return m_value < otherEnum;
     }
 
-    bool operator > (const EnumItemWrapperT & other) const noexcept {
+    inline constexpr bool
+    operator > (EnumItemWrapperT const & other) const noexcept
+    {
         return m_value > other.m_value;
     }
-    bool operator > (TEnum const & otherEnum) const noexcept {
+
+    inline constexpr bool
+    operator > (TEnum const & otherEnum) const noexcept
+    {
         return m_value > otherEnum;
     }
 
-    TEnum value() const noexcept {
+    inline constexpr TEnum
+    value() const noexcept
+    {
         return m_value;
     }
 
-    QqEnumString const & name() const noexcept {
+    inline constexpr QqEnumString const &
+    name() const noexcept
+    {
         return * m_pName;
+    }
+
+    inline constexpr TInt
+    asInt() const noexcept
+    {
+        return static_cast<TInt>(value());
     }
 };
 
