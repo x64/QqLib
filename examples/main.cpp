@@ -7,6 +7,7 @@
 #include "../export/QqLib/QqEnum/_CompileConfig.h"
 #include "../export/QqLib/QqEnum/QqEnumString.h"
 #include "../export/QqLib/QqEnum/Index.h"
+#include "../export/QqLib/QqEnum/IteratorT.h"
 
 
 enum TEnum : int
@@ -163,17 +164,47 @@ void Index_test()
     cout << "0. i2: " << i2 << endl;
 
     i1 = i2;
-    cout << "i1 = i2;" << endl;
-
+    cout << "1. i1 = i2;" << endl;
     cout << "1. i1: " << i1 << endl;
     cout << "1. i2: " << i2 << endl;
 
+    i1 = 10;
+    ++i2;
+
+    cout << "2. i1 = 10; ++i2" << endl;
+    cout << "2. i1: " << i1 << endl;
+    cout << "2. i2: " << i2 << endl;
+
+    auto i3 = i2 +5;
+    cout << "3. i3 = i2 +5\n";
+    cout << "3. i3: " << i3 << endl;
+
+    cout << "4. i3++: " << i3++;
+}
+
+void Iterator_test()
+{
+    Qq::Enum::IteratorT<Enum1,Enum1::_Enum,Enum1::_Int> iter;
+
+    using namespace std;
+
+    Enum1 e1;
+    cout << "e1().value(): " << e1().value() << endl;
+    cout << "e1().name():  " << e1().name()  << endl;
+    cout << "e1().asInt(): " << e1().asInt() << endl;
+
+    iter += 3;
+    cout << "value: "   << iter->value()
+         << "\nname: "  << iter->name()
+         << "\nasInt: " << iter->asInt()
+         << endl;
 }
 
 int main(int argc, char *argv[])
 {
-    Index_test();
+    Iterator_test();
 
+    //Index_test();
     //Enum1_test();
     //s3_test();
     //getArgNum_test();

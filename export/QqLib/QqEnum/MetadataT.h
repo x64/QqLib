@@ -105,6 +105,21 @@ public:
     }
 
 //
+// Public API
+//
+public:
+    static inline constexpr int
+    indexOf(TEnum e) noexcept
+    {
+        auto & m  = eiMap();
+        auto   it = m.find(e);
+        if (it == m.end())
+            return -1;
+
+        return it->second;
+    }
+
+//
 // Internal API
 //
 protected:
@@ -129,45 +144,14 @@ protected:
         return res.c_str();
     }
 
-    static inline constexpr int
-    indexOf(TEnum const e) noexcept
-    {
-        auto & m  = eiMap();
-        auto   it = m.find(e);
-        if (it == m.end())
-            return -1;
-
-        return it->second;
-    }
-
-    //
-    // \brief Searching \arg e in values and return its index. If e in not range then do throw.
-    //
-    static inline constexpr int
-    ifEnumInNotRangeDoThrow(TEnum const e, char const * funcName)
-    {
-        auto it = eiMap().find(e);
-        if (it == eiMap().end())
-            qq_throw_l(
-                std::out_of_range,
-                StringLiteral{ "The '%2' is out of range of '%3'\nMETHOD: %1" }
-                    .arg(funcName)
-                    .arg(static_cast<TInt>(e))
-                    .arg(className())
-                    .toLatin1()
-            )
-
-        return it->second;
-    }
-
 private:
     static inline constexpr void
-    setInvalidValue(TEnum const newInvalidValue)
+    setInvalidValue(TEnum newInvalidValue)
     {
-        int index = ifEnumInNotRangeDoThrow(newInvalidValue, QQ_FULL_FUNC_SIG);
+        int index = C::ifEnumInNotRangeDoThrow(newInvalidValue, QQ_FULL_FUNC_SIG);
         if (index != 0)
         {
-            if (indexIsValid(index))
+            if (indexInRange(index))
                 qq_throw_l(
                     std::logic_error,
                     StringLiteral{ "The invalid enum '%2' must be the first string in the enum list (QQ_ENUM).\nMETHOD: %1" }
@@ -178,18 +162,16 @@ private:
             else
                 qq_throw_l(
                     std::out_of_range,
-                    StringLiteral{ "The '%2' is out of range of '%3'.\nMETHOD:%1" }
-                        .arg(QQ_FULL_FUNC_SIG)
+                    StringLiteral{ "The %1 (as int) is out of range of %2.\nMETHOD:%3" }
                         .arg(static_cast<TInt>(newInvalidValue))
                         .arg(className())
+                        .arg(QQ_FULL_FUNC_SIG)
                         .toLatin1()
                 )
         }
 
         qq_lock
         {
-            //- m_invalidValueDefined = true;
-            //- m_invalidValue        = newInvalidValue;
             m_invalidValueIndex   = index;
 
             m_firstValidIndex     = 1;
@@ -197,13 +179,11 @@ private:
     }
 
     static inline constexpr void
-    setDefaultValue(TEnum const newDefaultValue)
+    setDefaultValue(TEnum newDefaultValue)
     {
-        int index = ifEnumInNotRangeDoThrow(newDefaultValue, QQ_FULL_FUNC_SIG);
+        int index = C::ifEnumInNotRangeDoThrow(newDefaultValue, QQ_FULL_FUNC_SIG);
         qq_lock
         {
-            //- m_defaultValueDefined = true;
-            //- m_defaultValue        = newDefaultValue;
             m_defaultValueIndex   = index;
         }
     }
@@ -227,9 +207,9 @@ private:
 // Public API
 //
 public:
-    //
-    // Meta-info
-    //
+//
+// Meta-info
+//
     static inline char const *
     className() {
         return m_className;
@@ -245,9 +225,9 @@ public:
         return m_fullClassName;
     }
 
-    //
-    // Access and info API
-    //
+//
+// Access and info API
+//
     static inline constexpr int
     count() noexcept {
         return m_values.size();
@@ -256,14 +236,15 @@ public:
     static inline constexpr TEnum
     value(int index)
     {
-        if (not indexIsValid(index))
-            qq_throw_l(
-                std::out_of_range,
-                StringLiteral{ "%1: the index = %2 is out of range." }
-                    .arg(QQ_FULL_FUNC_SIG)
-                    .arg(index)
-                    .toLatin1()
-            );
+        //- if (not indexInRange(index))
+        //-     qq_throw_l(
+        //-         std::out_of_range,
+        //-         StringLiteral{ "%1: the index = %2 is out of range." }
+        //-             .arg(QQ_FULL_FUNC_SIG)
+        //-             .arg(index)
+        //-             .toLatin1()
+        //-     );
+        C::ifIndexOutOfRangeDoThrow(index, QQ_FULL_FUNC_SIG);
 
         return m_values[index];
     }
@@ -271,14 +252,14 @@ public:
     static inline constexpr QqEnumString const &
     name(int index) noexcept
     {
-        if (not indexIsValid(index))
+        if (not indexInRange(index))
             return m_emptyString;
 
         return m_names[index];
     }
 
     static inline constexpr QqEnumString const &
-    nameByValue(TEnum const e) noexcept
+    nameByValue(TEnum e) noexcept
     {
         int index = indexOf(e);
         if (index < 0)
@@ -290,15 +271,15 @@ public:
     static inline constexpr EnumItemWrapper const &
     wrapper(int index)
     {
-        if (not indexIsValid(index))
+        if (not indexInRange(index))
             return m_emptyWrapper;
 
         return m_wrappers[index];
     }
 
-    //
-    // List and map API
-    //
+//
+// List and map API
+//
     static inline constexpr ValueList const &
     valueList() noexcept {
         return m_values;
@@ -319,9 +300,9 @@ public:
         return m_wrappers;
     }
 
-    //
-    // Invalid and Default value API
-    //
+//
+// Invalid and Default value API
+//
     static inline constexpr bool
     isInvalidValueDefined() noexcept {
         return m_invalidValueIndex == 0;
@@ -358,11 +339,11 @@ public:
     }
 
 
-    //
-    // Other API
-    //
+//
+// Other API
+//
     static inline constexpr bool
-    indexIsValid(int const index) noexcept
+    indexInValidRange(int index) noexcept
     {
         int minIndex = isInvalidValueDefined() ? 1 : 0;
 
@@ -370,7 +351,7 @@ public:
     }
 
     static inline constexpr bool
-    indexInRange(int const index) noexcept
+    indexInRange(int index) noexcept
     {
         return 0 <= index && index < count();
     }
@@ -391,10 +372,10 @@ public:
     }
 
 
-//
-// Fields:
-//
 private: //~ protected:
+//
+// Fields
+//
     static inline bool        m_isCreated = false;
 
     static inline ValueList   m_values;
@@ -405,18 +386,15 @@ private: //~ protected:
     static inline int         m_firstValidIndex;
     static inline int         m_lastValidIndex;
 
-    //- static inline bool        m_invalidValueDefined = false;
-    //- static inline TEnum       m_invalidValue;
     static inline int         m_invalidValueIndex = -1;
 
-    //- static inline bool        m_defaultValueDefined = false;
-    //- static inline TEnum       m_defaultValue;
     static inline int         m_defaultValueIndex = 0;
 
     static inline TEnum       m_minValue;
     static inline TEnum       m_maxValue;
+
 //
-// Consts:
+// Consts
 //
     static inline const char          * m_className     = nullptr;
     static inline const char          * m_intTypeName   = nullptr;
@@ -424,9 +402,15 @@ private: //~ protected:
 
     static inline const QqEnumString    m_emptyString { "" };
     static inline const EnumItemWrapper m_emptyWrapper{ TEnum{}, m_emptyString };
+
+//
+// Using-synonyms
+//
+    using C = CoreT<TClass,TEnum,TInt>;
 };
 
 
 } // namespace Qq::Enum
 
 #include "./MetadataInitializierT.h"
+#include "./CoreT.h"

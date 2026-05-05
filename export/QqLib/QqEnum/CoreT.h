@@ -36,25 +36,6 @@ protected:
         return D::value(index);
     }
 
-    // ret: if index in range then don't throws the exception
-    static constexpr void
-    ifIndexNotValidDoThrow(
-        int          const   index,
-        QqEnumString const & methodName,
-        QqEnumString const & paramName = StringLiteral{ "index" })
-    {
-        if (indexIsValid(index)) //-V3504
-            return;
-
-        throw std::out_of_range{
-            StringLiteral{ "%1: the `%2` is out of range." }
-                .arg(methodName)
-                .arg(paramName)
-                .toLatin1()
-        };
-
-    }
-
 //
 // Public API
 //
@@ -62,23 +43,8 @@ public:
     //
     // Range API
     //
-    static inline constexpr bool
-    indexIsValid(int index)
-    {
-        int minRangeIndex = D::isInvalidValueDefined() ? 1 : 0;
-        int maxRangeIndex = D::lastValidindex();
-
-        return Qq::Helper::inMinMax(minRangeIndex, index, maxRangeIndex);
-    }
-
     static inline int
-    toRange(int index, bool negativeIsAllow = true) noexcept {  //-V2565
-        return toRange<int>(index, negativeIsAllow);            //-V2565
-    }
-
-    template <typename TIndex>
-    static inline int
-    toRange(TIndex & index, bool negativeIsAllow = true) noexcept
+    toRange(int index, bool negativeIsAllow = true) noexcept
     {
         // TODO:
         // static_assert(
@@ -89,13 +55,12 @@ public:
         if (negativeIsAllow)
             toPositiveRange(index);
 
-        index = std::max( 0, std::min(index, D::lastValidindex()) );
+        index = std::max( 0, std::min(index, D::lastValidIndex()) );
         return index;
     }
 
-    template <typename TIndex>
     static constexpr void
-    toPositiveRange(TIndex & index) noexcept
+    toPositiveRange(int & index) noexcept
     {
         // TODO:
         // static_assert(
@@ -104,8 +69,48 @@ public:
         // );
 
         index = index < 0
-            ? D::lastValidindex() + index +1
+            ? D::lastValidIndex() + index +1
             : index;
+    }
+
+    //
+    // \brief Searching \arg e in values and return its index. If e in not range then do throw.
+    //
+    static inline constexpr int
+    ifEnumInNotRangeDoThrow(TEnum e, char const * methodName)
+    {
+        auto it = D::eiMap().find(e);
+        if (it == D::eiMap().end())
+            qq_throw_l(
+                std::out_of_range,
+                StringLiteral{ "The %1(as int) is not a member of enumeration %2\nMETHOD: %3" }
+                    .arg(static_cast<TInt>(e))
+                    .arg(D::className())
+                    .arg(methodName)
+                    .toLatin1()
+            )
+
+        return it->second;
+    }
+
+    // ret: if index in range then don't throws the exception
+    static constexpr void
+    ifIndexOutOfRangeDoThrow(
+        int          index,
+        char const * methodName,
+        char const * paramName = "index")
+    {
+        if (D::indexInRange(index)) //-V3504
+            return;
+
+        qq_throw_l(
+            std::out_of_range,
+            StringLiteral{ "The %1 = %2 is out of range.\nMETHOD: %3" }
+                .arg(paramName)
+                .arg(index)
+                .arg(methodName)
+                .toLatin1()
+        );
     }
 };
 

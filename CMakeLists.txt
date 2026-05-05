@@ -38,6 +38,7 @@ qt_add_executable(QqLib
     export/QqLib/QqEnum/DefaultValueSetterT.h
     export/QqLib/Utils/qq_throw_l.M.h
     export/QqLib/QqEnum/Index.h
+    export/QqLib/QqEnum/IteratorT.h
 
 
 )

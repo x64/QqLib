@@ -88,6 +88,11 @@ public:
         return argCore(argStr);
     }
 
+    inline StringLiteral & arg(std::string const & argStr) noexcept
+    {
+        return argCore(argStr.c_str());
+    }
+
 protected:
     inline StringLiteral & argCore(char const * str) noexcept
     {
