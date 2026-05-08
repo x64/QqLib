@@ -184,19 +184,23 @@ void Index_test()
 
 void Iterator_test()
 {
-    Qq::Enum::IteratorT<Enum1,Enum1::_Enum,Enum1::_Int> iter;
-
     using namespace std;
 
-    Enum1 e1;
-    cout << "e1().value(): " << e1().value() << endl;
-    cout << "e1().name():  " << e1().name()  << endl;
-    cout << "e1().asInt(): " << e1().asInt() << endl;
+    Enum1 e1{0};
+    cout << "e1().value(): "     << e1().value()     << endl;
+    cout << "e1().name():  "     << e1().name()      << endl;
+    cout << "e1().asInt(): "     << e1().asInt()     << endl;
+    cout << "e1().isInvalid(): " << e1().isInvalid() << endl;
+    cout << "e1().isDefault(): " << e1().isDefault() << endl;
 
-    iter += 3;
-    cout << "value: "   << iter->value()
-         << "\nname: "  << iter->name()
-         << "\nasInt: " << iter->asInt()
+    Qq::Enum::IteratorT<Enum1,Enum1::_Enum,Enum1::_Int> iter;
+    iter++;
+    cout << "\n\n\n";
+    cout << "value: "       << iter->value()
+         << "\nname: "      << iter->name()
+         << "\nasInt: "     << iter->asInt()
+         << "\nisInvalid: " << iter->isInvalid()
+         << "\nisDefault: " << iter->isDefault()
          << endl;
 }
 

@@ -31,11 +31,11 @@ struct IteratorT
 //
 // CTORs
 //
-    explicit IteratorT(int index = 0)
+    IteratorT(int index = 0)
         : m_index{ index }
     {}
 
-    explicit IteratorT(IteratorT const & other)
+    IteratorT(IteratorT const & other)
         : IteratorT{ other.m_index }
     {}
 

@@ -110,13 +110,13 @@ public:
     inline constexpr bool
     isInvalid() const noexcept
     {
-        return m_index == (m_index >> c_invalidValueShift);
+        return index() == (m_index >> c_invalidValueShift);
     }
 
     inline constexpr bool
     isDefault() const noexcept
     {
-        return m_index == (m_index >> c_defaultValueShift);
+        return index() == (m_index >> c_defaultValueShift);
     }
 
 //
