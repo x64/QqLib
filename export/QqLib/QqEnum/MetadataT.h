@@ -95,7 +95,7 @@ public:
             m_wrappers.reserve(count());
 
             for (int i = 0; i < count(); ++i)
-                m_wrappers.push_back(EnumItemWrapper{ m_values[i], m_names[i] });
+                m_wrappers.push_back(EnumItemWrapper{ i, m_values[i], m_names[i] });
 
             calcAndSetMinMaxValues();
             m_lastValidIndex = count() -1;
@@ -170,11 +170,34 @@ private:
                 )
         }
 
+        if (0 == m_wrappers.size())
+            qq_throw_l(
+                std::logic_error,
+                StringLiteral{ "Unable to set the newInvalidValue because EnumItemWrappers is empty." }
+                    .toLatin1()
+            );
+
+        if (index > c_indexMask)
+            qq_throw_l(
+                std::out_of_range,
+                StringLiteral{ "The index value in QQ_ENUM can't exceed %1." }
+                    .arg(c_indexMask)
+                    .toLatin1()
+            );
+
         qq_lock
         {
-            m_invalidValueIndex   = index;
+            m_invalidValue      = newInvalidValue;
+            m_invalidValueIndex = index;
+            m_firstValidIndex   = 1;
 
-            m_firstValidIndex     = 1;
+            int shiftedInvalidValueIndex = index << c_invalidValueShift;
+
+            for (int i = 0; i < m_wrappers.size(); ++i)
+            {
+                auto & w = m_wrappers[i];
+                w.m_index |= shiftedInvalidValueIndex;
+            }
         }
     }
 
@@ -182,9 +205,35 @@ private:
     setDefaultValue(TEnum newDefaultValue)
     {
         int index = C::ifEnumInNotRangeDoThrow(newDefaultValue, QQ_FULL_FUNC_SIG);
+
+        if (0 == m_wrappers.size())
+            qq_throw_l(
+                std::logic_error,
+                StringLiteral{ "Unable to set the newDefaultValue because EnumItemWrappers is empty." }
+                    .toLatin1()
+            );
+
+        if (index > c_indexMask)
+            qq_throw_l(
+                std::out_of_range,
+                StringLiteral{ "The index value in QQ_ENUM can't exceed %1." }
+                    .arg(c_indexMask)
+                    .toLatin1()
+            );
+
         qq_lock
         {
-            m_defaultValueIndex   = index;
+            m_defaultValue      = newDefaultValue;
+            m_defaultValueIndex = index;
+
+            int shiftedDefaultValueIndex = index << c_defaultValueShift;
+
+            for (int i=0; i < m_wrappers.size(); ++i)
+            {
+                auto & w = m_wrappers[i];
+                w.m_index |= shiftedDefaultValueIndex;
+            }
+
         }
     }
 
@@ -236,14 +285,6 @@ public:
     static inline constexpr TEnum
     value(int index)
     {
-        //- if (not indexInRange(index))
-        //-     qq_throw_l(
-        //-         std::out_of_range,
-        //-         StringLiteral{ "%1: the index = %2 is out of range." }
-        //-             .arg(QQ_FULL_FUNC_SIG)
-        //-             .arg(index)
-        //-             .toLatin1()
-        //-     );
         C::ifIndexOutOfRangeDoThrow(index, QQ_FULL_FUNC_SIG);
 
         return m_values[index];
@@ -253,7 +294,7 @@ public:
     name(int index) noexcept
     {
         if (not indexInRange(index))
-            return m_emptyString;
+            return c_emptyString;
 
         return m_names[index];
     }
@@ -263,7 +304,7 @@ public:
     {
         int index = indexOf(e);
         if (index < 0)
-            return m_emptyString;
+            return c_emptyString;
 
         return name(index);
     }
@@ -272,7 +313,7 @@ public:
     wrapper(int index)
     {
         if (not indexInRange(index))
-            return m_emptyWrapper;
+            return c_emptyWrapper;
 
         return m_wrappers[index];
     }
@@ -315,12 +356,12 @@ public:
 
     static inline constexpr TEnum
     invalidValue() noexcept {
-        return value(m_invalidValueIndex);
+        return m_invalidValue;
     }
 
     static inline constexpr TEnum
     defaultValue() noexcept {
-        return value(m_defaultValueIndex);
+        return m_defaultValue;
     }
 
     static inline constexpr int
@@ -329,15 +370,27 @@ public:
     }
 
     static inline constexpr QqEnumString const &
-    invalidValueName() noexcept {
-        return name(m_invalidValueIndex);
-    }
-
-    static inline constexpr QqEnumString const &
     defaultValueName() noexcept {
         return name(m_defaultValueIndex);
     }
 
+    static inline constexpr QqEnumString const &
+    invalidValueName() noexcept {
+        return name(m_invalidValueIndex);
+    }
+
+    static inline constexpr bool
+    valueIsValid(TEnum e)
+    {
+        return not isInvalidValueDefined()
+               || e != invalidValue();
+    }
+
+    static inline constexpr bool
+    valueIsDefault(TEnum e)
+    {
+        return e == defaultValue();
+    }
 
 //
 // Other API
@@ -386,31 +439,53 @@ private: //~ protected:
     static inline int         m_firstValidIndex;
     static inline int         m_lastValidIndex;
 
+    static inline TEnum       m_invalidValue      = TEnum{};
     static inline int         m_invalidValueIndex = -1;
 
+    static inline TEnum       m_defaultValue      = TEnum{};
     static inline int         m_defaultValueIndex = 0;
 
     static inline TEnum       m_minValue;
     static inline TEnum       m_maxValue;
 
 //
-// Consts
+// Const-data
 //
-    static inline const char          * m_className     = nullptr;
-    static inline const char          * m_intTypeName   = nullptr;
-    static inline const char          * m_fullClassName = nullptr;
+    static inline char const          * m_className     = nullptr;
+    static inline char const          * m_intTypeName   = nullptr;
+    static inline char const          * m_fullClassName = nullptr;
 
-    static inline const QqEnumString    m_emptyString { "" };
-    static inline const EnumItemWrapper m_emptyWrapper{ TEnum{}, m_emptyString };
+    static inline QqEnumString    const c_emptyString { "" };
+    static inline EnumItemWrapper const c_emptyWrapper{ -1, TEnum{}, c_emptyString };
+
+//
+// Consts for m_wrappers.m_index
+//
+private:
+    enum : int
+    {
+        c_invlaidValueMask  = 0x00ff0000,
+        c_defaultValueMask  = 0x0000ff00,
+        c_indexMask         = 0x000000ff
+    };
+
+    enum : int
+    {
+        c_invalidValueShift = 16,
+        c_defaultValueShift = 8
+    };
+
+
 
 //
 // Using-synonyms
 //
+private:
     using C = CoreT<TClass,TEnum,TInt>;
 };
 
 
 } // namespace Qq::Enum
 
-#include "./MetadataInitializierT.h"
 #include "./CoreT.h"
+#include "./MetadataInitializierT.h"

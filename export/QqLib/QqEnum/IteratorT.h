@@ -14,11 +14,19 @@ namespace Qq::Enum
 template <typename TClass, typename TEnum, typename TInt =int>
 struct IteratorT
 {
+//
+// Public using synonyms:
+//
+    using EnumItemWrapper = EnumItemWrapperT<TEnum,TInt>;
+
+//
+// Iterator's using-synonyms
+//
     using iterator_category = std::random_access_iterator_tag;
     using difference_type   = std::ptrdiff_t;
-    using value_type        = EnumItemWrapperT<TEnum,TInt>;
-    using pointer           = value_type * ;
-    using reference         = value_type & ;
+    using value_type        = EnumItemWrapper;
+    using pointer           = EnumItemWrapper * ;
+    using reference         = EnumItemWrapper & ;
 
 //
 // CTORs
@@ -185,14 +193,14 @@ struct IteratorT
 //
 // Wrap operations
 //
-    constexpr inline EnumItemWrapperT<TEnum,TInt> const &
+    constexpr inline EnumItemWrapper const &
     operator * () const noexcept
     {
         C::ifIndexOutOfRangeDoThrow(m_index, QQ_FULL_FUNC_SIG, "m_index");
         return D::wrapper(m_index);
     }
 
-    constexpr inline EnumItemWrapperT<TEnum,TInt> const *
+    constexpr inline EnumItemWrapper const *
     operator -> () const noexcept
     {
         C::ifIndexOutOfRangeDoThrow(m_index, QQ_FULL_FUNC_SIG, "m_index");
@@ -203,8 +211,8 @@ struct IteratorT
 // Using-synonyms
 //
 private:
-    using C = Qq::Enum::CoreT<TClass,TEnum,TInt>;
-    using D = Qq::Enum::MetadataT<TClass,TEnum,TInt>;
+    using C = CoreT<TClass,TEnum,TInt>;
+    using D = MetadataT<TClass,TEnum,TInt>;
 
 //
 // Fields

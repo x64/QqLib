@@ -4,7 +4,6 @@
 #include "./_CompileConfig.h"
 #include "./QqEnumString.h"
 #include "./QqEnumStringLiteral.h"
-
 #include "./MetadataT.h"
 
 
@@ -23,16 +22,15 @@ class CoreT
 // Types
 //
 public:
-    using EnumMetadata = MetadataT<TClass,TEnum,TInt>;
+    //using Metadata = MetadataT<TClass,TEnum,TInt>;
 
 //
 // Internal API
 //
 protected:
-    using D = MetadataT<TClass,TEnum,TInt>;
-
     static inline TEnum
-    value(int index) {
+    value(int index) noexcept
+    {
         return D::value(index);
     }
 
@@ -112,6 +110,12 @@ public:
                 .toLatin1()
         );
     }
+
+//
+// Using-synonyms
+//
+private:
+    using D = MetadataT<TClass,TEnum,TInt>;
 };
 
 
