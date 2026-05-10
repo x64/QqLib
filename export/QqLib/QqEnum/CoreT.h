@@ -38,9 +38,11 @@ protected:
 // Public API
 //
 public:
+
     //
     // Range API
     //
+
     static inline int
     toRange(int index, bool negativeIsAllow = true) noexcept
     {
@@ -94,14 +96,14 @@ public:
     }
 
     // ret: if index in range then don't throws the exception
-    static constexpr void
+    static constexpr int
     ifIndexOutOfRangeDoThrow(
         int          index,
         char const * methodName,
         char const * paramName = "index")
     {
         if (D::indexInRange(index)) //-V3504
-            return;
+            return index;
 
         qq_throw_l(
             std::out_of_range,
