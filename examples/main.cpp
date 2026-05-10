@@ -150,8 +150,12 @@ void Enum1_test()
     cout << e1._count()            << endl;
     cout << e1().name()            << endl;
     cout << e1().value()           << endl;
+    cout << e1().isInvalid()       << endl;
+    cout << e1().isDefault()       << endl;
     cout << e1._invalidValueName() << endl;
     cout << e1._defaultValueName() << endl;
+
+
 }
 
 void Index_test()
@@ -203,6 +207,8 @@ void Iterator_test()
          << "\nisInvalid: " << iter->isInvalid()
          << "\nisDefault: " << iter->isDefault()
          << endl;
+
+    //Enum1::
 }
 
 int main(int argc, char *argv[])

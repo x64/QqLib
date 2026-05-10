@@ -29,6 +29,7 @@
 
 #define QQ_ENUM_CORE_AS(Int,Class,...)                                      \
 public:                                                                     \
+    enum  { _0___BELOW_ENUM_API_0NLY___ };                                  \
     enum  : bool { _isQqEnum = true };                                      \
     using _Class = Class;                                                   \
     using _Int   = Int;                                                     \
@@ -157,6 +158,16 @@ public:                                                                     \
     /*                                                                      \
      * Others                                                               \
      */                                                                     \
+    inline constexpr bool                                                   \
+    _isInvalid() const noexcept {                                           \
+        return _D::isInvalidByIndex(m_index);                               \
+    }                                                                       \
+                                                                            \
+    inline constexpr bool                                                   \
+    _isDefault() const noexcept {                                           \
+        return _D::isDefaultByIndex(m_index);                               \
+    }                                                                       \
+                                                                            \
     static inline constexpr bool                                            \
     _isInvalidValueDefined() noexcept {                                     \
         return _D::isInvalidValueDefined();                                 \

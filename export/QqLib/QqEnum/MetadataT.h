@@ -109,6 +109,75 @@ public:
 // Public API
 //
 public:
+
+    //
+    // Meta-info
+    //
+
+    static inline char const *
+    className()
+    {
+        return m_className;
+    }
+
+    static inline char const *
+    intTypeName()
+    {
+        return m_intTypeName;
+    }
+
+    static inline char const *
+    fullClassName()
+    {
+        return m_fullClassName;
+    }
+
+    //
+    // Access and info API
+    //
+
+    static inline constexpr int
+    count() noexcept
+    {
+        return m_values.size();
+    }
+
+    static inline constexpr TEnum
+    value(int index) noexcept
+    {
+        C::ifIndexOutOfRangeDoThrow(index, QQ_FULL_FUNC_SIG);
+
+        return m_values[index];
+    }
+
+    static inline constexpr QqEnumString const &
+    name(int index) noexcept
+    {
+        if (not indexInRange(index))
+            return c_emptyString;
+
+        return m_names[index];
+    }
+
+    static inline constexpr QqEnumString const &
+    nameByValue(TEnum e) noexcept
+    {
+        int index = indexOf(e);
+        if (index < 0)
+            return c_emptyString;
+
+        return name(index);
+    }
+
+    static inline constexpr EnumItemWrapper const &
+    wrapper(int index)
+    {
+        if (not indexInRange(index))
+            return c_emptyWrapper;
+
+        return m_wrappers[index];
+    }
+
     static inline constexpr int
     indexOf(TEnum e) noexcept
     {
@@ -118,6 +187,147 @@ public:
             return -1;
 
         return it->second;
+    }
+
+    //
+    // List and map API
+    //
+
+    static inline constexpr ValueList const &
+    valueList() noexcept
+    {
+        return m_values;
+    }
+
+    static inline constexpr NameList const &
+    nameList() noexcept
+    {
+        return m_names;
+    }
+
+    static inline constexpr EIMap const &
+    eiMap() noexcept
+    {
+        return m_enumToIndex;
+    }
+
+    static inline constexpr WrapperList const &
+    wrapperList() noexcept
+    {
+        return m_wrappers;
+    }
+
+    //
+    // Invalid and Default value API
+    //
+
+    static inline constexpr bool
+    isInvalidValueDefined() noexcept
+    {
+        return m_invalidValueIndex == 0;
+    }
+
+    static inline constexpr bool
+    isDefaultValueDefined() noexcept
+    {
+        return m_defaultValueIndex >= 0;
+    }
+
+    static inline constexpr TEnum
+    invalidValue() noexcept
+    {
+        return m_invalidValue;
+    }
+
+    static inline constexpr int
+    invalidValueIndex() noexcept
+    {
+        return m_invalidValueIndex;
+    }
+
+    static inline constexpr TEnum
+    defaultValue() noexcept
+    {
+        return m_defaultValue;
+    }
+
+    static inline constexpr int
+    defaultValueIndex() noexcept
+    {
+        return m_defaultValueIndex;
+    }
+
+    static inline constexpr QqEnumString const &
+    defaultValueName() noexcept
+    {
+        return name(m_defaultValueIndex);
+    }
+
+    static inline constexpr QqEnumString const &
+    invalidValueName() noexcept
+    {
+        return name(m_invalidValueIndex);
+    }
+
+    static inline constexpr bool
+    isInvalidByIndex(int index)
+    {
+        return index == invalidValueIndex();
+    }
+
+    static inline constexpr bool
+    isDefaultByIndex(int index)
+    {
+        return index == defaultValueIndex();
+    }
+
+    static inline constexpr bool
+    isValueValid(TEnum e)
+    {
+        return not isInvalidValueDefined()
+               || e != invalidValue();
+    }
+
+    static inline constexpr bool
+    isValueDefault(TEnum e)
+    {
+        return e == defaultValue();
+    }
+
+    //
+    // Other API
+    //
+
+    static inline constexpr bool
+    indexInValidRange(int index) noexcept
+    {
+        int minIndex = isInvalidValueDefined() ? 1 : 0;
+
+        return minIndex <= index && index < count();
+    }
+
+    static inline constexpr bool
+    indexInRange(int index) noexcept
+    {
+        return 0 <= index && index < count();
+    }
+
+    static inline constexpr int
+    firstValidindex() noexcept
+    {
+        return m_firstValidIndex; //1 + m_invalidValueIndex;
+    }
+
+    static inline constexpr int
+    lastValidIndex() noexcept
+    {
+        return m_lastValidIndex;
+    }
+
+    static inline constexpr int
+    beyondIndex() noexcept
+    {
+        return count();
     }
 
 //
@@ -252,197 +462,6 @@ private:
         m_minValue = min;
         m_maxValue = max;
     }
-
-//
-// Public API
-//
-public:
-//
-// Meta-info
-//
-    static inline char const *
-    className()
-    {
-        return m_className;
-    }
-
-    static inline char const *
-    intTypeName()
-    {
-        return m_intTypeName;
-    }
-
-    static inline char const *
-    fullClassName()
-    {
-        return m_fullClassName;
-    }
-
-//
-// Access and info API
-//
-    static inline constexpr int
-    count() noexcept
-    {
-        return m_values.size();
-    }
-
-    static inline constexpr TEnum
-    value(int index)
-    {
-        C::ifIndexOutOfRangeDoThrow(index, QQ_FULL_FUNC_SIG);
-
-        return m_values[index];
-    }
-
-    static inline constexpr QqEnumString const &
-    name(int index) noexcept
-    {
-        if (not indexInRange(index))
-            return c_emptyString;
-
-        return m_names[index];
-    }
-
-    static inline constexpr QqEnumString const &
-    nameByValue(TEnum e) noexcept
-    {
-        int index = indexOf(e);
-        if (index < 0)
-            return c_emptyString;
-
-        return name(index);
-    }
-
-    static inline constexpr EnumItemWrapper const &
-    wrapper(int index)
-    {
-        if (not indexInRange(index))
-            return c_emptyWrapper;
-
-        return m_wrappers[index];
-    }
-
-//
-// List and map API
-//
-    static inline constexpr ValueList const &
-    valueList() noexcept
-    {
-        return m_values;
-    }
-
-    static inline constexpr NameList const &
-    nameList() noexcept
-    {
-        return m_names;
-    }
-
-    static inline constexpr EIMap const &
-    eiMap() noexcept
-    {
-        return m_enumToIndex;
-    }
-
-    static inline constexpr WrapperList const &
-    wrapperList() noexcept
-    {
-        return m_wrappers;
-    }
-
-//
-// Invalid and Default value API
-//
-    static inline constexpr bool
-    isInvalidValueDefined() noexcept
-    {
-        return m_invalidValueIndex == 0;
-    }
-
-    static inline constexpr bool
-    isDefaultValueDefined() noexcept
-    {
-        return m_defaultValueIndex >= 0;
-    }
-
-    static inline constexpr TEnum
-    invalidValue() noexcept
-    {
-        return m_invalidValue;
-    }
-
-    static inline constexpr TEnum
-    defaultValue() noexcept
-    {
-        return m_defaultValue;
-    }
-
-    static inline constexpr int
-    defaultValueIndex() noexcept
-    {
-        return m_defaultValueIndex;
-    }
-
-    static inline constexpr QqEnumString const &
-    defaultValueName() noexcept
-    {
-        return name(m_defaultValueIndex);
-    }
-
-    static inline constexpr QqEnumString const &
-    invalidValueName() noexcept
-    {
-        return name(m_invalidValueIndex);
-    }
-
-    static inline constexpr bool
-    isValueValid(TEnum e)
-    {
-        return not isInvalidValueDefined()
-               || e != invalidValue();
-    }
-
-    static inline constexpr bool
-    isValueDefault(TEnum e)
-    {
-        return e == defaultValue();
-    }
-
-//
-// Other API
-//
-    static inline constexpr bool
-    indexInValidRange(int index) noexcept
-    {
-        int minIndex = isInvalidValueDefined() ? 1 : 0;
-
-        return minIndex <= index && index < count();
-    }
-
-    static inline constexpr bool
-    indexInRange(int index) noexcept
-    {
-        return 0 <= index && index < count();
-    }
-
-    static inline constexpr int
-    firstValidindex() noexcept
-    {
-        return m_firstValidIndex; //1 + m_invalidValueIndex;
-    }
-
-    static inline constexpr int
-    lastValidIndex() noexcept
-    {
-        return m_lastValidIndex;
-    }
-
-    static inline constexpr int
-    beyondIndex() noexcept
-    {
-        return count();
-    }
-
 
 private: //~ protected:
 //

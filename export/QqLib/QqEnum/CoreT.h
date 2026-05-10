@@ -75,7 +75,9 @@ public:
     // \brief Searching \arg e in values and return its index. If e in not range then do throw.
     //
     static inline constexpr int
-    ifEnumInNotRangeDoThrow(TEnum e, char const * methodName)
+    ifEnumInNotRangeDoThrow(
+        TEnum        e,
+        char const * methodName)
     {
         auto it = D::eiMap().find(e);
         if (it == D::eiMap().end())
