@@ -193,9 +193,10 @@ void Iterator_test()
     cout << "e1().isInvalid(): " << e1().isInvalid() << endl;
     cout << "e1().isDefault(): " << e1().isDefault() << endl;
 
-    Qq::Enum::IteratorT<Enum1,Enum1::_Enum,Enum1::_Int> iter;
-    iter++;
     cout << "\n\n\n";
+
+    Qq::Enum::IteratorT<Enum1,Enum1::_Enum,Enum1::_Int> iter;
+    iter += 2;
     cout << "value: "       << iter->value()
          << "\nname: "      << iter->name()
          << "\nasInt: "     << iter->asInt()

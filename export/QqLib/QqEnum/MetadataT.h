@@ -16,6 +16,7 @@
 
 #include "../QqThread/qq_lock.M.h"
 #include "./EnumItemWrapperT.h"
+#include "./Consts.h"
 
 
 namespace Qq::Enum
@@ -177,11 +178,11 @@ private:
                     .toLatin1()
             );
 
-        if (index > c_indexMask)
+        if (index > Const::indexMask)
             qq_throw_l(
                 std::out_of_range,
                 StringLiteral{ "The index value in QQ_ENUM can't exceed %1." }
-                    .arg(c_indexMask)
+                    .arg(Const::indexMask)
                     .toLatin1()
             );
 
@@ -191,7 +192,7 @@ private:
             m_invalidValueIndex = index;
             m_firstValidIndex   = 1;
 
-            int shiftedInvalidValueIndex = index << c_invalidValueShift;
+            int shiftedInvalidValueIndex = index << Const::invalidValueShift;
 
             for (int i = 0; i < m_wrappers.size(); ++i)
             {
@@ -213,11 +214,11 @@ private:
                     .toLatin1()
             );
 
-        if (index > c_indexMask)
+        if (index > Const::indexMask)
             qq_throw_l(
                 std::out_of_range,
                 StringLiteral{ "The index value in QQ_ENUM can't exceed %1." }
-                    .arg(c_indexMask)
+                    .arg(Const::indexMask)
                     .toLatin1()
             );
 
@@ -226,7 +227,7 @@ private:
             m_defaultValue      = newDefaultValue;
             m_defaultValueIndex = index;
 
-            int shiftedDefaultValueIndex = index << c_defaultValueShift;
+            int shiftedDefaultValueIndex = index << Const::defaultValueShift;
 
             for (int i=0; i < m_wrappers.size(); ++i)
             {
@@ -260,17 +261,20 @@ public:
 // Meta-info
 //
     static inline char const *
-    className() {
+    className()
+    {
         return m_className;
     }
 
     static inline char const *
-    intTypeName() {
+    intTypeName()
+    {
         return m_intTypeName;
     }
 
     static inline char const *
-    fullClassName() {
+    fullClassName()
+    {
         return m_fullClassName;
     }
 
@@ -278,7 +282,8 @@ public:
 // Access and info API
 //
     static inline constexpr int
-    count() noexcept {
+    count() noexcept
+    {
         return m_values.size();
     }
 
@@ -322,22 +327,26 @@ public:
 // List and map API
 //
     static inline constexpr ValueList const &
-    valueList() noexcept {
+    valueList() noexcept
+    {
         return m_values;
     }
 
     static inline constexpr NameList const &
-    nameList() noexcept {
+    nameList() noexcept
+    {
         return m_names;
     }
 
     static inline constexpr EIMap const &
-    eiMap() noexcept {
+    eiMap() noexcept
+    {
         return m_enumToIndex;
     }
 
     static inline constexpr WrapperList const &
-    wrapperList() noexcept {
+    wrapperList() noexcept
+    {
         return m_wrappers;
     }
 
@@ -345,49 +354,56 @@ public:
 // Invalid and Default value API
 //
     static inline constexpr bool
-    isInvalidValueDefined() noexcept {
+    isInvalidValueDefined() noexcept
+    {
         return m_invalidValueIndex == 0;
     }
 
     static inline constexpr bool
-    isDefaultValueDefined() noexcept {
+    isDefaultValueDefined() noexcept
+    {
         return m_defaultValueIndex >= 0;
     }
 
     static inline constexpr TEnum
-    invalidValue() noexcept {
+    invalidValue() noexcept
+    {
         return m_invalidValue;
     }
 
     static inline constexpr TEnum
-    defaultValue() noexcept {
+    defaultValue() noexcept
+    {
         return m_defaultValue;
     }
 
     static inline constexpr int
-    defaultValueIndex() noexcept {
+    defaultValueIndex() noexcept
+    {
         return m_defaultValueIndex;
     }
 
     static inline constexpr QqEnumString const &
-    defaultValueName() noexcept {
+    defaultValueName() noexcept
+    {
         return name(m_defaultValueIndex);
     }
 
     static inline constexpr QqEnumString const &
-    invalidValueName() noexcept {
+    invalidValueName() noexcept
+    {
         return name(m_invalidValueIndex);
     }
 
     static inline constexpr bool
-    valueIsValid(TEnum e)
+    isValueValid(TEnum e)
     {
         return not isInvalidValueDefined()
                || e != invalidValue();
     }
 
     static inline constexpr bool
-    valueIsDefault(TEnum e)
+    isValueDefault(TEnum e)
     {
         return e == defaultValue();
     }
@@ -410,17 +426,20 @@ public:
     }
 
     static inline constexpr int
-    firstValidindex() noexcept {
+    firstValidindex() noexcept
+    {
         return m_firstValidIndex; //1 + m_invalidValueIndex;
     }
 
     static inline constexpr int
-    lastValidIndex() noexcept {
+    lastValidIndex() noexcept
+    {
         return m_lastValidIndex;
     }
 
     static inline constexpr int
-    beyondIndex() noexcept {
+    beyondIndex() noexcept
+    {
         return count();
     }
 
@@ -457,25 +476,6 @@ private: //~ protected:
 
     static inline QqEnumString    const c_emptyString { "" };
     static inline EnumItemWrapper const c_emptyWrapper{ -1, TEnum{}, c_emptyString };
-
-//
-// Consts for m_wrappers.m_index
-//
-private:
-    enum : int
-    {
-        c_invlaidValueMask  = 0x00ff0000,
-        c_defaultValueMask  = 0x0000ff00,
-        c_indexMask         = 0x000000ff
-    };
-
-    enum : int
-    {
-        c_invalidValueShift = 16,
-        c_defaultValueShift = 8
-    };
-
-
 
 //
 // Using-synonyms

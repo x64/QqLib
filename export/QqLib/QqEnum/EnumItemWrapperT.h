@@ -4,7 +4,7 @@
 #include "./QqEnumString.h"
 
 
-//#include "./MetadataT.h"
+#include "./Consts.h"
 
 namespace Qq::Enum
 {
@@ -16,6 +16,9 @@ namespace Qq::Enum
 template <typename TEnum, typename TInt>
 class EnumItemWrapperT
 {
+//
+// Friends
+//
     template <typename T_Class, typename T_Enum, typename T_Int>
     friend struct MetadataT;
 
@@ -33,9 +36,9 @@ public:
         : m_value{ value  }
         , m_pName{ & name }
     {
-        m_index = index & c_indexMask
-                  | invalidValueIndex << c_invalidValueShift
-                  | defaultValueIndex << c_defaultValueShift;
+        m_index = index & Const::indexMask
+                  | invalidValueIndex << Const::invalidValueShift
+                  | defaultValueIndex << Const::defaultValueShift;
     }
 
     EnumItemWrapperT() = default;
@@ -92,13 +95,13 @@ public:
     inline constexpr QqEnumString const &
     name() const noexcept
     {
-        return * m_pName;
+        return *m_pName;
     }
 
     inline constexpr int
     index() const noexcept
     {
-        return m_index & c_indexMask;
+        return m_index & Const::indexMask;
     }
 
     inline constexpr TInt
@@ -110,31 +113,14 @@ public:
     inline constexpr bool
     isInvalid() const noexcept
     {
-        return index() == (m_index >> c_invalidValueShift);
+        return index() == (m_index >> Const::invalidValueShift);
     }
 
     inline constexpr bool
     isDefault() const noexcept
     {
-        return index() == (m_index >> c_defaultValueShift);
+        return index() == (m_index >> Const::defaultValueShift);
     }
-
-//
-// Consts
-//
-private:
-    enum : int
-    {
-        c_invlaidValueMask  = 0x00ff0000,
-        c_defaultValueMask  = 0x0000ff00,
-        c_indexMask         = 0x000000ff
-    };
-
-    enum : int
-    {
-        c_invalidValueShift = 16,
-        c_defaultValueShift = 8
-    };
 
 //
 // Fields
