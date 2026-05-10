@@ -31,6 +31,7 @@ struct IteratorT
 //
 // CTORs
 //
+public:
     IteratorT(int index = 0)
         : m_index{ index }
     {}
@@ -40,21 +41,33 @@ struct IteratorT
     {}
 
 //
+// Consistent API
+//
+public:
+    inline constexpr bool
+    inRange() const noexcept {
+        return D::indexInRange(m_index);
+    }
+
+//
 // Assignment operators
 //
+public:
     inline constexpr IteratorT &
     operator = (int n) noexcept
     {
         m_index = n;
-        return * this;
+        return *this;
     }
 
     inline constexpr IteratorT &
     operator = (IteratorT const & other) noexcept
     {
-        if (other == *this) return * this;
+        if (other == *this)
+            return *this;
+
         m_index = other.m_index;
-        return * this;
+        return *this;
     }
 
     //
@@ -64,15 +77,15 @@ struct IteratorT
     operator += (int n) noexcept
     {
         m_index += n;
-        return * this;
+        return *this;
     }
 
     inline constexpr IteratorT &
     operator += (IteratorT const & other) noexcept
     {
-        if (other == *this) return * this;
+        if (other == *this) return *this;
         m_index += other.m_index;
-        return * this;
+        return *this;
     }
 
     //
@@ -82,20 +95,41 @@ struct IteratorT
     operator -= (int n) noexcept
     {
         m_index -= n;
-        return * this;
+        return *this;
     }
 
     inline constexpr IteratorT &
     operator -= (IteratorT const & other) noexcept
     {
-        if (other == *this) return * this;
+        if (other == *this) return *this;
         m_index -= other.m_index;
-        return * this;
+        return *this;
     }
 
 //
-// Compare operators
+// Comparsion operators
 //
+public:
+    friend inline constexpr bool
+    operator < (IteratorT const & it1, IteratorT const & it2) {
+        return it1.m_index < it2.m_index;
+    }
+
+    friend inline constexpr bool
+    operator > (IteratorT const & it1, IteratorT const & it2) {
+        return it2 < it1;
+    }
+
+    friend inline constexpr bool
+    operator <= (IteratorT const & it1, IteratorT const & it2) {
+        return not (it1 > it2);
+    }
+
+    friend inline constexpr bool
+    operator >= (IteratorT const & it1, IteratorT const & it2) {
+        return not (it2 < it1);
+    }
+
     inline constexpr bool
     operator == (IteratorT const & other) noexcept {
         return m_index == other.m_index;
@@ -103,7 +137,7 @@ struct IteratorT
 
     inline constexpr bool
     operator != (IteratorT const & other) noexcept {
-        return m_index != other.m_index;
+        return not (m_index == other.m_index);
     }
 
 //
@@ -113,7 +147,7 @@ struct IteratorT
     operator + (IteratorT const & other) noexcept
     {
         m_index += other.m_index;
-        return * this;
+        return *this;
     }
 
     friend inline constexpr IteratorT
@@ -124,7 +158,7 @@ struct IteratorT
     }
 
     friend inline constexpr IteratorT &
-    operator + (IteratorT iter, int n) noexcept
+    operator + (IteratorT & iter, int n) noexcept
     {
         iter.m_index += n;
         return iter;
@@ -137,7 +171,7 @@ struct IteratorT
     operator ++ () noexcept
     {
         ++ m_index;
-        return * this;
+        return *this;
     }
 
     constexpr inline IteratorT
@@ -155,7 +189,7 @@ struct IteratorT
     operator - (IteratorT const & other) noexcept
     {
         m_index -= other.m_index;
-        return * this;
+        return *this;
     }
 
     friend inline constexpr IteratorT
@@ -166,7 +200,7 @@ struct IteratorT
     }
 
     friend inline constexpr IteratorT &
-    operator - (IteratorT iter, int n) noexcept
+    operator - (IteratorT & iter, int n) noexcept
     {
         iter.m_index -= n;
         return iter;
@@ -179,7 +213,7 @@ struct IteratorT
     operator -- () noexcept
     {
         -- m_index;
-        return * this;
+        return *this;
     }
 
     constexpr inline IteratorT
@@ -193,6 +227,7 @@ struct IteratorT
 //
 // Wrap operations
 //
+public:
     constexpr inline EnumItemWrapper const &
     operator * () const noexcept
     {
