@@ -86,6 +86,8 @@ public:                                                                     \
      */                                                                     \
     QP_ENUM_CTORS_IMPL_AS(Int,Class)                                        \
                                                                             \
+    QP_ENUM_OPERATORS_IMPL_AS(Int,Class)                                    \
+                                                                            \
     /*                                                                      \
      * Metadata                                                             \
      */                                                                     \
@@ -208,8 +210,13 @@ public:                                                                     \
     }                                                   \
                                                         \
     inline explicit Class(int index) noexcept {         \
-        m_index = _C::toRange(index);                   \
-    }
+        m_index = _C::ctor_index(index);                \
+    }                                                   \
+                                                        \
+    inline Class(Class const & other) {                 \
+        m_index = _C::ctor_index(other.m_index);        \
+    }                                                   \
+
 
 
 //
@@ -221,8 +228,13 @@ public:                                                                     \
                                                     \
     constexpr inline Class &                        \
     operator = (_Enum const e) {                    \
-        return _C::op_assignmentEnum(& m_index, e); \
-    }
+        return _C::op_assignment(*this, e);         \
+    }                                               \
+                                                    \
+    constexpr inline Class &                        \
+    operator = (Class const & c) {                  \
+        return _C::op_assignment(*this, c);         \
+    }                                               \
 
 
 //

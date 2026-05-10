@@ -115,6 +115,38 @@ public:
         );
     }
 
+    //
+    // CTORs
+    //
+
+    static constexpr int
+    ctor_index(int index) noexcept
+    {
+        return ifIndexOutOfRangeDoThrow(index, QQ_FULL_FUNC_SIG);
+    }
+
+    //
+    // Operators
+    //
+
+    static constexpr TClass &
+    op_assignment(TClass & c, TEnum e) noexcept
+    {
+        c.m_index = D::indexOf(e);
+        ifIndexOutOfRangeDoThrow(c.m_index, QQ_FULL_FUNC_SIG);
+
+        return c;
+    }
+
+    static constexpr TClass &
+    op_assignment(TClass & c, TClass const & other) noexcept
+    {
+        c.m_index = other.m_index;
+        ifIndexOutOfRangeDoThrow(c.m_index, QQ_FULL_FUNC_SIG);
+
+        return c;
+    }
+
 //
 // Using-synonyms
 //

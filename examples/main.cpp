@@ -208,7 +208,8 @@ void Iterator_test()
          << "\nisDefault: " << iter->isDefault()
          << endl;
 
-    //Enum1::
+    auto e2 = e1;
+    Enum1 e3{0};
 }
 
 int main(int argc, char *argv[])
