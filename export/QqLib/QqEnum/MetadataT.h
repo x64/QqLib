@@ -75,12 +75,22 @@ public:
                     .toLatin1()
             )
 
+        if (not valueList.size())
+            qq_throw_l(
+                std::logic_error,
+                StringLiteral{ "The Qq::Enum::MetadataT<%1,%2,%3>::ctor() doesn't work with empty list of value." }
+                    .arg(className)
+                    .arg("TEnum")
+                    .arg(intTypeName)
+                    .toLatin1()
+
+            );
+
         qq_lock
         {
             m_className     = className;
             m_intTypeName   = intTypeName;
             m_fullClassName = gfcn(fullClassName);
-
 
             if (nameList.size() != valueList.size())
                 qq_throw_l(
@@ -133,14 +143,42 @@ public:
     }
 
     //
-    // Access and info API
+    // Range API
     //
+
+    static inline constexpr TEnum
+    firstValue() noexcept
+    {
+        return m_values.front();
+    }
+
+    static inline constexpr TEnum
+    lastValue() noexcept
+    {
+        return m_values.back();
+    }
 
     static inline constexpr int
     count() noexcept
     {
         return m_values.size();
     }
+
+    static inline constexpr TEnum
+    minValue() noexcept
+    {
+        return m_minValue;
+    }
+
+    static inline constexpr TEnum
+    maxValue() noexcept
+    {
+        return m_maxValue;
+    }
+
+    //
+    // Access API
+    //
 
     static inline constexpr TEnum
     value(int index) noexcept
@@ -224,7 +262,7 @@ public:
     static inline constexpr bool
     isInvalidValueDefined() noexcept
     {
-        return m_invalidValueIndex == 0;
+        return 0 == m_invalidValueIndex;
     }
 
     static inline constexpr bool
@@ -236,7 +274,8 @@ public:
     static inline constexpr TEnum
     invalidValue() noexcept
     {
-        return m_invalidValue;
+        C::ifIndexOutOfRangeDoThrow(m_invalidValueIndex, QQ_FULL_FUNC_SIG);
+        return value(m_invalidValueIndex);
     }
 
     static inline constexpr int
@@ -248,7 +287,8 @@ public:
     static inline constexpr TEnum
     defaultValue() noexcept
     {
-        return m_defaultValue;
+        C::ifIndexOutOfRangeDoThrow(m_defaultValueIndex, QQ_FULL_FUNC_SIG);
+        return value(m_defaultValueIndex);
     }
 
     static inline constexpr int
@@ -398,7 +438,7 @@ private:
 
         qq_lock
         {
-            m_invalidValue      = newInvalidValue;
+            //- m_invalidValue      = newInvalidValue;
             m_invalidValueIndex = index;
             m_firstValidIndex   = 1;
 
@@ -434,7 +474,7 @@ private:
 
         qq_lock
         {
-            m_defaultValue      = newDefaultValue;
+            //- m_defaultValue      = newDefaultValue;
             m_defaultValueIndex = index;
 
             int shiftedDefaultValueIndex = index << Const::defaultValueShift;
@@ -474,13 +514,13 @@ private: //~ protected:
     static inline EIMap       m_enumToIndex;
     static inline WrapperList m_wrappers;
 
-    static inline int         m_firstValidIndex;
-    static inline int         m_lastValidIndex;
+    static inline int         m_firstValidIndex   = 0;
+    static inline int         m_lastValidIndex    = -1;
 
-    static inline TEnum       m_invalidValue      = TEnum{};
+    //- static inline TEnum       m_invalidValue      = TEnum{};
     static inline int         m_invalidValueIndex = -1;
 
-    static inline TEnum       m_defaultValue      = TEnum{};
+    //- static inline TEnum       m_defaultValue      = TEnum{};
     static inline int         m_defaultValueIndex = 0;
 
     static inline TEnum       m_minValue;

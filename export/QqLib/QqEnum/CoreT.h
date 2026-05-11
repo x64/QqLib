@@ -130,7 +130,7 @@ public:
     //
 
     static constexpr TClass &
-    op_assignment(TClass & c, TEnum e) noexcept
+    op_assignmentEnum(TClass & c, TEnum e) noexcept
     {
         c.m_index = D::indexOf(e);
         ifIndexOutOfRangeDoThrow(c.m_index, QQ_FULL_FUNC_SIG);
@@ -139,13 +139,29 @@ public:
     }
 
     static constexpr TClass &
-    op_assignment(TClass & c, TClass const & other) noexcept
+    op_assignmentOther(TClass & c, TClass const & other) noexcept
     {
         c.m_index = other.m_index;
         ifIndexOutOfRangeDoThrow(c.m_index, QQ_FULL_FUNC_SIG);
 
         return c;
     }
+
+    //--
+    // static constexpr TClass &
+    // op_add(TClass & c, TClass const & other) noexcept
+    // {
+    //     c.m_index += other.m_index;
+    //     ifIndexOutOfRangeDoThrow(c.m_index, QQ_FULL_FUNC_SIG);
+
+    //     return c;
+    // }
+
+    // static constexpr TClass &
+    // op_add_asignment(TClass & c, TClass const & other) noexcept
+    // {
+
+    // }
 
 //
 // Using-synonyms

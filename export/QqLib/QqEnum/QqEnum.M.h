@@ -46,10 +46,11 @@ protected:                                                                  \
     template <typename T_Class, typename T_Enum, typename T_Int>            \
     friend class Qq::Enum::CoreT;                                           \
                                                                             \
-    using _C         = Qq::Enum::CoreT<_Class,_Enum,_Int>;                  \
-    using _D         = Qq::Enum::MetadataT<_Class,_Enum,_Int>;              \
-    using _H         = Qq::Enum::Helper;                                    \
-    using _EatAssign = Qq::Enum::EatAssignT<_Enum, _Int>;                   \
+    using _C               = Qq::Enum::CoreT<_Class,_Enum,_Int>;            \
+    using _D               = Qq::Enum::MetadataT<_Class,_Enum,_Int>;        \
+    using _H               = Qq::Enum::Helper;                              \
+    using _EatAssign       = Qq::Enum::EatAssignT<_Enum, _Int>;             \
+    using _IteratorWrapper = Qq::Enum::IteratorWrapperT<_Class,_Enum,_Int>; \
                                                                             \
     static inline _D _d {                                                   \
         #Class,                                                             \
@@ -107,13 +108,36 @@ public:                                                                     \
     }                                                                       \
                                                                             \
     /*                                                                      \
-     * Names & values access                                                \
+     * Range                                                                \
      */                                                                     \
+    static inline constexpr _Enum                                           \
+    _first() noexcept {                                                     \
+        return _D::count();                                                 \
+    }                                                                       \
+                                                                            \
+    static inline constexpr _Enum                                           \
+    _last() noexcept {                                                      \
+        return _D::count();                                                 \
+    }                                                                       \
+                                                                            \
     static inline constexpr int                                             \
     _count() noexcept {                                                     \
         return _D::count();                                                 \
     }                                                                       \
                                                                             \
+    static inline constexpr _Enum                                           \
+    _min() noexcept {                                                       \
+        return _D::minValue();                                              \
+    }                                                                       \
+                                                                            \
+    static inline constexpr _Enum                                           \
+    _max() noexcept {                                                       \
+        return _D::maxValue();                                              \
+    }                                                                       \
+                                                                            \
+    /*                                                                      \
+     * Names & values access                                                \
+     */                                                                     \
     inline constexpr _Enum                                                  \
     _value() const noexcept {                                               \
         return _D::value(m_index);                                          \
@@ -158,7 +182,7 @@ public:                                                                     \
     }                                                                       \
                                                                             \
     /*                                                                      \
-     * Others                                                               \
+     * Invalid & Default                                                    \
      */                                                                     \
     inline constexpr bool                                                   \
     _isInvalid() const noexcept {                                           \
@@ -171,35 +195,42 @@ public:                                                                     \
     }                                                                       \
                                                                             \
     static inline constexpr bool                                            \
-    _isInvalidValueDefined() noexcept {                                     \
+    _isInvalidDefined() noexcept {                                          \
         return _D::isInvalidValueDefined();                                 \
     }                                                                       \
                                                                             \
     static inline constexpr bool                                            \
-    _isDefaultValueDefined() noexcept {                                     \
+    _isDefaultDefined() noexcept {                                          \
         return _D::isDefaultValueDefined();                                 \
     }                                                                       \
                                                                             \
     static inline constexpr _Enum                                           \
-    _invalidValue() noexcept {                                              \
+    _invalid() noexcept {                                                   \
         return _D::invalidValue();                                          \
     }                                                                       \
                                                                             \
     static inline constexpr _Enum                                           \
-    _defaultValue() noexcept {                                              \
+    _default() noexcept {                                                   \
         return _D::defaultValue();                                          \
     }                                                                       \
                                                                             \
     static inline constexpr QqEnumString const &                            \
-    _invalidValueName() noexcept {                                          \
+    _invalidName() noexcept {                                               \
         return _D::invalidValueName();                                      \
     }                                                                       \
                                                                             \
     static inline constexpr QqEnumString const &                            \
-    _defaultValueName() noexcept {                                          \
+    _defaultName() noexcept {                                               \
         return _D::defaultValueName();                                      \
     }                                                                       \
-
+                                                                            \
+    /*                                                                      \
+     * Invalid & Default                                                    \
+     */                                                                     \
+    static inline constexpr _IteratorWrapper                                \
+    _iter() noexcept {                                                      \
+        return _IteratorWrapper{};                                          \
+    }                                                                       \
 
 //
 // CTORS
@@ -222,19 +253,19 @@ public:                                                                     \
 //
 // Operators
 //
-#define QP_ENUM_OPERATORS_IMPL_AS(Int,Class)        \
-                                                    \
-    /* Assignment operators */                      \
-                                                    \
-    constexpr inline Class &                        \
-    operator = (_Enum const e) {                    \
-        return _C::op_assignment(*this, e);         \
-    }                                               \
-                                                    \
-    constexpr inline Class &                        \
-    operator = (Class const & c) {                  \
-        return _C::op_assignment(*this, c);         \
-    }                                               \
+#define QP_ENUM_OPERATORS_IMPL_AS(Int,Class)            \
+                                                        \
+    /* Assignment operators */                          \
+                                                        \
+    inline constexpr Class &                            \
+    operator = (_Enum const e) {                        \
+        return _C::op_assignmentEnum(*this, e);         \
+    }                                                   \
+                                                        \
+    inline constexpr Class &                            \
+    operator = (Class const & other) {                  \
+        return _C::op_assignmentOther(*this, other);    \
+    }                                                   \
 
 
 //
