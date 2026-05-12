@@ -32,7 +32,13 @@ public:
         , m_pName{ & name }
     {}
 
-    EnumItemWrapperT(int index, TEnum value, QqEnumString const & name, int invalidValueIndex, int defaultValueIndex)
+    EnumItemWrapperT(
+        int                  index,
+        TEnum                value,
+        QqEnumString const & name,
+        int                  invalidValueIndex,
+        int                  defaultValueIndex
+    )
         : m_value{ value  }
         , m_pName{ & name }
     {

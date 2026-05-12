@@ -40,6 +40,7 @@ qt_add_executable(QqLib
     export/QqLib/QqEnum/Index.h
     export/QqLib/QqEnum/IteratorT.h
     export/QqLib/QqEnum/Consts.h
+    export/QqLib/QqEnum/IteratorWrapperT.h
 
 
 )

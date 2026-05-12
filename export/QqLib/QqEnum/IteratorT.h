@@ -32,20 +32,23 @@ struct IteratorT
 // CTORs
 //
 public:
-    IteratorT(int index = 0)
-        : m_index{ index }
+    IteratorT(int fromIndex = 0, int toIndex = -1)
+        : m_index  { fromIndex }
+        , m_toIndex{ toIndex   }
     {}
 
-    IteratorT(IteratorT const & other)
-        : IteratorT{ other.m_index }
+    IteratorT(IteratorT const & from)
+        : IteratorT{ from.m_index }
     {}
+
 
 //
 // Consistent API
 //
 public:
     inline constexpr bool
-    inRange() const noexcept {
+    inRange() const noexcept
+    {
         return D::indexInRange(m_index);
     }
 
@@ -254,6 +257,7 @@ private:
 //
 private:
     Qq::Enum::Index m_index;
+    int             m_toIndex;
 };
 
 

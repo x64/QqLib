@@ -101,7 +101,7 @@ struct S3
 }
 
 #include "../export/QqLib/QqEnum/QqEnumStringLiteral.h"
-void getArgNum_test()
+void getArgNum_example()
 {
     using Qq::Enum::StringLiteral;
     using std::cout;
@@ -115,7 +115,7 @@ void getArgNum_test()
 
 }
 
-void s3_test()
+void s3_example()
 {
     using std::cout;
     using std::endl;
@@ -133,32 +133,34 @@ struct Enum1
 
         One,
         Two,
-        Three
+        Three,
+        Four,
+        Five
     )
 
     QQ_ENUM_INVALID_VALUE(Unknown)
     QQ_ENUM_DEFAULT_VALUE(One)
 };
 
-void Enum1_test()
+void Enum1_example()
 {
     using namespace std;
 
     Enum1 e1, e2;
-    cout << e1._invalidValue()     << endl;
-    cout << e1._defaultValue()     << endl;
-    cout << e1._count()            << endl;
-    cout << e1().name()            << endl;
-    cout << e1().value()           << endl;
-    cout << e1().isInvalid()       << endl;
-    cout << e1().isDefault()       << endl;
-    cout << e1._invalidValueName() << endl;
-    cout << e1._defaultValueName() << endl;
+    cout << e1._invalid()     << endl;
+    cout << e1._default()     << endl;
+    cout << e1._count()       << endl;
+    cout << e1().name()       << endl;
+    cout << e1().value()      << endl;
+    cout << e1().isInvalid()  << endl;
+    cout << e1().isDefault()  << endl;
+    cout << e1._invalidName() << endl;
+    cout << e1._defaultName() << endl;
 
 
 }
 
-void Index_test()
+void Index_example()
 {
     using namespace std;
 
@@ -183,10 +185,10 @@ void Index_test()
     cout << "3. i3 = i2 +5\n";
     cout << "3. i3: " << i3 << endl;
 
-    cout << "4. i3++: " << i3++;
+    cout << "4. i3++: " << i3++ << endl;
 }
 
-void Iterator_test()
+void Iterator_example()
 {
     using namespace std;
 
@@ -212,14 +214,49 @@ void Iterator_test()
     Enum1 e3{0};
 }
 
+void IteratorWrapper_example()
+{
+    using namespace std;
+
+    Enum1 e1;
+
+    // variable "w" is "Qq::Enum::EnumItemWrapperT<Enum1,Enum1::_Enum,Enum1::_Int> const &"
+    for (auto const & w : e1._iter(0/*e1.Two, e1.Five*/))
+    {
+        cout << w.name() << ", isDefault: " << w.isDefault() << ", isInvalid: " << w.isInvalid() << endl;
+    }
+
+}
+
+void printExampleName(char const * name)
+{
+    using namespace std;
+    cout << "--------------------------------------------------------\n"
+         << "EXAMPLE: " << name << "\n"
+         << "--------------------------------------------------------\n"
+         ;
+}
+
+#define RUN_EXAMPLE(example)    \
+    printExampleName(#example); \
+    example();                  \
+    putFreeLines();
+
+
+void putFreeLines()
+{
+    std::cout << "--------------------------------------------------------\n\n\n";
+}
+
 int main(int argc, char *argv[])
 {
-    Iterator_test();
+    RUN_EXAMPLE(getArgNum_example)
+    RUN_EXAMPLE(s3_example)
+    RUN_EXAMPLE(Enum1_example)
+    RUN_EXAMPLE(Index_example)
+    RUN_EXAMPLE(Iterator_example)
+    RUN_EXAMPLE(IteratorWrapper_example)
 
-    //Index_test();
-    //Enum1_test();
-    //s3_test();
-    //getArgNum_test();
     return 0;
 
     //Qq_string s{ "" };

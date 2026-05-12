@@ -15,6 +15,7 @@
 #include "./InvalidValueSetterT.h"
 #include "./DefaultValueSetterT.h"
 #include "./Index.h"
+#include "./IteratorWrapperT.h"
 
 
 
@@ -110,14 +111,14 @@ public:                                                                     \
     /*                                                                      \
      * Range                                                                \
      */                                                                     \
-    static inline constexpr _Enum                                           \
+    static inline _Enum                                                     \
     _first() noexcept {                                                     \
-        return _D::count();                                                 \
+        return _D::firstValue();                                            \
     }                                                                       \
                                                                             \
-    static inline constexpr _Enum                                           \
+    static inline _Enum                                                     \
     _last() noexcept {                                                      \
-        return _D::count();                                                 \
+        return _D::lastValue();                                             \
     }                                                                       \
                                                                             \
     static inline constexpr int                                             \
@@ -225,12 +226,33 @@ public:                                                                     \
     }                                                                       \
                                                                             \
     /*                                                                      \
-     * Invalid & Default                                                    \
+     * Iteration                                                            \
      */                                                                     \
-    static inline constexpr _IteratorWrapper                                \
+    static inline _IteratorWrapper                                          \
     _iter() noexcept {                                                      \
-        return _IteratorWrapper{};                                          \
+        return _IteratorWrapper{ };                                         \
     }                                                                       \
+                                                                            \
+    static inline _IteratorWrapper                                          \
+    _iter(                                                                  \
+        int fromIndex,                                                      \
+        int toIndex = _IteratorWrapper::c_toIndex                           \
+    )                                                                       \
+        noexcept                                                            \
+    {                                                                       \
+        return _IteratorWrapper{ fromIndex, toIndex };                      \
+    }                                                                       \
+                                                                            \
+    static inline _IteratorWrapper                                          \
+    _iter(                                                                  \
+        _Enum from,                                                         \
+        _Enum to                                                            \
+    )                                                                       \
+        noexcept                                                            \
+    {                                                                       \
+        return _IteratorWrapper{ from, to };                                \
+    }                                                                       \
+
 
 //
 // CTORS
