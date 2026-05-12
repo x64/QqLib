@@ -32,11 +32,11 @@ struct MetadataT
 protected:
     using H               = Helper;
 public:
-    using ValueList       = std::vector<TEnum>;                   //QList<TEnum>;
-    using NameList        = std::vector<QqEnumString>;               //QStringList;
-    using EIMap           = std::map   <TEnum,int>;               //QMap<TEnum,int>;
+    using ValueList       = std::vector     <TEnum>;
+    using NameList        = std::vector     <QqEnumString>;
+    using EIMap           = std::map        <TEnum,int>;
     using EnumItemWrapper = EnumItemWrapperT<TEnum,TInt>;
-    using WrapperList     = std::vector<EnumItemWrapper>;
+    using WrapperList     = std::vector     <EnumItemWrapper>;
 
 //
 // Friends
@@ -68,7 +68,7 @@ public:
         if (m_isCreated)
             qq_throw_l(
                 std::logic_error,
-                StringLiteral{ "Qq::Enum::MetadataT<%1,%2,%3> already creadted." }
+                QqEnumStringLiteral{ "Qq::Enum::MetadataT<%1,%2,%3> already creadted." }
                     .arg(className)
                     .arg("TEnum")
                     .arg(intTypeName)
@@ -78,7 +78,7 @@ public:
         if (not valueList.size())
             qq_throw_l(
                 std::logic_error,
-                StringLiteral{ "The Qq::Enum::MetadataT<%1,%2,%3>::ctor() doesn't work with empty list of value." }
+                QqEnumStringLiteral{ "The Qq::Enum::MetadataT<%1,%2,%3>::ctor() doesn't work with empty list of value." }
                     .arg(className)
                     .arg("TEnum")
                     .arg(intTypeName)
@@ -405,15 +405,15 @@ private:
             if (indexInRange(index))
                 qq_throw_l(
                     std::logic_error,
-                    StringLiteral{ "The invalid enum '%2' must be the first string in the enum list (QQ_ENUM).\nMETHOD: %1" }
+                    QqEnumStringLiteral{ "The invalid enum '%2' must be the first string in the enum list (QQ_ENUM).\nMETHOD: %1" }
                         .arg(QQ_FULL_FUNC_SIG)
-                        .arg(name(index).c_str())
+                        .arg(name(index))
                         .toLatin1()
                 )
             else
                 qq_throw_l(
                     std::out_of_range,
-                    StringLiteral{ "The %1 (as int) is out of range of %2.\nMETHOD:%3" }
+                    QqEnumStringLiteral{ "The %1 (as int) is out of range of %2.\nMETHOD:%3" }
                         .arg(static_cast<TInt>(newInvalidValue))
                         .arg(className())
                         .arg(QQ_FULL_FUNC_SIG)
@@ -424,21 +424,20 @@ private:
         if (0 == m_wrappers.size())
             qq_throw_l(
                 std::logic_error,
-                StringLiteral{ "Unable to set the newInvalidValue because EnumItemWrappers is empty." }
+                QqEnumStringLiteral{ "Unable to set the newInvalidValue because EnumItemWrappers is empty." }
                     .toLatin1()
             );
 
         if (index > Const::indexMask)
             qq_throw_l(
                 std::out_of_range,
-                StringLiteral{ "The index value in QQ_ENUM can't exceed %1." }
+                QqEnumStringLiteral{ "The index value in QQ_ENUM can't exceed %1." }
                     .arg(Const::indexMask)
                     .toLatin1()
             );
 
         qq_lock
         {
-            //- m_invalidValue      = newInvalidValue;
             m_invalidValueIndex = index;
             m_firstValidIndex   = 1;
 
@@ -460,21 +459,20 @@ private:
         if (0 == m_wrappers.size())
             qq_throw_l(
                 std::logic_error,
-                StringLiteral{ "Unable to set the newDefaultValue because EnumItemWrappers is empty." }
+                QqEnumStringLiteral{ "Unable to set the newDefaultValue because EnumItemWrappers is empty." }
                     .toLatin1()
             );
 
         if (index > Const::indexMask)
             qq_throw_l(
                 std::out_of_range,
-                StringLiteral{ "The index value in QQ_ENUM can't exceed %1." }
+                QqEnumStringLiteral{ "The index value in QQ_ENUM can't exceed %1." }
                     .arg(Const::indexMask)
                     .toLatin1()
             );
 
         qq_lock
         {
-            //- m_defaultValue      = newDefaultValue;
             m_defaultValueIndex = index;
 
             int shiftedDefaultValueIndex = index << Const::defaultValueShift;
@@ -517,10 +515,8 @@ private: //~ protected:
     static inline int         m_firstValidIndex   = 0;
     static inline int         m_lastValidIndex    = -1;
 
-    //- static inline TEnum       m_invalidValue      = TEnum{};
     static inline int         m_invalidValueIndex = -1;
 
-    //- static inline TEnum       m_defaultValue      = TEnum{};
     static inline int         m_defaultValueIndex = 0;
 
     static inline TEnum       m_minValue;
