@@ -20,7 +20,12 @@
 
 
 #define QP_GET_VALUE_FROM_ITEM(ITEM)    _EatAssign{}         << ITEM  , //-V2561
-#define QP_GET_NAME_FROM_ITEM(ITEM)     _H::parseEnumValueName(#ITEM) ,
+
+#ifdef QQ_DONT_USE_QT
+    #define QP_GET_NAME_FROM_ITEM(ITEM) _H::parseEnumValueName(#ITEM) ,
+#else
+    #define QP_GET_NAME_FROM_ITEM(ITEM) QString{ _H::parseEnumValueName(#ITEM).c_str() } ,
+#endif
 
 
 #define QQ_ENUM_CORE(Class,...)         QQ_ENUM_CORE_AS(int, Class, __VA_ARGS__)
@@ -30,7 +35,6 @@
 
 #define QQ_ENUM_CORE_AS(Int,Class,...)                                      \
 public:                                                                     \
-    enum  { _0___BELOW_ENUM_API_0NLY___ };                                  \
     enum  : bool { _isQqEnum = true };                                      \
     using _Class = Class;                                                   \
     using _Int   = Int;                                                     \
@@ -252,6 +256,27 @@ public:                                                                     \
     {                                                                       \
         return _IteratorWrapper{ from, to };                                \
     }                                                                       \
+                                                                            \
+    /*                                                                      \
+     * Parsing                                                              \
+     */                                                                     \
+    static inline bool                                                      \
+    _tryParse(                                                              \
+        char const * str,                                                   \
+        Class      * out             = nullptr,                             \
+        bool         caseInsensitive = true                                 \
+    )                                                                       \
+        noexcept                                                            \
+    {                                                                       \
+        return _C::tryParse(str, out, caseInsensitive);                     \
+    }                                                                       \
+                                                                            \
+    static inline Class                                                     \
+    _parse(char const * str, bool caseInsensitive = true)                   \
+    {                                                                       \
+        return _C::parse(str, caseInsensitive);                             \
+    }                                                                       \
+
 
 
 //
