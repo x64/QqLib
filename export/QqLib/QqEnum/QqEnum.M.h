@@ -15,7 +15,8 @@
 #include "./InvalidValueSetterT.h"
 #include "./DefaultValueSetterT.h"
 #include "./Index.h"
-#include "./IteratorWrapperT.h"
+#include "./IterationRangeT.h"
+#include "./Consts.h"
 
 
 
@@ -55,7 +56,8 @@ protected:                                                                  \
     using _D               = Qq::Enum::MetadataT<_Class,_Enum,_Int>;        \
     using _H               = Qq::Enum::Helper;                              \
     using _EatAssign       = Qq::Enum::EatAssignT<_Enum, _Int>;             \
-    using _IteratorWrapper = Qq::Enum::IteratorWrapperT<_Class,_Enum,_Int>; \
+    using _Iterator        = Qq::Enum::IteratorT<_Class,_Enum,_Int>;        \
+    using _IterationRange  = Qq::Enum::IterationRangeT<_Class,_Enum,_Int>; \
                                                                             \
     static inline _D _d {                                                   \
         #Class,                                                             \
@@ -90,6 +92,7 @@ public:                                                                     \
     /*                                                                      \
      * CTORS & DTORS                                                        \
      */                                                                     \
+                                                                            \
     QP_ENUM_CTORS_IMPL_AS(Int,Class)                                        \
                                                                             \
     QP_ENUM_OPERATORS_IMPL_AS(Int,Class)                                    \
@@ -97,6 +100,7 @@ public:                                                                     \
     /*                                                                      \
      * Metadata                                                             \
      */                                                                     \
+                                                                            \
     static inline char const *                                              \
     _className() noexcept {                                                 \
         return _D::className();                                             \
@@ -113,8 +117,9 @@ public:                                                                     \
     }                                                                       \
                                                                             \
     /*                                                                      \
-     * Range                                                                \
+     * Bounds API                                                           \
      */                                                                     \
+                                                                            \
     static inline _Enum                                                     \
     _first() noexcept {                                                     \
         return _D::firstValue();                                            \
@@ -143,6 +148,12 @@ public:                                                                     \
     /*                                                                      \
      * Names & values access                                                \
      */                                                                     \
+                                                                            \
+    inline constexpr _Int                                                   \
+    _int() const noexcept {                                                 \
+        return static_cast<_Int>(_value());                                 \
+    }                                                                       \
+                                                                            \
     inline constexpr _Enum                                                  \
     _value() const noexcept {                                               \
         return _D::value(m_index);                                          \
@@ -158,19 +169,15 @@ public:                                                                     \
         return _D::nameByValue(e);                                          \
     }                                                                       \
                                                                             \
-    inline constexpr _Wrapper const &                                       \
-    _wrapper() const noexcept {                                             \
-        return _D::wrapper(m_index);                                        \
-    }                                                                       \
-                                                                            \
-    inline constexpr _Wrapper const &                                       \
-    operator () () const noexcept {                                         \
-        return _wrapper();                                                  \
+    static constexpr _Wrapper const &                                       \
+    _wrapper(int index) noexcept {                                          \
+        return _D::wrapper(index, QQ_FULL_FUNC_SIG);                        \
     }                                                                       \
                                                                             \
     /*                                                                      \
      * Lists                                                                \
      */                                                                     \
+                                                                            \
     static inline constexpr std::vector<_Enum> const &                      \
     _valueList() noexcept {                                                 \
         return _D::valueList();                                             \
@@ -189,6 +196,7 @@ public:                                                                     \
     /*                                                                      \
      * Invalid & Default                                                    \
      */                                                                     \
+                                                                            \
     inline constexpr bool                                                   \
     _isInvalid() const noexcept {                                           \
         return _D::isInvalidByIndex(m_index);                               \
@@ -219,6 +227,16 @@ public:                                                                     \
         return _D::defaultValue();                                          \
     }                                                                       \
                                                                             \
+    inline constexpr bool                                                   \
+    _invalidIndex() const noexcept {                                        \
+        return _D::invalidValueIndex();                                     \
+    }                                                                       \
+                                                                            \
+    inline constexpr bool                                                   \
+    _defaultIndex() const noexcept {                                        \
+        return _D::defaultValueIndex();                                     \
+    }                                                                       \
+                                                                            \
     static inline constexpr QqEnumString const &                            \
     _invalidName() noexcept {                                               \
         return _D::invalidValueName();                                      \
@@ -232,29 +250,82 @@ public:                                                                     \
     /*                                                                      \
      * Iteration                                                            \
      */                                                                     \
-    static inline _IteratorWrapper                                          \
-    _iter() noexcept {                                                      \
-        return _IteratorWrapper{ };                                         \
+                                                                            \
+    inline constexpr _Iterator                                              \
+    _iterator() noexcept                                                    \
+    {                                                                       \
+        return _Iterator{ m_index, Qq::Enum::Const::badIndex };             \
     }                                                                       \
                                                                             \
-    static inline _IteratorWrapper                                          \
-    _iter(                                                                  \
+    static inline constexpr _Iterator                                       \
+    _iterator(                                                              \
         int fromIndex,                                                      \
-        int toIndex = _IteratorWrapper::c_toIndex                           \
+        int toIndex   = Qq::Enum::Const::badIndex                           \
     )                                                                       \
         noexcept                                                            \
     {                                                                       \
-        return _IteratorWrapper{ fromIndex, toIndex };                      \
+        return _Iterator{ fromIndex, toIndex };                             \
     }                                                                       \
                                                                             \
-    static inline _IteratorWrapper                                          \
-    _iter(                                                                  \
+    static inline constexpr _Iterator                                       \
+    _iterator(                                                              \
         _Enum from,                                                         \
         _Enum to                                                            \
     )                                                                       \
         noexcept                                                            \
     {                                                                       \
-        return _IteratorWrapper{ from, to };                                \
+        return _Iterator{ from, to };                                       \
+    }                                                                       \
+                                                                            \
+    static inline constexpr _IterationRange                                 \
+    _range() noexcept {                                                     \
+        return _IterationRange{ };                                          \
+    }                                                                       \
+                                                                            \
+    static inline constexpr _IterationRange                                 \
+    _range(                                                                 \
+        int fromIndex,                                                      \
+        int toIndex = Qq::Enum::Const::badIndex                             \
+    )                                                                       \
+        noexcept                                                            \
+    {                                                                       \
+        return _IterationRange{ fromIndex, toIndex };                       \
+    }                                                                       \
+                                                                            \
+    static inline constexpr _IterationRange                                 \
+    _range(                                                                 \
+        _Enum from,                                                         \
+        _Enum to                                                            \
+    )                                                                       \
+        noexcept                                                            \
+    {                                                                       \
+        return _IterationRange{ from, to };                                 \
+    }                                                                       \
+                                                                            \
+                                                                            \
+    static inline constexpr _IterationRange                                 \
+    _range_r() noexcept {                                                   \
+        return _IterationRange{ Qq::Enum::Const::badIndex, 0 };             \
+    }                                                                       \
+                                                                            \
+    static inline constexpr _IterationRange                                 \
+    _range_r(                                                               \
+        int fromIndex,                                                      \
+        int toIndex = Qq::Enum::Const::badIndex                             \
+    )                                                                       \
+        noexcept                                                            \
+    {                                                                       \
+        return _IterationRange{ toIndex, fromIndex };                       \
+    }                                                                       \
+                                                                            \
+    static inline constexpr _IterationRange                                 \
+    _range_r(                                                               \
+        _Enum from,                                                         \
+        _Enum to                                                            \
+    )                                                                       \
+        noexcept                                                            \
+    {                                                                       \
+        return _IterationRange{ to, from };                                 \
     }                                                                       \
                                                                             \
     /*                                                                      \
@@ -282,37 +353,170 @@ public:                                                                     \
 //
 // CTORS
 //
-#define QP_ENUM_CTORS_IMPL_AS(Int,Class)                \
-    inline Class() noexcept {                           \
-        m_index = _D::defaultValueIndex();              \
-    }                                                   \
-                                                        \
-    inline explicit Class(int index) noexcept {         \
-        m_index = _C::ctor_index(index);                \
-    }                                                   \
-                                                        \
-    inline Class(Class const & other) {                 \
-        m_index = _C::ctor_index(other.m_index);        \
-    }                                                   \
+#define QP_ENUM_CTORS_IMPL_AS(Int,Class)                                    \
+    inline Class() noexcept {                                               \
+        m_index = _D::defaultValueIndex();                                  \
+    }                                                                       \
+                                                                            \
+    inline explicit Class(int index) noexcept {                             \
+        m_index = _C::ctor_index(index, QQ_FULL_FUNC_SIG);                  \
+    }                                                                       \
+                                                                            \
+    inline Class(Class const & other) noexcept {                            \
+        m_index = _C::ctor_index(other.m_index, QQ_FULL_FUNC_SIG);          \
+    }                                                                       \
+                                                                            \
+    explicit inline Class(_Enum e) noexcept {                               \
+        m_index = _C::ctor_enum(e, QQ_FULL_FUNC_SIG);                       \
+    }                                                                       \
 
 
 
 //
 // Operators
 //
-#define QP_ENUM_OPERATORS_IMPL_AS(Int,Class)            \
-                                                        \
-    /* Assignment operators */                          \
-                                                        \
-    inline constexpr Class &                            \
-    operator = (_Enum const e) {                        \
-        return _C::op_assignmentEnum(*this, e);         \
-    }                                                   \
-                                                        \
-    inline constexpr Class &                            \
-    operator = (Class const & other) {                  \
-        return _C::op_assignmentOther(*this, other);    \
-    }                                                   \
+#define QP_ENUM_OPERATORS_IMPL_AS(Int,Class)                                        \
+                                                                                    \
+    /* Wrapper operator */                                                          \
+    inline _Wrapper const &                                                         \
+    operator () (int index = Qq::Enum::Const::badIndex) const noexcept              \
+    {                                                                               \
+        return _wrapper(index == Qq::Enum::Const::badIndex                          \
+                                    ? static_cast<int>(m_index)                     \
+                                    : index);                                       \
+    }                                                                               \
+                                                                                    \
+    /* Assignment operators */                                                      \
+                                                                                    \
+    inline constexpr Class &                                                        \
+    operator = (_Enum const e) noexcept {                                           \
+        return _C::op_assignmentEnum(*this, e, QQ_FULL_FUNC_SIG);                   \
+    }                                                                               \
+                                                                                    \
+    inline constexpr Class &                                                        \
+    operator = (Class const & other) noexcept {                                     \
+        return _C::op_assignmentOther(*this, other, QQ_FULL_FUNC_SIG);              \
+    }                                                                               \
+                                                                                    \
+    /* Comparsion operators */                                                      \
+                                                                                    \
+    friend inline bool                                                              \
+    operator == (Class const & lh, Class const & rh) noexcept {                     \
+        return lh.m_index == rh.m_index;                                            \
+    }                                                                               \
+                                                                                    \
+    friend inline bool                                                              \
+    operator != (Class const & lh, Class const & rh) noexcept {                     \
+        return not (lh.m_index == rh.m_index);                                      \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator > (Class const & lh, Class const & rh) noexcept {                      \
+        return _D::value(lh.m_index) > _D::value(rh.m_index);                       \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator < (Class const & lh, Class const & rh) noexcept {                      \
+        return _D::value(lh.m_index) < _D::value(rh.m_index);                       \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator >= (Class const & lh, Class const & rh) noexcept {                     \
+        return _D::value(lh.m_index) >= _D::value(rh.m_index);                      \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator <= (Class const & lh, Class const & rh) noexcept {                     \
+        return _D::value(lh.m_index) <= _D::value(rh.m_index);                      \
+    }                                                                               \
+                                                                                    \
+    /* ADD operators */                                                             \
+                                                                                    \
+    friend inline Class                                                             \
+    operator + (Class lh, Class const & rh) noexcept {                              \
+        return _C::op_add(lh, rh, QQ_FULL_FUNC_SIG);                                \
+    }                                                                      \
+                                                                                    \
+    friend inline Class                                                             \
+    operator + (Class lh, int n) noexcept {                                         \
+        return _C::op_add(lh, n, QQ_FULL_FUNC_SIG);                        \
+    }                                                                               \
+                                                                                    \
+    /* ADD & assignment operators */                                                \
+                                                                                    \
+    inline Class &                                                                  \
+    operator += (int n) noexcept {                                                  \
+        _C::op_add_assignment(m_index, n, QQ_FULL_FUNC_SIG);                        \
+        return *this;                                                               \
+    }                                                                               \
+                                                                                    \
+    inline Class &                                                                  \
+    operator += (Class const & other) noexcept {                                    \
+        m_index = _C::op_add_assignment(m_index, other.m_index, QQ_FULL_FUNC_SIG);  \
+        return *this;                                                               \
+    }                                                                               \
+                                                                                    \
+    /* INC operators */                                                             \
+                                                                                    \
+    inline Class &                                                                  \
+    operator ++ () noexcept                                                         \
+    {                                                                               \
+        m_index = _C::op_inc(m_index, QQ_FULL_FUNC_SIG);                            \
+        return *this;                                                               \
+    }                                                                               \
+                                                                                    \
+    inline Class                                                                    \
+    operator ++ (int) noexcept                                                      \
+    {                                                                               \
+        Class prev{ m_index };                                                      \
+        m_index = _C::op_inc(m_index, QQ_FULL_FUNC_SIG);                            \
+        return prev;                                                                \
+    }                                                                               \
+                                                                                    \
+    /* SUB operators */                                                             \
+                                                                                    \
+    friend inline Class                                                             \
+    operator - (Class lh, Class const & rh) noexcept {                              \
+        return _C::op_sub(lh, rh, QQ_FULL_FUNC_SIG);                                \
+    }                                                                               \
+                                                                                    \
+    friend inline Class                                                             \
+    operator - (Class lh, int n) noexcept {                                         \
+        return _C::op_sub(lh, n, QQ_FULL_FUNC_SIG);                                 \
+    }                                                                               \
+                                                                                    \
+    /* SUB & assignment operators */                                                \
+                                                                                    \
+    inline Class &                                                                  \
+    operator -= (int n) noexcept {                                                  \
+        _C::op_sub_assignment(m_index, n, QQ_FULL_FUNC_SIG);                        \
+        return *this;                                                               \
+    }                                                                               \
+                                                                                    \
+    inline Class &                                                                  \
+    operator -= (Class const & other) noexcept {                                    \
+        m_index = _C::op_sub_assignment(m_index, other.m_index, QQ_FULL_FUNC_SIG);  \
+        return *this;                                                               \
+    }                                                                               \
+                                                                                    \
+    /* DEC operators */                                                             \
+                                                                                    \
+    inline Class &                                                                  \
+    operator -- () noexcept                                                         \
+    {                                                                               \
+        m_index = _C::op_dec(m_index, QQ_FULL_FUNC_SIG);                            \
+        return *this;                                                               \
+    }                                                                               \
+                                                                                    \
+    inline Class                                                                    \
+    operator -- (int) noexcept                                                      \
+    {                                                                               \
+        Class prev{ m_index };                                                      \
+        m_index = _C::op_dec(m_index, QQ_FULL_FUNC_SIG);                            \
+        return prev;                                                                \
+    }                                                                               \
+                                                                                    \
+
 
 
 //
