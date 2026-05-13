@@ -318,6 +318,9 @@ void Enum_arithmetics_example()
 
     e3 = e1-e2;
     cout << "e3 = e1 - e2: " << e3().asInt() << endl;
+
+    e1 = Enum1::One;
+    cout << "e1 == Enum1::One, is true? " << boolToStr(Enum1::One == e1) << endl;
 }
 
 void Enum1_comparsion_example()

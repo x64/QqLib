@@ -220,6 +220,16 @@ public:
     }
 
     //
+    // Comparsion operators
+    //
+    static inline constexpr bool
+    op_compare(int index, TEnum e, char const * methodName = nullptr) noexcept
+    {
+        return index == ifEnumInNotRangeDoThrow(e, methodName ? methodName : QQ_FULL_FUNC_SIG);
+    }
+
+
+    //
     // Other
     //
     static constexpr int

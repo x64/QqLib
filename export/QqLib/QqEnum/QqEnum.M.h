@@ -401,6 +401,26 @@ public:                                                                     \
     /* Comparsion operators */                                                      \
                                                                                     \
     friend inline bool                                                              \
+    operator == (Class const & lh, _Enum e) noexcept {                              \
+        return _C::op_compare(lh.m_index, e);                                       \
+    }                                                                               \
+                                                                                    \
+    friend inline bool                                                              \
+    operator == (_Enum e, Class const & rh) noexcept {                              \
+        return _C::op_compare(rh.m_index, e);                                       \
+    }                                                                               \
+                                                                                    \
+    friend inline bool                                                              \
+    operator != (Class const & lh, _Enum e) noexcept {                              \
+        return not _C::op_compare(lh.m_index, e);                                   \
+    }                                                                               \
+                                                                                    \
+    friend inline bool                                                              \
+    operator != (_Enum e, Class const & rh) noexcept {                              \
+        return not _C::op_compare(rh.m_index, e);                                   \
+    }                                                                               \
+                                                                                    \
+    friend inline bool                                                              \
     operator == (Class const & lh, Class const & rh) noexcept {                     \
         return lh.m_index == rh.m_index;                                            \
     }                                                                               \
