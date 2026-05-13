@@ -53,6 +53,9 @@ public:
 // Operators
 //
 public:
+    //
+    // Comparsions
+    //
     inline constexpr bool
     operator == (EnumItemWrapperT const & other) const noexcept
     {
@@ -63,6 +66,18 @@ public:
     operator == (TEnum const & otherEnum) const noexcept
     {
         return m_value == otherEnum;
+    }
+
+    inline constexpr bool
+    operator != (EnumItemWrapperT const & other) const noexcept
+    {
+        return not (m_value == other.m_value);
+    }
+
+    inline constexpr bool
+    operator != (TEnum const & otherEnum) const noexcept
+    {
+        return not (m_value == otherEnum);
     }
 
     inline constexpr bool
@@ -89,9 +104,37 @@ public:
         return m_value > otherEnum;
     }
 
+    //
+    // Comparsion & assignment
+    //
+    inline constexpr bool
+    operator <= (EnumItemWrapperT const & other) const noexcept
+    {
+        return m_value <= other.m_value;
+    }
+
+    inline constexpr bool
+    operator <= (TEnum const & otherEnum) const noexcept
+    {
+        return m_value <= otherEnum;
+    }
+
+    inline constexpr bool
+    operator >= (EnumItemWrapperT const & other) const noexcept
+    {
+        return m_value >= other.m_value;
+    }
+
+    inline constexpr bool
+    operator >= (TEnum const & otherEnum) const noexcept
+    {
+        return m_value >= otherEnum;
+    }
+
 //
 // Const Data API
 //
+public:
     inline constexpr TEnum
     value() const noexcept
     {
