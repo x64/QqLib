@@ -5,6 +5,7 @@
 //
 
 #define QQ_DONT_USE_QT
+//#undef QQ_DONT_USE_QT
 
 
 #ifdef QQ_DONT_USE_QT
@@ -13,7 +14,7 @@
 #else
     #define QqMap                      QMap
     #define QqList                     QList
-    #define Qq_string                  QString
-    #define Qq_stringLiteral(TEXT)     QStringLiteral(TEXT)
-    #define QQ_ENUM_STRING_INCLUDE     <QString>
+    // #define Qq_string                  QString
+    // #define Qq_stringLiteral(TEXT)     QStringLiteral(TEXT)
+    // #define QQ_ENUM_STRING_INCLUDE     <QString>
 #endif

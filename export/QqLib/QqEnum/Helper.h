@@ -1,7 +1,5 @@
 #pragma once
 
-// #include <QMap>
-// #include <QList>
 #include <vector>
 #include <map>
 
@@ -53,29 +51,6 @@ struct Helper
 
         return res;
     }
-
-    // static std::string
-    // parseEnumValueName2(char const * str) noexcept
-    // {
-    //     using H = Qq::Helper;
-
-    //     std::string res;
-    //     size_t      len = std::strlen(str);
-
-    //     if (len == 0)
-    //         return res;
-
-    //     int i;
-    //     for (i = 0; i < len; ++i)
-    //         if ('=' == str[i]) break;
-
-    //     if (i < len)
-    //         res = std::string(str, i);
-
-    //     res = H::trim(res.c_str());
-
-    //     return res;
-    // }
 };
 
 

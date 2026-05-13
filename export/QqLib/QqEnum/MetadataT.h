@@ -208,11 +208,13 @@ public:
     }
 
     static inline constexpr EnumItemWrapper const &
-    wrapper(int index)
+    wrapper(int index, char const * methodName = nullptr) noexcept
     {
-        if (not indexInRange(index))
-            return c_emptyWrapper;
+        //TODO: -
+        // if (not indexInRange(index))
+        //     return c_emptyWrapper;
 
+        C::ifIndexOutOfRangeDoThrow(index, methodName ? methodName : QQ_FULL_FUNC_SIG);
         return m_wrappers[index];
     }
 
@@ -489,7 +491,7 @@ private:
     static inline constexpr void
     calcAndSetMinMaxValues() noexcept
     {
-        TEnum min, max;
+        TEnum min{}, max{};
 
         for (int i = 0; i < count(); ++i)
         {
@@ -513,9 +515,9 @@ private: //~ protected:
     static inline WrapperList m_wrappers;
 
     static inline int         m_firstValidIndex   = 0;
-    static inline int         m_lastValidIndex    = -1;
+    static inline int         m_lastValidIndex    = Const::badIndex;
 
-    static inline int         m_invalidValueIndex = -1;
+    static inline int         m_invalidValueIndex = Const::badIndex;
 
     static inline int         m_defaultValueIndex = 0;
 

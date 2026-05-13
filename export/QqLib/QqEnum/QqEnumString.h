@@ -7,6 +7,6 @@
     #include <string>
     using QqEnumString = std::string;
 #else
-    #include <QString
+    #include <QString>
     using QqEnumString = QString;
 #endif

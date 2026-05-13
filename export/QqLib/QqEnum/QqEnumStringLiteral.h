@@ -155,6 +155,7 @@ using QqEnumStringLiteral = Qq::Enum::StringLiteral;
 
 #else
 
-using QqEnumStringLiteral = QStringLiteral;
+#include <QStringLiteral>
+using QqEnumStringLiteral = QString;
 
 #endif
