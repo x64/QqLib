@@ -32,30 +32,93 @@ struct IteratorT
 // CTORs
 //
 public:
-    IteratorT(int fromIndex = 0, int toIndex = -1)
-        : m_index  { fromIndex }
-        , m_toIndex{ toIndex   }
+    constexpr IteratorT(int fromIndex = 0, int toIndex = Const::badIndex)
+        : m_index    { fromIndex }
+    {
+        m_fromIndex = C::toRange(fromIndex, true);
+        m_toIndex   = C::toRange(toIndex,   true);
+        m_order     = m_fromIndex > m_toIndex ? -1 : +1;
+    }
+
+    constexpr IteratorT(IteratorT const & from)
+        : IteratorT{ from.m_fromIndex, from.m_toIndex }
     {}
 
-    IteratorT(IteratorT const & from)
-        : IteratorT{ from.m_index }
-    {}
-
-
+    constexpr IteratorT(TEnum from, TEnum to)
+    {
+        m_fromIndex = D::indexOf(from);
+        m_toIndex   = D::indexOf(to);
+        m_order     = m_fromIndex > m_toIndex ? -1 : +1;
+    }
 //
 // Consistent API
 //
 public:
+    // \b Is m_index between _range[from, to]?
+    inline constexpr bool
+    inIterRange() const noexcept
+    {
+        return Qq::Helper::inMinMax(
+            m_order > 0 ? m_fromIndex : m_toIndex,
+            m_index,
+            m_order > 0 ? m_toIndex   : m_fromIndex
+        );
+    }
+
+    // \b Is m_index in range from 0 to D::count()-1.
     inline constexpr bool
     inRange() const noexcept
     {
         return D::indexInRange(m_index);
     }
 
-//
-// Assignment operators
-//
+    inline constexpr int
+    index() const noexcept
+    {
+        return m_index;
+    }
+
 public:
+
+    //
+    // Comparsion operators
+    //
+
+    friend inline constexpr bool
+    operator < (IteratorT const & lh, IteratorT const & rh) {
+        return lh.m_index < rh.m_index;
+    }
+
+    friend inline constexpr bool
+    operator > (IteratorT const & lh, IteratorT const & rh) {
+        return lh.m_index > rh.m_index;
+    }
+
+    friend inline constexpr bool
+    operator <= (IteratorT const & lh, IteratorT const & rh) {
+        return lh.m_index <= rh.m_index;
+    }
+
+    friend inline constexpr bool
+    operator >= (IteratorT const & lh, IteratorT const & rh) {
+        return lh.m_index >= rh.m_index;
+    }
+
+    friend inline constexpr bool
+    operator == (IteratorT const & lh, IteratorT const & rh) noexcept {
+        return lh.m_index == rh.m_index;
+    }
+
+    friend inline constexpr bool
+    operator != (IteratorT const & lh, IteratorT const & rh) noexcept {
+        return not (lh.m_index == rh.m_index);
+    }
+
+
+    //
+    // Assignment operators
+    //
+
     inline constexpr IteratorT &
     operator = (int n) noexcept
     {
@@ -66,98 +129,21 @@ public:
     inline constexpr IteratorT &
     operator = (IteratorT const & other) noexcept
     {
-        if (other == *this)
-            return *this;
+        if (other != *this)
+            m_index = other.m_index;
 
-        m_index = other.m_index;
         return *this;
     }
 
     //
-    // ADD & assignment
+    // ADD operators
     //
-    inline constexpr IteratorT &
-    operator += (int n) noexcept
-    {
-        m_index += n;
-        return *this;
-    }
-
-    inline constexpr IteratorT &
-    operator += (IteratorT const & other) noexcept
-    {
-        if (other == *this) return *this;
-        m_index += other.m_index;
-        return *this;
-    }
-
-    //
-    // SUB & assignment
-    //
-    inline constexpr IteratorT &
-    operator -= (int n) noexcept
-    {
-        m_index -= n;
-        return *this;
-    }
-
-    inline constexpr IteratorT &
-    operator -= (IteratorT const & other) noexcept
-    {
-        if (other == *this) return *this;
-        m_index -= other.m_index;
-        return *this;
-    }
-
-//
-// Comparsion operators
-//
-public:
-    friend inline constexpr bool
-    operator < (IteratorT const & it1, IteratorT const & it2) {
-        return it1.m_index < it2.m_index;
-    }
-
-    friend inline constexpr bool
-    operator > (IteratorT const & it1, IteratorT const & it2) {
-        return it2 < it1;
-    }
-
-    friend inline constexpr bool
-    operator <= (IteratorT const & it1, IteratorT const & it2) {
-        return not (it1 > it2);
-    }
-
-    friend inline constexpr bool
-    operator >= (IteratorT const & it1, IteratorT const & it2) {
-        return not (it2 < it1);
-    }
-
-    inline constexpr bool
-    operator == (IteratorT const & other) noexcept {
-        return m_index == other.m_index;
-    }
-
-    inline constexpr bool
-    operator != (IteratorT const & other) noexcept {
-        return not (m_index == other.m_index);
-    }
-
-//
-// Add operators
-//
-    inline constexpr IteratorT &
-    operator + (IteratorT const & other) noexcept
-    {
-        m_index += other.m_index;
-        return *this;
-    }
 
     friend inline constexpr IteratorT
-    operator + (IteratorT lhs, IteratorT const & rhs) noexcept
+    operator + (IteratorT lh, IteratorT const & rh) noexcept
     {
-        lhs += rhs;
-        return lhs;
+        lh += rh;
+        return lh;
     }
 
     friend inline constexpr IteratorT &
@@ -170,30 +156,42 @@ public:
     //
     // INC opertors
     //
-    constexpr inline IteratorT &
+    inline constexpr IteratorT &
     operator ++ () noexcept
     {
-        ++ m_index;
+        m_index += m_order;
         return *this;
     }
 
-    constexpr inline IteratorT
+    inline constexpr IteratorT
     operator ++ (int) noexcept
     {
         IteratorT tmp{ m_index };
-        ++ m_index;
+        m_index += m_order;
         return tmp;
     }
 
-//
-// Sub operators
-//
+    //
+    // ADD & assignment operators
+    //
+
     inline constexpr IteratorT &
-    operator - (IteratorT const & other) noexcept
+    operator += (int n) noexcept
     {
-        m_index -= other.m_index;
+        m_index += n;
         return *this;
     }
+
+    inline constexpr IteratorT &
+    operator += (IteratorT const & other) noexcept
+    {
+        m_index += other.m_index;
+        return *this;
+    }
+
+    //
+    // SUB operators
+    //
 
     friend inline constexpr IteratorT
     operator - (IteratorT lhs, IteratorT const & rhs) noexcept
@@ -212,10 +210,11 @@ public:
     //
     // DEC operators
     //
+
     constexpr inline IteratorT &
     operator -- () noexcept
     {
-        -- m_index;
+        m_index -= m_order;
         return *this;
     }
 
@@ -223,14 +222,32 @@ public:
     operator -- (int) noexcept
     {
         IteratorT tmp{ m_index };
-        -- m_index;
+        m_index -= m_order;
         return tmp;
     }
 
-//
-// Wrap operations
-//
-public:
+    //
+    // SUB & assignment
+    //
+
+    inline constexpr IteratorT &
+    operator -= (int n) noexcept
+    {
+        m_index -= n;
+        return *this;
+    }
+
+    inline constexpr IteratorT &
+    operator -= (IteratorT const & other) noexcept
+    {
+        m_index -= other.m_index;
+        return *this;
+    }
+
+    //
+    // Wrap operations
+    //
+
     constexpr inline EnumItemWrapper const &
     operator * () const noexcept
     {
@@ -256,8 +273,10 @@ private:
 // Fields
 //
 private:
-    Qq::Enum::Index m_index;
-    int             m_toIndex;
+    Qq::Enum::Index m_index     ;
+    int             m_fromIndex ;
+    int             m_toIndex   ;
+    int             m_order    ;
 };
 
 
