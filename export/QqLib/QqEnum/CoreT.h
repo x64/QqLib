@@ -5,6 +5,7 @@
 #include "./QqEnumString.h"
 #include "./QqEnumStringLiteral.h"
 #include "./MetadataT.h"
+#include "../Exceptions/ParseException.h"
 
 
 namespace Qq::Enum
@@ -19,21 +20,9 @@ template <typename TClass, typename TEnum, typename TInt =int>
 class CoreT
 {
 //
-// Types
-//
-public:
-    //using Metadata = MetadataT<TClass,TEnum,TInt>;
-
-
-//
 // Internal API
 //
 protected:
-    static inline TEnum
-    value(int index) noexcept
-    {
-        return D::value(index);
-    }
 
 //
 // Public API
@@ -44,15 +33,9 @@ public:
     // Range API
     //
 
-    static inline int
+    static inline constexpr int
     toRange(int index, bool negativeIsAllow = true) noexcept
     {
-        // TODO:
-        // static_assert(
-        //     qqIsNonConstEnumIndexType<TIndex>,
-        //     "The type of the `index` is not non-const enum index type."
-        // );
-
         if (negativeIsAllow)
             toPositiveRange(index);
 
@@ -60,15 +43,9 @@ public:
         return index;
     }
 
-    static constexpr void
+    static inline constexpr void
     toPositiveRange(int & index) noexcept
     {
-        // TODO:
-        // static_assert(
-        //     qqIsNonConstEnumIndexType<TIndex>,
-        //     "The type of the `index` is not non-const enum index type."
-        // );
-
         index = index < 0
             ? D::lastValidIndex() + index +1
             : index;
@@ -86,7 +63,7 @@ public:
         if (it == D::eiMap().end())
             qq_throw_l(
                 std::out_of_range,
-                StringLiteral{ "The %1(as int) is not a member of enumeration %2\nMETHOD: %3" }
+                QqEnumStringLiteral{ "The %1(as int) is not a member of enumeration %2\nMETHOD: %3" }
                     .arg(static_cast<TInt>(e))
                     .arg(D::className())
                     .arg(methodName)
@@ -97,7 +74,7 @@ public:
     }
 
     // ret: if index in range then don't throws the exception
-    static constexpr int
+    static inline constexpr int
     ifIndexOutOfRangeDoThrow(
         int          index,
         char const * methodName,
@@ -108,7 +85,7 @@ public:
 
         qq_throw_l(
             std::out_of_range,
-            StringLiteral{ "The %1 = %2 is out of range.\nMETHOD: %3" }
+            QqEnumStringLiteral{ "The %1 = %2 is out of range.\nMETHOD: %3" }
                 .arg(paramName)
                 .arg(index)
                 .arg(methodName)
@@ -120,32 +97,231 @@ public:
     // CTORs
     //
 
-    static constexpr int
-    ctor_index(int index) noexcept
+    static inline constexpr int
+    ctor_index(int index, char const * methodName = nullptr) noexcept
     {
-        return ifIndexOutOfRangeDoThrow(index, QQ_FULL_FUNC_SIG);
+        return ifIndexOutOfRangeDoThrow(index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+    }
+
+    static inline constexpr int
+    ctor_enum(TEnum e, char const * methodName = nullptr) noexcept
+    {
+        return ifEnumInNotRangeDoThrow(e, methodName ? methodName : QQ_FULL_FUNC_SIG);
     }
 
     //
-    // Operators
+    // Assignment operators
     //
 
-    static constexpr TClass &
-    op_assignmentEnum(TClass & c, TEnum e) noexcept
+    static inline constexpr TClass &
+    op_assignmentEnum(TClass & c, TEnum e, char const * methodName = nullptr) noexcept
     {
         c.m_index = D::indexOf(e);
-        ifIndexOutOfRangeDoThrow(c.m_index, QQ_FULL_FUNC_SIG);
+        ifIndexOutOfRangeDoThrow(c.m_index, methodName ? methodName : QQ_FULL_FUNC_SIG);
 
         return c;
     }
 
-    static constexpr TClass &
-    op_assignmentOther(TClass & c, TClass const & other) noexcept
+    static inline constexpr TClass &
+    op_assignmentOther(TClass & lh, TClass const & rh, char const * methodName = nullptr) noexcept
     {
-        c.m_index = other.m_index;
-        ifIndexOutOfRangeDoThrow(c.m_index, QQ_FULL_FUNC_SIG);
+        lh.m_index = rh.m_index;
+        ifIndexOutOfRangeDoThrow(lh.m_index, methodName ? methodName : QQ_FULL_FUNC_SIG);
 
-        return c;
+        return lh;
+    }
+
+    //
+    // ADD operators
+    //
+
+    static inline constexpr TClass &
+    op_add(TClass & lh, TClass const & rh, char const * methodName = nullptr) noexcept
+    {
+        lh.m_index += rh.m_index;
+        ifIndexOutOfRangeDoThrow(lh.m_index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+
+        return lh;
+    }
+
+    static inline constexpr TClass &
+    op_add(TClass & lh, int n, char const * methodName = nullptr) noexcept
+    {
+        lh.m_index += n;
+        ifIndexOutOfRangeDoThrow(lh.m_index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+
+        return lh;
+    }
+
+    //
+    // ADD & assignment operators
+    //
+
+    static inline constexpr int
+    op_add_assignment(int index, int n, char const * methodName = nullptr) noexcept
+    {
+        index += n;
+        return ifIndexOutOfRangeDoThrow(index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+    }
+
+    //
+    // INC operator (only prefix)
+    //
+
+    static inline constexpr int
+    op_inc(int index, char const * methodName = nullptr) noexcept
+    {
+        ++index;
+        return ifIndexOutOfRangeDoThrow(index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+    }
+
+    //
+    // SUB operators
+    //
+
+    static inline constexpr TClass &
+    op_sub(TClass & lh, TClass const & rh, char const * methodName = nullptr) noexcept
+    {
+        lh.m_index -= rh.m_index;
+        ifIndexOutOfRangeDoThrow(lh.m_index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+
+        return lh;
+    }
+
+    static inline constexpr TClass &
+    op_sub/*_asFriend*/(TClass & lh, int n, char const * methodName = nullptr) noexcept
+    {
+        lh.m_index -= n;
+        ifIndexOutOfRangeDoThrow(lh.m_index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+
+        return lh;
+    }
+
+    //
+    // ADD & assignment operators
+    //
+
+    static inline constexpr int
+    op_sub_assignment(int index, int n, char const * methodName = nullptr) noexcept
+    {
+        index -= n;
+        return ifIndexOutOfRangeDoThrow(index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+    }
+
+    //
+    // DEC operator (only prefix)
+    //
+
+    static inline constexpr int
+    op_dec(int index, char const * methodName = nullptr) noexcept
+    {
+        --index;
+        return ifIndexOutOfRangeDoThrow(index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+    }
+
+    //
+    // Other
+    //
+    static constexpr int
+    findNameIndex(char const * nameStr, bool caseInsensitive = true)
+    {
+        if (not nameStr) return -1;
+
+        int index   = -1;
+        int counter = 0;
+
+    #ifdef QQ_DONT_USE_QT
+        std::string sFind{
+            caseInsensitive
+                ? Qq::Helper::toLower(Qq::Helper::trim(nameStr))
+                : Qq::Helper::trim(nameStr)
+        };
+
+        for(auto const & name : D::nameList())
+        {
+            if (caseInsensitive)
+            {
+                std::string lowName{ name };
+                if (sFind == Qq::Helper::toLower(lowName))
+                {
+                    index = counter;
+                    break;
+                }
+            }
+            else
+            {
+                if (sFind == name)
+                {
+                    index = counter;
+                    break;
+                }
+            }
+
+            ++counter;
+        }
+    #else
+        QString sFind = QString{ nameStr }.trimmed();
+        sFind = not caseInsensitive ? sFind : sFind.toLower();
+
+        for(auto const & name : D::nameList())
+        {
+            if (caseInsensitive)
+                if (sFind == name.toLower())
+                {
+                    index = counter;
+                    break;
+                }
+            else
+            {
+                if (sFind == name)
+                {
+                    index = counter;
+                    break;
+                }
+            }
+
+            ++counter;
+        }
+    #endif
+
+        return index;
+    }
+
+    static constexpr bool
+    tryParse(
+        char const * name,
+        TClass     * out             = nullptr,
+        bool         caseInsensitive = true
+    )
+        noexcept
+    {
+        int idx = findNameIndex(name, caseInsensitive);
+
+        if (idx == Const::badIndex) return false;
+
+        if (out) out->m_index = idx;
+
+        return true;
+    }
+
+    static constexpr TClass
+    parse(char const * name, bool caseInsensitive = true)
+    {
+        int idx = findNameIndex(name, caseInsensitive);
+
+        if (idx == Const::badIndex)
+            qq_throw_l(
+                Qq::Exceptions::ParseException,
+                QqEnumStringLiteral{ "The string '%1' was not found in the list of names of the '%2' enum when parsing.\nMETHOD: %3" }
+                    .arg(name)
+                    .arg(D::className())
+                    .arg(QQ_FULL_FUNC_SIG)
+                    .toLatin1()
+            );
+
+        TClass res{ idx };
+
+        return res;
     }
 
 //
