@@ -8,6 +8,10 @@
 namespace Qq::Enum::Const
 {
 
+enum Index : int
+{
+    badIndex = -1
+};
 
 enum Mask : int
 {
