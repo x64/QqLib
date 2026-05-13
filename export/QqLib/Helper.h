@@ -31,6 +31,37 @@ struct Helper
         return res;
     }
 
+    static std::string &
+    toUpper(std::string && str)
+    {
+        for (auto & ch : str)
+            ch = std::toupper(ch);
+
+        return str;
+    }
+
+    static std::string &
+    toUpper(std::string & str)
+    {
+        return toUpper(std::move(str));
+    }
+
+    static std::string &
+    toLower(std::string && str)
+    {
+        for (auto & ch : str)
+            ch = std::tolower(ch);
+
+        return str;
+    }
+
+    static std::string &
+    toLower(std::string & str)
+    {
+        return toLower(std::move(str));
+    }
+
+
     template <typename TInt,
               std::enable_if_t<std::is_integral<TInt>::value, bool> = true>
     static bool
