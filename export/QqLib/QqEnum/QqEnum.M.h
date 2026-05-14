@@ -389,6 +389,11 @@ public:                                                                     \
     /* Assignment operators */                                                      \
                                                                                     \
     inline constexpr Class &                                                        \
+    operator = (Int i) noexcept {                                                   \
+        return _C::op_assignmentInt(*this, i, QQ_FULL_FUNC_SIG);                    \
+    }                                                                               \
+                                                                                    \
+    inline constexpr Class &                                                        \
     operator = (_Enum const e) noexcept {                                           \
         return _C::op_assignmentEnum(*this, e, QQ_FULL_FUNC_SIG);                   \
     }                                                                               \
@@ -430,10 +435,34 @@ public:                                                                     \
         return not (lh.m_index == rh.m_index);                                      \
     }                                                                               \
                                                                                     \
+    /* operator > */                                                                \
+                                                                                    \
     friend inline constexpr bool                                                    \
     operator > (Class const & lh, Class const & rh) noexcept {                      \
         return _D::value(lh.m_index) > _D::value(rh.m_index);                       \
     }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator > (Class const & lh, _Int i) noexcept {                                \
+        return _D::value(lh.m_index) > i;                                           \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator > (_Int i, Class const & rh) noexcept {                                \
+        return i > _D::value(rh.m_index);                                           \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator > (Class const & lh, _Enum e) noexcept {                               \
+        return _D::value(lh.m_index) > e;                                           \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator > (_Enum e, Class const & rh) noexcept {                               \
+        return e > _D::value(rh.m_index);                                           \
+    }                                                                               \
+                                                                                    \
+    /* operator < */                                                                \
                                                                                     \
     friend inline constexpr bool                                                    \
     operator < (Class const & lh, Class const & rh) noexcept {                      \
@@ -441,13 +470,77 @@ public:                                                                     \
     }                                                                               \
                                                                                     \
     friend inline constexpr bool                                                    \
+    operator < (Class const & lh, _Int i) noexcept {                                \
+        return _D::value(lh.m_index) < i;                                           \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator < (_Int i, Class const & rh) noexcept {                                \
+        return i < _D::value(rh.m_index);                                           \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator < (Class const & lh, _Enum e) noexcept {                               \
+        return _D::value(lh.m_index) < e;                                           \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator < (_Enum e, Class const & rh) noexcept {                               \
+        return e < _D::value(rh.m_index);                                           \
+    }                                                                               \
+                                                                                    \
+    /* operator >= */                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
     operator >= (Class const & lh, Class const & rh) noexcept {                     \
         return _D::value(lh.m_index) >= _D::value(rh.m_index);                      \
     }                                                                               \
                                                                                     \
     friend inline constexpr bool                                                    \
+    operator >= (Class const & lh, _Int i) noexcept {                               \
+        return _D::value(lh.m_index) >= i;                                          \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator >= (_Int i, Class const & rh) noexcept {                               \
+        return i >= _D::value(rh.m_index);                                          \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator >= (Class const & lh, _Enum e) noexcept {                              \
+        return _D::value(lh.m_index) >= e;                                          \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator >= (_Enum e, Class const & rh) noexcept {                              \
+        return e >= _D::value(rh.m_index);                                          \
+    }                                                                               \
+                                                                                    \
+    /* operator <= */                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
     operator <= (Class const & lh, Class const & rh) noexcept {                     \
         return _D::value(lh.m_index) <= _D::value(rh.m_index);                      \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator <= (Class const & lh, _Int i) noexcept {                               \
+        return _D::value(lh.m_index) <= i;                                          \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator <= (_Int i, Class const & rh) noexcept {                               \
+        return i <= _D::value(rh.m_index);                                          \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator <= (Class const & lh, _Enum e) noexcept {                              \
+        return _D::value(lh.m_index) <= e;                                          \
+    }                                                                               \
+                                                                                    \
+    friend inline constexpr bool                                                    \
+    operator <= (_Enum e, Class const & rh) noexcept {                              \
+        return e <= _D::value(rh.m_index);                                          \
     }                                                                               \
                                                                                     \
     /* ADD operators */                                                             \

@@ -321,6 +321,9 @@ void Enum_arithmetics_example()
 
     e1 = Enum1::One;
     cout << "e1 == Enum1::One, is true? " << boolToStr(Enum1::One == e1) << endl;
+
+    e3 = 10;
+    e3 = static_cast<Enum1::_Enum>(10);
 }
 
 void Enum1_comparsion_example()
@@ -331,12 +334,19 @@ void Enum1_comparsion_example()
 
     cout << "e1 == e2: " << boolToStr(e1 == e2) << " (" << e1._int() << ", " << e2._int() << ")" << endl;
     cout << "e1 != e2: " << boolToStr(e1 != e2) << " (" << e1._int() << ", " << e2._int() << ")" << endl;
-
+    cout << "\n";
     cout << "e1 < e2: " << boolToStr(e1 < e2) << " (" << e1._int() << ", " << e2._int() << ")" << endl;
     cout << "e1 > e2: " << boolToStr(e1 > e2) << " (" << e1._int() << ", " << e2._int() << ")" << endl;
-
+    cout << "\n";
     cout << "e1 <= e2: " << boolToStr(e1 <= e2) << " (" << e1._int() << ", " << e2._int() << ")" << endl;
     cout << "e1 >= e2: " << boolToStr(e1 >= e2) << " (" << e1._int() << ", " << e2._int() << ")" << endl;
+    cout << "\n";
+    cout << "e2 > 3: " << boolToStr(e2 > 3) << endl;
+    cout << "3 < e2: " << boolToStr(3 < e2) << endl;
+    cout << "\n";
+    cout << "e2 > Enum1::Three : " << boolToStr(e2 > Enum1::Three) << endl;
+    cout << "Enum1::Three < e2 : " << boolToStr(Enum1::Three < e2) << endl;
+
 }
 
 void Enum1_methods_example()

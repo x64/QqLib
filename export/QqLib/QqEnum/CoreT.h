@@ -114,10 +114,24 @@ public:
     //
 
     static inline constexpr TClass &
+    op_assignmentInt(TClass & c, TInt i, char const * methodName = nullptr) noexcept
+    {
+        return op_assignmentEnum(c, static_cast<TEnum>(i), methodName);
+    }
+
+    static inline constexpr TClass &
     op_assignmentEnum(TClass & c, TEnum e, char const * methodName = nullptr) noexcept
     {
         c.m_index = D::indexOf(e);
-        ifIndexOutOfRangeDoThrow(c.m_index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+        if (Const::badIndex == c.m_index)
+            qq_throw_l(
+                std::out_of_range,
+                QqEnumStringLiteral{ "The %1(as int) is not a member of enumeration %2\nMETHOD: %3" }
+                    .arg(static_cast<TInt>(e))
+                    .arg(D::className())
+                    .arg(methodName ? methodName : QQ_FULL_FUNC_SIG)
+                    .toLatin1()
+            )
 
         return c;
     }
