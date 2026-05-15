@@ -1,7 +1,7 @@
-#include <QCoreApplication>
+// #include <QCoreApplication>
 
-#include <QList>
-#include <iostream>
+ #include <vector>
+// #include <iostream>
 
 
 #include "../export/QqLib/QqEnum/_CompileConfig.h"
@@ -46,11 +46,11 @@ enum TEnum : int
 
 class EnumItem
 {
-    TEnum   m_value;
-    QString m_name;
+    TEnum       m_value;
+    std::string m_name;
 
 public:
-    EnumItem(TEnum aValue, QString const & aName)
+    EnumItem(TEnum aValue, std::string const & aName)
         : m_value{ aValue }
         , m_name { aName  }
     {}
@@ -65,14 +65,14 @@ public:
         return m_value;
     }
 
-    QString const & name() const noexcept {
+    std::string const & name() const noexcept {
         return m_name;
     }
 };
 
 
-QList<TEnum>   enums{ TEnum::a0, TEnum::b0, TEnum::c0, TEnum::d0, TEnum::e0, TEnum::f0, TEnum::g0 };
-QList<QString> names{ "TEnum::a0", "TEnum::b0", "TEnum::c0", "TEnum::d0", "TEnum::e0", "TEnum::f0", "TEnum::g0" };
+std::vector<TEnum>       enums{ TEnum::a0, TEnum::b0, TEnum::c0, TEnum::d0, TEnum::e0, TEnum::f0, TEnum::g0 };
+std::vector<std::string> names{ "TEnum::a0", "TEnum::b0", "TEnum::c0", "TEnum::d0", "TEnum::e0", "TEnum::f0", "TEnum::g0" };
 
 
 namespace NS0
@@ -517,7 +517,7 @@ int main(int argc, char *argv[])
 
     //Qq_string s{ "" };
 
-    QCoreApplication a(argc, argv);
+    //QCoreApplication a(argc, argv);
 
     // Set up code that uses the Qt event loop here.
     // Call a.quit() or a.exit() to quit the application.
@@ -530,13 +530,14 @@ int main(int argc, char *argv[])
     // If you do not need a running Qt event loop, remove the call
     // to a.exec() or use the Non-Qt Plain C++ Application template.
 
-    int itemCount = enums.size();
-    QList<EnumItem> items{ itemCount };
+    //-
+    // int itemCount = enums.size();
+    // std::vector<EnumItem> items{ itemCount };
 
-    for (int i = 0; i < itemCount; ++i)
-    {
-        items[i] = EnumItem{ enums[i], names[i] };
-    }
+    // for (int i = 0; i < itemCount; ++i)
+    // {
+    //     items[i] = EnumItem{ enums[i], names[i] };
+    // }
 
     return 0; //a.exec();
 }
