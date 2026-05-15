@@ -227,6 +227,25 @@ public:                                                                     \
         return _D::defaultValue();                                          \
     }                                                                       \
                                                                             \
+    static inline constexpr QqEnumString const &                            \
+    _invalidName() noexcept {                                               \
+        return _D::invalidValueName();                                      \
+    }                                                                       \
+                                                                            \
+    static inline constexpr QqEnumString const &                            \
+    _defaultName() noexcept {                                               \
+        return _D::defaultValueName();                                      \
+    }                                                                       \
+                                                                            \
+    /*                                                                      \
+     * Indexes                                                              \
+     */                                                                     \
+                                                                            \
+    inline constexpr bool                                                   \
+    _index() const noexcept {                                               \
+        return m_index();                                                   \
+    }                                                                       \
+                                                                            \
     inline constexpr bool                                                   \
     _invalidIndex() const noexcept {                                        \
         return _D::invalidValueIndex();                                     \
@@ -237,14 +256,14 @@ public:                                                                     \
         return _D::defaultValueIndex();                                     \
     }                                                                       \
                                                                             \
-    static inline constexpr QqEnumString const &                            \
-    _invalidName() noexcept {                                               \
-        return _D::invalidValueName();                                      \
+    inline constexpr bool                                                   \
+    _firstValidIndex() const noexcept {                                     \
+        return _D::firstValidIndex();                                       \
     }                                                                       \
                                                                             \
-    static inline constexpr QqEnumString const &                            \
-    _defaultName() noexcept {                                               \
-        return _D::defaultValueName();                                      \
+    inline constexpr bool                                                   \
+    _lastIndex() const noexcept {                                           \
+        return _D::lastValidIndex();                                        \
     }                                                                       \
                                                                             \
     /*                                                                      \
@@ -331,6 +350,7 @@ public:                                                                     \
     /*                                                                      \
      * Parsing                                                              \
      */                                                                     \
+                                                                            \
     static inline bool                                                      \
     _tryParse(                                                              \
         char const * str,                                                   \
