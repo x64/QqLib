@@ -120,7 +120,7 @@ public:
     }
 
     static inline constexpr TClass &
-    op_assignmentEnum(TClass & c, TEnum e, char const * methodName = nullptr) noexcept
+    op_assignmentEnum(TClass & c, TEnum e, char const * methodName = nullptr)
     {
         c.m_index = D::indexOf(e);
         if (Const::badIndex == c.m_index)
