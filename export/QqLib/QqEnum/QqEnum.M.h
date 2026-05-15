@@ -40,6 +40,7 @@ public:                                                                     \
     using _Class = Class;                                                   \
     using _Int   = Int;                                                     \
     enum  _Enum  : Int { __VA_ARGS__ };                                     \
+    using _      = _Enum;                                                   \
                                                                             \
     using _Wrapper = Qq::Enum::EnumItemWrapperT<_Enum,_Int>;                \
                                                                             \
@@ -241,7 +242,7 @@ public:                                                                     \
      * Indexes                                                              \
      */                                                                     \
                                                                             \
-    inline constexpr bool                                                   \
+    inline bool                                                             \
     _index() const noexcept {                                               \
         return m_index();                                                   \
     }                                                                       \
@@ -258,7 +259,7 @@ public:                                                                     \
                                                                             \
     inline constexpr bool                                                   \
     _firstValidIndex() const noexcept {                                     \
-        return _D::firstValidIndex();                                       \
+        return _D::firstValidindex();                                       \
     }                                                                       \
                                                                             \
     inline constexpr bool                                                   \
@@ -386,7 +387,7 @@ public:                                                                     \
         m_index = _C::ctor_index(other.m_index, QQ_FULL_FUNC_SIG);          \
     }                                                                       \
                                                                             \
-    explicit inline Class(_Enum e) noexcept {                               \
+    inline Class(_Enum e) noexcept {                                        \
         m_index = _C::ctor_enum(e, QQ_FULL_FUNC_SIG);                       \
     }                                                                       \
 
@@ -396,6 +397,12 @@ public:                                                                     \
 // Operators
 //
 #define QP_ENUM_OPERATORS_IMPL_AS(Int,Class)                                        \
+                                                                                    \
+    /* conversion operators */                                                      \
+    inline constexpr operator                                                                 \
+    operator Int () const {                                                         \
+        return _int();                                                              \
+    }                                                                               \
                                                                                     \
     /* Wrapper operator */                                                          \
     inline _Wrapper const &                                                         \
