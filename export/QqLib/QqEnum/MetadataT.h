@@ -324,10 +324,9 @@ public:
     }
 
     static inline constexpr bool
-    isValueValid(TEnum e)
+    isValueInvalid(TEnum e)
     {
-        return not isInvalidValueDefined()
-               || e != invalidValue();
+        return isInvalidValueDefined() && e == invalidValue();
     }
 
     static inline constexpr bool
