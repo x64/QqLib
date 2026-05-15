@@ -1,10 +1,5 @@
 #pragma once
 
-// #include <QList>
-// #include <QMap>
-#include <QLocale>
-
-
 #include "./_CompileConfig.h"
 #include "./QqEnumString.h"
 #include "./QqEnumStringLiteral.h"
