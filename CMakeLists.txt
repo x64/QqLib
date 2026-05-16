@@ -30,7 +30,7 @@ qt_add_executable(QqLib
     export/QqLib/QqEnum/EatAssignT.h
     export/QqLib/QqEnum/QqEnumStringLiteral.h
     export/QqLib/QqThread/QqMutexGuard.h
-    export/QqLib/Helper.h
+    export/QqLib/Helpers/Main.h
     export/QqLib/QqEnum/InvalidValueSetterT.h
     export/QqLib/QqThread/qq_lock.M.h
     export/QqLib/QqEnum/QqEnumString.h

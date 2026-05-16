@@ -58,7 +58,7 @@ public:
     inline constexpr bool
     inIterRange() const noexcept
     {
-        return Qq::Helper::inMinMax(
+        return Qq::Helpers::Main::inMinMax(
             m_order > 0 ? m_fromIndex : m_toIndex,
             m_index,
             m_order > 0 ? m_toIndex   : m_fromIndex

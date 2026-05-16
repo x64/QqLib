@@ -398,12 +398,6 @@ public:                                                                     \
 //
 #define QP_ENUM_OPERATORS_IMPL_AS(Int,Class)                                        \
                                                                                     \
-    /* conversion operators */                                                      \
-    inline constexpr operator                                                                 \
-    operator Int () const {                                                         \
-        return _int();                                                              \
-    }                                                                               \
-                                                                                    \
     /* Wrapper operator */                                                          \
     inline _Wrapper const &                                                         \
     operator () (int index = Qq::Enum::Const::badIndex) const noexcept              \

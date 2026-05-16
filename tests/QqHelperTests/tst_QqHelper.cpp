@@ -3,7 +3,7 @@
 // add necessary includes here
 #include <QDebug>
 
-#include "../../export/QqLib/Helper.h"
+#include "../../export/QqLib/Helpers/Main.h"
 
 
 
@@ -35,14 +35,14 @@ void QqHelper::trim_test01()
 {
     const char * str = "  +lastPos+ ";
 
-    qDebug() << "01:"<< Qq::Helper::trim(str);
+    qDebug() << "01:"<< Qq::Helpers::Main::trim(str);
 }
 
 void QqHelper::trim_test02()
 {
     const char * str = "+lastPos+";
 
-    qDebug() << "02:"<< Qq::Helper::trim(str);
+    qDebug() << "02:"<< Qq::Helpers::Main::trim(str);
 }
 
 
@@ -52,7 +52,7 @@ void QqHelper::inMinMax_test01()
     int max = 10;
     int x   = 0;
 
-    bool res = Qq::Helper::inMinMax(min, x, max);
+    bool res = Qq::Helpers::Main::inMinMax(min, x, max);
 
     QVERIFY( res);
 }
@@ -63,7 +63,7 @@ void QqHelper::inMinMax_test02()
     int max = 10;
     int x   = 1;
 
-    bool res = Qq::Helper::inMinMax(min, x, max);
+    bool res = Qq::Helpers::Main::inMinMax(min, x, max);
 
     QVERIFY( res);
 }
@@ -74,7 +74,7 @@ void QqHelper::inMinMax_test03()
     int max = 10;
     int x   = 11;
 
-    bool res = Qq::Helper::inMinMax(min, x, max);
+    bool res = Qq::Helpers::Main::inMinMax(min, x, max);
 
     QVERIFY( res );
 }
@@ -85,7 +85,7 @@ void QqHelper::inMinMax_test04()
     int max = 1;
     int x   = 1;
 
-    bool res = Qq::Helper::inMinMax(min, x, max);
+    bool res = Qq::Helpers::Main::inMinMax(min, x, max);
 
     QVERIFY( res );
 }

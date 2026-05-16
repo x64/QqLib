@@ -3,6 +3,7 @@
 
 #include "./_CompileConfig.h"
 #include "./QqEnumString.h"
+#include <vector>
 
 
 #ifdef QQ_DONT_USE_QT
@@ -110,7 +111,7 @@ protected:
         auto & sl  = * esl;
         auto & str = sl.m_str;
 
-        for (int i = str.size() -1; i >= 0; --i)
+        for (int i = static_cast<int>(str.size()) -1; i >= 0; --i)
         {
             if ('%' == str[i] && i < str.size()-1)
             {
@@ -141,7 +142,7 @@ protected:
         }
 
         if (nullptr != replaceCharCount)
-            * replaceCharCount = buff.size();
+            *replaceCharCount = static_cast<int>(buff.size());
 
         return std::atoi(buff.data());
     }

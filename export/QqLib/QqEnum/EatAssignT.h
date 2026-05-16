@@ -29,7 +29,7 @@ struct EatAssignT
         return *this;
     }
 
-    TEnum value;
+    TEnum value{};
 };
 
 

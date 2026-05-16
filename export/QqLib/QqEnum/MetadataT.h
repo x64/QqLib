@@ -156,7 +156,7 @@ public:
     static inline constexpr int
     count() noexcept
     {
-        return m_values.size();
+        return static_cast<int>(m_values.size());
     }
 
     static inline constexpr TEnum
@@ -179,7 +179,6 @@ public:
     value(int index) noexcept
     {
         C::ifIndexOutOfRangeDoThrow(index, QQ_FULL_FUNC_SIG);
-
         return m_values[index];
     }
 
@@ -271,7 +270,6 @@ public:
     static inline constexpr TEnum
     invalidValue() noexcept
     {
-        C::ifIndexOutOfRangeDoThrow(m_invalidValueIndex, QQ_FULL_FUNC_SIG);
         return value(m_invalidValueIndex);
     }
 
@@ -284,7 +282,6 @@ public:
     static inline constexpr TEnum
     defaultValue() noexcept
     {
-        C::ifIndexOutOfRangeDoThrow(m_defaultValueIndex, QQ_FULL_FUNC_SIG);
         return value(m_defaultValueIndex);
     }
 
@@ -376,7 +373,7 @@ protected:
         static std::string res{ fcnStr };
         if (not m_isCreated)
         {
-            int i = res.length() -1;
+            int i = static_cast<int>(res.length()) -1;
             for (; i > 2; --i)
                 if (':' == res[i] && ':' == res[i-1]) break;
 

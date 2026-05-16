@@ -8,8 +8,9 @@ namespace Qq::Enum
 
 
 template <typename TClass, typename TEnum, typename TInt =int>
-struct DefaultValueSetterT
+class DefaultValueSetterT
 {
+public:
     constexpr DefaultValueSetterT(TEnum const e) noexcept
     {
         MetadataT<TClass,TEnum,TInt>::setDefaultValue(e);

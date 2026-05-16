@@ -255,10 +255,11 @@ public:
         int counter = 0;
 
     #ifdef QQ_DONT_USE_QT
+        using H = Qq::Helpers::Main;
         std::string sFind{
             caseInsensitive
-                ? Qq::Helper::toLower(Qq::Helper::trim(nameStr))
-                : Qq::Helper::trim(nameStr)
+                ? H::toLower(H::trim(nameStr))
+                : H::trim(nameStr)
         };
 
         for(auto const & name : D::nameList())
@@ -266,7 +267,7 @@ public:
             if (caseInsensitive)
             {
                 std::string lowName{ name };
-                if (sFind == Qq::Helper::toLower(lowName))
+                if (sFind == H::toLower(lowName))
                 {
                     index = counter;
                     break;

@@ -3,16 +3,16 @@
 #include <string>
 
 
-namespace Qq
+namespace Qq::Helpers
 {
 
 
-struct Helper
+struct Main
 {
     static std::string
     trim(char const * str)
     {
-        size_t count = std::strlen(str);
+        int count = static_cast<int>(std::strlen(str));
 
         int i = 0;
 
@@ -87,7 +87,6 @@ struct Helper
 
         return min <= x && x <= max;
     }
-
 };
 
 

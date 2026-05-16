@@ -7,7 +7,7 @@
 #include "./_CompileConfig.h"
 #include "../QqEnum/QqEnumString.h"
 
-#include "../Helper.h"
+#include "../Helpers/Main.h"
 
 
 namespace Qq::Enum
@@ -39,11 +39,11 @@ struct Helper
     static std::string
     parseEnumValueName(char const * str) noexcept
     {
-        using H = Qq::Helper;
+        using H = Qq::Helpers::Main;
 
         std::string res{ str };
 
-        int pos = res.find('=');
+        int pos = static_cast<int>(res.find('='));
         if (std::string::npos != pos)
             res = res.substr(0, pos);
 
