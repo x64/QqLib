@@ -15,34 +15,34 @@ qt_standard_project_setup()
 
 qt_add_executable(QqLib
     examples/main.cpp
-    export/QqLib/Macros/Cat.M.h
-    export/QqLib/Macros/Expand.M.h
-    export/QqLib/Macros/Variadic/Size.M.h
-    export/QqLib/Macros/Variadic/Elem.M.h
-    export/QqLib/Macros/Variadic/ForEach.M.h
-    export/QqLib/QqEnum/QqEnum.M.h
-    export/QqLib/QqEnum/MetadataT.h
-    export/QqLib/QqEnum/Helper.h
-    export/QqLib/QqEnum/MetadataInitializierT.h
-    export/QqLib/QqEnum/_CompileConfig.h
-    export/QqLib/QqEnum/EnumItemWrapperT.h
-    export/QqLib/QqEnum/CoreT.h
-    export/QqLib/QqEnum/EatAssignT.h
-    export/QqLib/QqEnum/QqEnumStringLiteral.h
-    export/QqLib/QqThread/QqMutexGuard.h
-    export/QqLib/Helpers/Main.h
-    export/QqLib/QqEnum/InvalidValueSetterT.h
-    export/QqLib/QqThread/qq_lock.M.h
-    export/QqLib/QqEnum/QqEnumString.h
-    export/QqLib/Macros/_MainMacro.M.h
-    export/QqLib/QqEnum/DefaultValueSetterT.h
-    export/QqLib/Utils/qq_throw_l.M.h
-    export/QqLib/QqEnum/Index.h
-    export/QqLib/QqEnum/IteratorT.h
-    export/QqLib/QqEnum/Consts.h
-    export/QqLib/QqEnum/IterationRangeT.h
+    src/Macros/Cat.M.h
+    src/Macros/Expand.M.h
+    src/Macros/Variadic/Size.M.h
+    src/Macros/Variadic/Elem.M.h
+    src/Macros/Variadic/ForEach.M.h
+    src/QqEnum/QqEnum.M.h
+    src/QqEnum/MetadataT.h
+    src/QqEnum/Helper.h
+    src/QqEnum/MetadataInitializierT.h
+    src/QqEnum/_CompileConfig.h
+    src/QqEnum/EnumItemWrapperT.h
+    src/QqEnum/CoreT.h
+    src/QqEnum/EatAssignT.h
+    src/QqEnum/QqEnumStringLiteral.h
+    src/QqThread/QqMutexGuard.h
+    src/Helpers/Main.h
+    src/QqEnum/InvalidValueSetterT.h
+    src/QqThread/qq_lock.M.h
+    src/QqEnum/QqEnumString.h
+    src/Macros/_MainMacro.M.h
+    src/QqEnum/DefaultValueSetterT.h
+    src/Utils/qq_throw_l.M.h
+    src/QqEnum/Index.h
+    src/QqEnum/IteratorT.h
+    src/QqEnum/Consts.h
+    src/QqEnum/IterationRangeT.h
 
-    export/QqLib/Exceptions/ParseException.h
+    src/Exceptions/ParseException.h
 
 
 )
