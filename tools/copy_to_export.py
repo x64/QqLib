@@ -4,8 +4,6 @@
 import shutil
 import os
 
-fh = open("./files_for_copy_to_export.txt", "rt")
-
 src_dir  = "../src/"
 dest_dir = "../export/QqLib/"
 
@@ -17,16 +15,25 @@ def make_dirs(path):
 	os.makedirs(dest_dir + path)
 
 
-clean_dest_dir()
+def main():
+	clean_dest_dir()
 
-last_folder = ""
-for line in fh.readlines():
-	path = line.strip()
-	if path == "" : continue
-	if path[-1] == "/":
-		make_dirs(path)
-		last_folder = path
-		continue
-	path = last_folder + path
-	print("path: ", path)
-	shutil.copy(src_dir + path, dest_dir + path)
+	fh = open("./files_for_copy_to_export.txt", "rt")
+
+	last_folder = ""
+	for line in fh.readlines():
+		path = line.strip()
+		if path == "" : continue
+		if path[-1] == "/":
+			make_dirs(path)
+			last_folder = path
+			continue
+		path = last_folder + path
+		print("path: ", path)
+		shutil.copy(src_dir + path, dest_dir + path)
+
+	fh.close()
+
+#############
+
+main()

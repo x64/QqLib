@@ -82,3 +82,6 @@ CMakeLists.txt.user*
 .rcc/
 .uic/
 /build*/
+
+#
+export/

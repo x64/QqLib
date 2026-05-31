@@ -65,3 +65,6 @@ add_subdirectory(tests/QqThreadTests)
 add_subdirectory(tests/QqHelperTests)
 add_subdirectory(tests/QqEnumHelperTests)
 add_subdirectory(tests/QqEnumCoreT_Tests)
+
+#set(tool_dir ${PROJECT_SOURCE_DIR}/tools)
+#COMMAND ${Python3_EXECUTABLE} ${tool_dir}/
