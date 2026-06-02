@@ -66,6 +66,9 @@ add_subdirectory(tests/QqHelperTests)
 add_subdirectory(tests/QqEnumHelperTests)
 add_subdirectory(tests/QqEnumCoreT_Tests)
 
+# FindPython3
+# find_package(Python3)
+
 set(tool_dir ${PROJECT_SOURCE_DIR}/tools)
 add_custom_command(TARGET QqLib
         POST_BUILD
