@@ -4,10 +4,10 @@
 // #include <iostream>
 
 
-#include "../export/QqLib/QqEnum/_CompileConfig.h"
-#include "../export/QqLib/QqEnum/QqEnumString.h"
-#include "../export/QqLib/QqEnum/Index.h"
-#include "../export/QqLib/QqEnum/IteratorT.h"
+#include "../src/QqEnum/_CompileConfig.h"
+#include "../src/QqEnum/QqEnumString.h"
+#include "../src/QqEnum/Index.h"
+#include "../src/QqEnum/IteratorT.h"
 
 
 static char const * const
@@ -129,7 +129,7 @@ struct S3
 };
 }
 
-#include "../export/QqLib/QqEnum/QqEnumStringLiteral.h"
+#include "../src/QqEnum/QqEnumStringLiteral.h"
 void getArgNum_example()
 {
     using std::cout;
@@ -151,7 +151,7 @@ void s3_example()
     cout << s3._t.m_str << endl;
 }
 
-#include "../export/QqLib/QqEnum/QqEnum.M.h"
+#include "../src/QqEnum/QqEnum.M.h"
 
 struct Enum1
 {

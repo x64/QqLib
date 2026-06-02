@@ -3,7 +3,7 @@
 // add necessary includes here
 #include "QDebug"
 
-#include "../../export/QqLib/QqEnum/Helper.h"
+#include "../../src/QqEnum/Helper.h"
 
 
 class QqEnumHelper : public QObject

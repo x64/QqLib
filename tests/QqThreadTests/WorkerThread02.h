@@ -3,7 +3,7 @@
 #include <QThread>
 #include <QDebug>
 
-#include "../../export/QqLib/QqThread/qq_lock.M.h"
+#include "../../src/QqThread/qq_lock.M.h"
 
 
 class WorkerThread02 : public QThread

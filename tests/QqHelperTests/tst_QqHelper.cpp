@@ -3,7 +3,7 @@
 // add necessary includes here
 #include <QDebug>
 
-#include "../../export/QqLib/Helpers/Main.h"
+#include "../../src/Helpers/Main.h"
 
 
 

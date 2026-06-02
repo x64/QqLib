@@ -1,7 +1,7 @@
 #include <QTest>
 
 // add necessary includes here
-#include "../../export/QqLib/QqEnum/CoreT.h"
+#include "../../src/QqEnum/CoreT.h"
 
 
 class QqEnumCoreT : public QObject

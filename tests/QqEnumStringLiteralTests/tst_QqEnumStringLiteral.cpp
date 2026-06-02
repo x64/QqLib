@@ -4,10 +4,7 @@
 #include <iostream>
 
 
-// #include "P:/Projects/Free/QqLib/export/QqLib/QqEnum/_CompileConfig.h"
-// #include QQ_ENUM_QQ_STRING_INCLUDE
-
-#include "P:/Projects/Free/QqLib/export/QqLib/QqEnum/QqEnumStringLiteral.h"
+#include "../../src/QqEnum/QqEnumStringLiteral.h"
 
 class QqEnumStringLiteralTests : public QObject
 {

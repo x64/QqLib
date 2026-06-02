@@ -66,5 +66,8 @@ add_subdirectory(tests/QqHelperTests)
 add_subdirectory(tests/QqEnumHelperTests)
 add_subdirectory(tests/QqEnumCoreT_Tests)
 
-#set(tool_dir ${PROJECT_SOURCE_DIR}/tools)
-#COMMAND ${Python3_EXECUTABLE} ${tool_dir}/
+set(tool_dir ${PROJECT_SOURCE_DIR}/tools)
+add_custom_command(TARGET QqLib
+        POST_BUILD
+        COMMAND ${Python3_EXECUTABLE} "${tool_dir}/copy_to_export.py" "${PROJECT_SOURCE_DIR}" "${tool_dir}/files_for_copy_to_export.txt"
+        )

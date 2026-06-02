@@ -3,6 +3,7 @@
 
 import shutil
 import os
+import sys
 
 src_dir  = "../src/"
 dest_dir = "../export/QqLib/"
@@ -16,20 +17,32 @@ def make_dirs(path):
 
 
 def main():
+	global src_dir, dest_dir
+
+	if len(sys.argv) == 2 or len(sys.argv) > 3:
+		print("The number of command line arguments can't be equal to 2 or greater than 3.")
+		exit()
+
+	excec_from_cmake = True if len(sys.argv) == 3 else False
+
+	file_of_list = sys.argv[2]                    if excec_from_cmake else "files_for_copy_to_export.txt"
+	src_dir      = sys.argv[1] + "/src/"          if excec_from_cmake else src_dir
+	dest_dir     = sys.argv[1] + "/export/QqLib/" if excec_from_cmake else dest_dir
+
 	clean_dest_dir()
 
-	fh = open("./files_for_copy_to_export.txt", "rt")
+	fh = open(file_of_list, "rt")
 
 	last_folder = ""
 	for line in fh.readlines():
 		path = line.strip()
-		if path == "" : continue
-		if path[-1] == "/":
+		if ""  == path: continue
+		if "/" == path[-1]:
 			make_dirs(path)
 			last_folder = path
 			continue
 		path = last_folder + path
-		print("path: ", path)
+		print("copying:", path)
 		shutil.copy(src_dir + path, dest_dir + path)
 
 	fh.close()

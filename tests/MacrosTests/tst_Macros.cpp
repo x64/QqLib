@@ -50,8 +50,8 @@ void MacrosTests::initTestCase()
 //     //TEnum e2 = getEnum(1);
 // }
 
-#include "../../export/QqLib/QqEnum/_CompileConfig.h"
-#include "../../export/QqLib/QqEnum/QqEnumString.h"
+#include "../../src/QqEnum/_CompileConfig.h"
+#include "../../src/QqEnum/QqEnumString.h"
 
 
 //

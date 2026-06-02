@@ -2,7 +2,7 @@
 
 
 // add necessary includes here
-#include "../../export/QqLib/QqThread/QqMutexGuard.h"
+#include "../../src/QqThread/QqMutexGuard.h"
 #include "./WorkerThread02.h"
 
 class QqThread : public QObject
