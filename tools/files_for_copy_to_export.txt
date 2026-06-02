@@ -38,3 +38,5 @@ QqMutexGuard.h
 
 Utils/
 qq_throw_l.M.h 
+
+QqEnum.h
