@@ -1,3 +1,5 @@
+QqEnum.h
+
 Exceptions/
 ParseException.h
 
@@ -37,6 +39,4 @@ qq_lock.M.h
 QqMutexGuard.h
 
 Utils/
-qq_throw_l.M.h 
-
-QqEnum.h
+qq_throw_l.M.h
