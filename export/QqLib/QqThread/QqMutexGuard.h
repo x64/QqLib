@@ -1,9 +1,6 @@
 #pragma once
 
-
 #include <mutex>
-// #include <QMutex>
-// #include <QDebug>
 
 
 namespace Qq::Thread
@@ -17,13 +14,11 @@ struct QqMutexGuard
         : m_mutex{ mutex }
     {
         m_mutex.lock();
-        // qDebug() << "QqMutexGuard::mutex locked";
     }
 
     virtual ~QqMutexGuard() noexcept
     {
         m_mutex.unlock();
-        // qDebug() << "QqMutexGuard::mutex unlocked";
     }
 
     constexpr operator bool() const noexcept
