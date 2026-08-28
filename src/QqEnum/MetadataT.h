@@ -13,6 +13,9 @@
 #include "./EnumItemWrapperT.h"
 #include "./Consts.h"
 
+#include <cassert>
+
+
 
 namespace Qq::Enum
 {
@@ -25,13 +28,13 @@ struct MetadataT
 // Types
 //
 protected:
-    using H               = Helper;
+    using H          = Helper;
 public:
-    using ValueList       = std::vector     <TEnum>;
-    using NameList        = std::vector     <QqEnumString>;
-    using EIMap           = std::map        <TEnum,int>;
-    using EnumItemWrapper = EnumItemWrapperT<TEnum,TInt>;
-    using WrapperList     = std::vector     <EnumItemWrapper>;
+    using ValueList  = std::vector     <TEnum>;
+    using NameList   = std::vector     <QqEnumString>;
+    using EIMap      = std::map        <TEnum,int>;
+    using Wrapper    = EnumItemWrapperT<TEnum,TInt>;
+    using WrapperList= std::vector     <Wrapper>;
 
 //
 // Friends
@@ -101,7 +104,7 @@ public:
             m_wrappers.reserve(count());
 
             for (int i = 0; i < count(); ++i)
-                m_wrappers.push_back(EnumItemWrapper{ i, m_values[i], m_names[i] });
+                m_wrappers.push_back(Wrapper{ i, m_values[i], m_names[i] });
 
             calcAndSetMinMaxValues();
             m_lastValidIndex = count() -1;
@@ -120,19 +123,19 @@ public:
     //
 
     static inline char const *
-    className()
+    className() noexcept
     {
         return m_className;
     }
 
     static inline char const *
-    intTypeName()
+    intTypeName() noexcept
     {
         return m_intTypeName;
     }
 
     static inline char const *
-    fullClassName()
+    fullClassName() noexcept
     {
         return m_fullClassName;
     }
@@ -144,19 +147,21 @@ public:
     static inline constexpr TEnum
     firstValue() noexcept
     {
+        assert(m_values.size() > 0 && "m_values.size() can't be zero or less!");
         return m_values.front();
     }
 
     static inline constexpr TEnum
-    lastValue() noexcept
+    lastValue()
     {
+        assert(m_values.size() > 0 && "m_values.size() can't be zero or less!");
         return m_values.back();
     }
 
-    static inline constexpr int
+    static inline constexpr size_t
     count() noexcept
     {
-        return static_cast<int>(m_values.size());
+        return m_values.size();
     }
 
     static inline constexpr TEnum
@@ -176,41 +181,39 @@ public:
     //
 
     static inline constexpr TEnum
-    value(int index) noexcept
+    value(int index, char const * exceptionMethodName = nullptr)
     {
-        C::ifIndexOutOfRangeDoThrow(index, QQ_FULL_FUNC_SIG);
+        C::ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
         return m_values[index];
     }
 
     static inline constexpr QqEnumString const &
-    name(int index) noexcept
+    name(int index, char const * exceptionMethodName = nullptr)
     {
-        if (not indexInRange(index))
-            return c_emptyString;
-
+        C::ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
         return m_names[index];
     }
 
     static inline constexpr QqEnumString const &
-    nameByValue(TEnum e) noexcept
+    nameByValue(TEnum e, char const * exceptionMethodName = nullptr)
     {
-        int index = indexOf(e);
-        if (index < 0)
-            return c_emptyString;
-
-        return name(index);
+        int index = C::ifEnumInNotRangeDoThrow(e, exceptionMethodName);
+        return m_names[index];
     }
 
-    static inline constexpr EnumItemWrapper const &
-    wrapper(int index, char const * methodName = nullptr) noexcept
+    static inline constexpr Wrapper const &
+    wrapper(int index, char const * exceptionMethodName = nullptr)
     {
-        //TODO: -
-        // if (not indexInRange(index))
-        //     return c_emptyWrapper;
-
-        C::ifIndexOutOfRangeDoThrow(index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+        C::ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
         return m_wrappers[index];
     }
+
+    static inline constexpr Wrapper const &
+    wrapperNoCheck(int index) noexcept
+    {
+        return m_wrappers[index];
+    }
+
 
     static inline constexpr int
     indexOf(TEnum e) noexcept
@@ -218,9 +221,17 @@ public:
         auto & m  = eiMap();
         auto   it = m.find(e);
         if (it == m.end())
-            return -1;
+            return Const::badIndex;
 
         return it->second;
+    }
+
+    static inline constexpr TEnum
+    valueByInt(TInt i, char const * exceptionMethodName = nullptr)
+    {
+        TEnum e = static_cast<TEnum>(i);
+        C::ifEnumInNotRangeDoThrow(e, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        return e;
     }
 
     //
@@ -268,9 +279,9 @@ public:
     }
 
     static inline constexpr TEnum
-    invalidValue() noexcept
+    invalidValue(char const * exceptionMethodName = nullptr)
     {
-        return value(m_invalidValueIndex);
+        return value(m_invalidValueIndex, exceptionMethodName);
     }
 
     static inline constexpr int
@@ -280,9 +291,9 @@ public:
     }
 
     static inline constexpr TEnum
-    defaultValue() noexcept
+    defaultValue(char const * exceptionMethodName = nullptr)
     {
-        return value(m_defaultValueIndex);
+        return value(m_defaultValueIndex, exceptionMethodName);
     }
 
     static inline constexpr int
@@ -292,15 +303,15 @@ public:
     }
 
     static inline constexpr QqEnumString const &
-    defaultValueName() noexcept
+    defaultValueName(char const * exceptionMethodName = nullptr)
     {
-        return name(m_defaultValueIndex);
+        return name(m_defaultValueIndex, exceptionMethodName);
     }
 
     static inline constexpr QqEnumString const &
-    invalidValueName() noexcept
+    invalidValueName(char const * exceptionMethodName = nullptr)
     {
-        return name(m_invalidValueIndex);
+        return name(m_invalidValueIndex, exceptionMethodName);
     }
 
     static inline constexpr bool
@@ -355,6 +366,12 @@ public:
     lastValidIndex() noexcept
     {
         return m_lastValidIndex;
+    }
+
+    static inline constexpr int
+    lastIndex() noexcept
+    {
+        return count() - 1;
     }
 
     static inline constexpr int
@@ -523,7 +540,7 @@ private: //~ protected:
     static inline char const          * m_fullClassName = nullptr;
 
     static inline QqEnumString    const c_emptyString { "" };
-    static inline EnumItemWrapper const c_emptyWrapper{ -1, TEnum{}, c_emptyString };
+    static inline Wrapper const c_emptyWrapper{ -1, TEnum{}, c_emptyString };
 
 //
 // Using-synonyms

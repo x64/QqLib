@@ -69,8 +69,8 @@ add_subdirectory(tests/QqEnumCoreT_Tests)
 # FindPython3
 # find_package(Python3)
 
-set(tool_dir ${PROJECT_SOURCE_DIR}/tools)
+set(tools_dir ${PROJECT_SOURCE_DIR}/tools)
 add_custom_command(TARGET QqLib
         POST_BUILD
-        COMMAND ${Python3_EXECUTABLE} "${tool_dir}/copy_to_export.py" "${PROJECT_SOURCE_DIR}" "${tool_dir}/files_for_copy_to_export.txt"
+        COMMAND ${Python3_EXECUTABLE} "${tools_dir}/copy_to_export/copy_to_export.py" "${PROJECT_SOURCE_DIR}" "${tools_dir}/copy_to_export/files_for_copy_to_export.txt"
         )

@@ -57,7 +57,7 @@ public:
 
     EnumItem() = default;
 
-    bool operator < (const EnumItem & other) const noexcept {
+    bool operator < (EnumItem const & other) const noexcept {
          return m_value < other.m_value;
     }
 
@@ -153,9 +153,9 @@ void s3_example()
 
 #include "../src/QqEnum/QqEnum.M.h"
 
-struct Enum1
+struct EnumStruct
 {
-    QQ_ENUM_CORE(Enum1,
+    QQ_ENUM_CORE(EnumStruct,
         Unknown = 0,
 
         One,
@@ -175,11 +175,12 @@ struct Enum1
     #define TO_STD_STRING .toStdString()
 #endif
 
-void Enum1_example()
+
+void EnumStruct_example()
 {
     using namespace std;
 
-    Enum1 e1, e2;
+    EnumStruct e1, e2;
     cout << e1._invalid()                  << endl;
     cout << e1._default()                  << endl;
     cout << e1._count()                    << endl;
@@ -223,7 +224,7 @@ void Iterator_example()
 {
     using namespace std;
 
-    Enum1 e1{0};
+    EnumStruct e1{0};
     cout << "e1().value(): "     << e1().value()             << endl;
     cout << "e1().name():  "     << e1().name()TO_STD_STRING << endl;
     cout << "e1().asInt(): "     << e1().asInt()             << endl;
@@ -232,7 +233,8 @@ void Iterator_example()
 
     cout << "\n\n\n";
 
-    Qq::Enum::IteratorT<Enum1,Enum1::_Enum,Enum1::_Int> iter1, iter2{4}, iter3;
+    //Qq::Enum::IteratorT<EnumStruct,EnumStruct::_Enum,EnumStruct::_Int> iter1, iter2{4}, iter3;
+    EnumStruct::_Iterator iter1, iter2{4}, iter3;
     iter1 += 2;
     cout << "value: "       << iter1->value()
          << "\nname: "      << iter1->name()TO_STD_STRING
@@ -245,19 +247,102 @@ void Iterator_example()
     cout << "iter3.index(): " << iter3.index() << endl;
 
     auto e2 = e1;
-    Enum1 e3{ 0 };
+    EnumStruct e3{ 0 };
+}
+
+struct SolarSystemObject
+{
+    QQ_ENUM( SolarSystemObject,
+    Unknown = -1,
+
+    Sun = 0,
+
+    // Planets:
+    Mercury,
+    Venus,
+    Earth,
+    Mars,
+    Jupiter,
+    Saturn,
+    Uranus,
+    Neptune,
+
+    // Moons:
+    Moon,
+    Deimos,
+    Phobos,
+    // Jupiter's moons - Galilean moons:
+    Io,
+    Europa,
+    Ganymede,
+    Callisto,
+    // Saturn's moons – Big Seven:
+    Titan,
+    Rhea,
+    Iapetus,
+    Dione,
+    Tethys,
+    Enceladus,
+    Mimas,
+    // Uranu's moons – Big Five:
+    Titania,
+    Oberon,
+    Ariel,
+    Umbriel,
+    Miranda,
+    // Neptune's moons:
+    Triton,
+    Nereid,
+    Larissa,
+    Proteus,
+    Despina,
+    Galatea,
+    Thalassa,
+    Naiad,
+    Halimede,
+    Sao,
+    Laomedeia,
+    Neso,
+    Psamathe,
+    Hippocamp,
+    S_2002_N_5,
+    S_2021_N_1
+    )
+    QQ_ENUM_INVALID_VALUE(Unknown);
+    QQ_ENUM_DEFAULT_VALUE(Sun);
+};
+
+void Iterator_example_02()
+{
+    using namespace std;
+
+    //Qq::Enum::IteratorT<EnumStruct,EnumStruct::_Enum,EnumStruct::_Int> iter1, iter2{4}, iter3;
+    SolarSystemObject::_Iterator iter1, iter2{ 4 }, iter3;
+    iter1 += 2;
+    cout << "value: "       << iter1->value()
+         << "\nname: "      << iter1->name()TO_STD_STRING
+         << "\nasInt: "     << iter1->asInt()
+         << "\nisInvalid: " << iter1->isInvalid()
+         << "\nisDefault: " << iter1->isDefault()
+         << endl;
+
+    iter3 = iter1+iter2;
+    cout << "iter3->index(): " << iter3->index() << endl;
+    cout << "iter3->name(): "  << iter3->name()  << endl;
 }
 
 void IteratorWrapper_example()
 {
     using namespace std;
 
-    Enum1 e1;
+    SolarSystemObject e1{ SolarSystemObject::Mercury };
 
-    // variable "w" is "Qq::Enum::EnumItemWrapperT<Enum1,Enum1::_Enum,Enum1::_Int> const &"
-    for (auto const & w : Enum1::_range(0,3/*e1.Two, e1.Five*/))
+    //for (SolarSystemObject::_Wrapper const & w : e1._range(5))     // Prints all _Enum elements but skip first 5 elements
+    //for (SolarSystemObject::_Wrapper const & w : e1._range(-5))    // Prints last 5 _Enum elements
+    for (SolarSystemObject::_Wrapper const & w : e1._range(0,5))   // Prints first 5 _Enum elements
+    //for (SolarSystemObject::_Wrapper const & w : e1._range_r(0,5)) // Prints first 5 _Enum elements in reverse order
     {
-        cout << w.name()TO_STD_STRING << ", isDefault: " << w.isDefault() << ", isInvalid: " << w.isInvalid() << endl;
+        cout << w.name()TO_STD_STRING << " = " << w.asInt()<< "\t, isDefault: " << w.isDefault() << ", isInvalid: " << w.isInvalid() << endl;
     }
 
 }
@@ -266,40 +351,40 @@ void TryParse_example()
 {
     using namespace std;
 
-    Enum1 e1;
+    EnumStruct e1;
 
     bool res;
 
-    res = Enum1::_tryParse("one");
+    res = EnumStruct::_tryParse("one");
     cout << "Enum1::_tryeParse('one') is " << boolToStr(res) << endl;
 
-    res = Enum1::_tryParse("one", nullptr, false);
+    res = EnumStruct::_tryParse("one", nullptr, false);
     cout << "Enum1::_tryeParse('one', nullptr, false) is " << boolToStr(res) << endl;
 
-    res = Enum1::_tryParse("One", nullptr, false);
+    res = EnumStruct::_tryParse("One", nullptr, false);
     cout << "Enum1::_tryeParse('One', nullptr, false) is " << boolToStr(res) << endl;
 
-    res = Enum1::_tryParse("Ones");
+    res = EnumStruct::_tryParse("Ones");
     cout << "Enum1::_tryeParse('Ones') is " << boolToStr(res) << endl;
 }
 
-void Parse_example()
+void EnumStruct_Parse_example()
 {
     using namespace std;
 
-    auto e1 = Enum1::_parse("Two");
+    auto e1 = EnumStruct::_parse("Two");
     cout << "e1 = Enum1::_parse(''Two''); e1._name(): " << e1._name()TO_STD_STRING << endl;
 
     cout << "BEFORE auto e2 = Enum1::_parse(''five'');..." << endl;
-    auto e2 = Enum1::_parse("five");
+    auto e2 = EnumStruct::_parse("five");
     cout << "e2 = Enum1::_parse(''five''); e2._name(): " << e2._name()TO_STD_STRING << endl;
 }
 
-void Enum_arithmetics_example()
+void EnumStruct_arithmetics_example()
 {
     using namespace std;
 
-    Enum1 e1, e2{1}, e3;
+    EnumStruct e1, e2{1}, e3;
 
     cout << "initial e1 = " << e1().asInt() << ", " << e1().name() << endl;
     cout << "++e1 = " << (++e1)().asInt() << endl;
@@ -319,18 +404,22 @@ void Enum_arithmetics_example()
     e3 = e1-e2;
     cout << "e3 = e1 - e2: " << e3().asInt() << endl;
 
-    e1 = Enum1::One;
-    cout << "e1 == Enum1::One, is true? " << boolToStr(Enum1::One == e1) << endl;
+    e1 = EnumStruct::One;
+    cout << "e1 == Enum1::One, is true? " << boolToStr(EnumStruct::One == e1) << endl;
 
-    e3 = 10;
-    e3 = static_cast<Enum1::_Enum>(10);
+    cout << "e1 = " << e1._int() << endl;
+    cout << "e1 + 1 = " << (1 + e1)._int() << endl;
+
+    // TROW:
+    // e3 = 10;
+    // e3 = static_cast<EnumStruct::_Enum>(10);
 }
 
-void Enum1_comparsion_example()
+void EnumStruct_comparsion_example()
 {
     using namespace std;
 
-    Enum1 e1, e2{5};
+    EnumStruct e1, e2{5};
 
     cout << "e1 == e2: " << boolToStr(e1 == e2) << " (" << e1._int() << ", " << e2._int() << ")" << endl;
     cout << "e1 != e2: " << boolToStr(e1 != e2) << " (" << e1._int() << ", " << e2._int() << ")" << endl;
@@ -344,16 +433,27 @@ void Enum1_comparsion_example()
     cout << "e2 > 3: " << boolToStr(e2 > 3) << endl;
     cout << "3 < e2: " << boolToStr(3 < e2) << endl;
     cout << "\n";
-    cout << "e2 > Enum1::Three : " << boolToStr(e2 > Enum1::Three) << endl;
-    cout << "Enum1::Three < e2 : " << boolToStr(Enum1::Three < e2) << endl;
+    cout << "e2 > EnumStruct::Three : " << boolToStr(e2 > EnumStruct::Three) << endl;
+    cout << "EnumStruct::Three < e2 : " << boolToStr(EnumStruct::Three < e2) << endl;
+
+
+    cout << "!!!!!!!!!" << endl;
+    cout << "e1._name() = " << e1._name() << endl;
+    cout << "e1 == EnumStruct::_Enum::One: " << boolToStr(e1 == EnumStruct::_Enum::One) << endl;
+    cout << "EnumStruct::_Enum::One == e1: " << boolToStr(EnumStruct::_Enum::One == e1) << endl;
+    cout << endl;
+    cout << "e2._name() = " << e2._name() << endl;
+    cout << "e2 != EnumStruct::_Enum::One: " << boolToStr(e2 != EnumStruct::_Enum::One) << endl;
+    cout << "e2 == e1: " << boolToStr(e2 == e1) << endl;
+    cout << "e2 != e1: " << boolToStr(e2 != e1) << endl;
 
 }
 
-void Enum1_methods_example()
+void EnumStruct_methods_example()
 {
     using namespace std;
 
-    Enum1 e1{Enum1::Unknown};
+    EnumStruct e1{EnumStruct::Unknown};
 
     cout << "e1._className(): "                 << e1._className()                          << endl;
     cout << "e1._intTypeName(): "               << e1._intTypeName()                        << endl;
@@ -366,7 +466,7 @@ void Enum1_methods_example()
     cout << "e1._int(): "                       << e1._int()                                << endl;
     cout << "e1._value(): "                     << e1._value()                              << endl;
     cout << "e1._name(): "                      << e1._name()                               << endl;
-    cout << "Enum1::_nameByValue(Enum1::One): " << Enum1::_nameByValue(Enum1::One)          << endl;
+    cout << "Enum1::_nameByValue(Enum1::One): " << EnumStruct::_nameByValue(EnumStruct::One)          << endl;
     cout << "e1(): "                                                   << endl
                 << "  .value(): "    << e1().value()                   << endl
                 << "  .name(): "     << e1().name()                    << endl
@@ -391,8 +491,8 @@ void Wrapper_conversion_example()
 {
     using namespace std;
 
-    auto w1 = Enum1::_wrapper(1);
-    auto w2 = Enum1::_wrapper(5);
+    auto w1 = EnumStruct::_wrapper(1);
+    auto w2 = EnumStruct::_wrapper(5);
 
     cout << " w1 = " << w1.value() << " w2 = " << w2.value() << endl;
     cout << " w2 = " << w1.value() << " w2 = " << w2.value() << endl;
@@ -422,7 +522,7 @@ void IterationByIterator_example()
          << "direct order  example: _range()\n"
          << "--------------------------------\n"
          << "\n";
-    for ( auto const & w : Enum1::_range())
+    for ( auto const & w : EnumStruct::_range())
     {
         cout << "wrapper by _range(): " << endl;
         cout << "   .name(): "      << w.name()                     << endl;
@@ -437,7 +537,7 @@ void IterationByIterator_example()
          << "reverse order example: _range_r()\n"
          << "-----------------------------------\n"
          << "\n";
-    for ( auto const & w : Enum1::_range_r())
+    for ( auto const & w : EnumStruct::_range_r())
     {
         cout << "wrapper by _range_r(): "                           << endl;
         cout << "   .name(): "      << w.name()                     << endl;
@@ -452,7 +552,7 @@ void IterationByIterator_example()
          << "direct order example: _range(Enum1::Unknown, Enum1::Three)\n"
          << "------------------------------------------------------------\n"
          << "\n";
-    for ( auto const & w : Enum1::_range(Enum1::Unknown, Enum1::Three))
+    for ( auto const & w : EnumStruct::_range(EnumStruct::Unknown, EnumStruct::Three))
     {
         cout << "wrapper by _range(Enum1::Unknown, Enum1::Three): " << endl;
         cout << "   .name(): "      << w.name()                     << endl;
@@ -467,7 +567,7 @@ void IterationByIterator_example()
          << "reverse order example: _range_r(Enum1::Unknown, Enum1::Three)\n"
          << "---------------------------------------------------------------\n"
          << "\n";
-    for ( auto const & w : Enum1::_range_r(Enum1::Unknown, Enum1::Three))
+    for ( auto const & w : EnumStruct::_range_r(EnumStruct::Unknown, EnumStruct::Three))
     {
         cout << "wrapper by _range_r(Enum1::Unknown, Enum1::Three): " << endl;
         cout << "   .name(): "      << w.name()                     << endl;
@@ -482,7 +582,7 @@ void IterationByIterator_example()
          << "reverse order  example: _range(Enum1::Three, Enum1::Unknown)\n"
          << "-------------------------------------------------------------\n"
          << "\n";
-    for ( auto const & w : Enum1::_range(Enum1::Three, Enum1::Unknown))
+    for ( auto const & w : EnumStruct::_range(EnumStruct::Three, EnumStruct::Unknown))
     {
         cout << "wrapper by _range(Enum1::Three, Enum1::Unknown): " << endl;
         cout << "   .name(): "      << w.name()                     << endl;
@@ -497,18 +597,19 @@ void IterationByIterator_example()
 
 int main(int argc, char *argv[])
 {
-    RUN_EXAMPLE(Enum_arithmetics_example)
-    RUN_EXAMPLE(Enum1_comparsion_example)
-    RUN_EXAMPLE(Enum1_methods_example)
-    RUN_EXAMPLE(Wrapper_conversion_example)
+    RUN_EXAMPLE(EnumStruct_comparsion_example)
+    RUN_EXAMPLE(EnumStruct_arithmetics_example)
     RUN_EXAMPLE(IteratorWrapper_example)
-    RUN_EXAMPLE(IterationByIterator_example)
+    RUN_EXAMPLE(Iterator_example_02)
     return 0;
-    RUN_EXAMPLE(Parse_example)
+    RUN_EXAMPLE(EnumStruct_methods_example)
+    RUN_EXAMPLE(Wrapper_conversion_example)
+    RUN_EXAMPLE(IterationByIterator_example)
+    RUN_EXAMPLE(EnumStruct_Parse_example)
     RUN_EXAMPLE(TryParse_example)
     RUN_EXAMPLE(getArgNum_example)
     RUN_EXAMPLE(s3_example)
-    RUN_EXAMPLE(Enum1_example)
+    RUN_EXAMPLE(EnumStruct_example)
     RUN_EXAMPLE(Index_example)
     RUN_EXAMPLE(Iterator_example)
 

@@ -17,16 +17,16 @@ struct IteratorT
 //
 // Public using synonyms:
 //
-    using EnumItemWrapper = EnumItemWrapperT<TEnum,TInt>;
+    using Wrapper = EnumItemWrapperT<TEnum,TInt>;
 
 //
 // Iterator's using-synonyms
 //
     using iterator_category = std::random_access_iterator_tag;
     using difference_type   = std::ptrdiff_t;
-    using value_type        = EnumItemWrapper;
-    using pointer           = EnumItemWrapper * ;
-    using reference         = EnumItemWrapper & ;
+    using value_type        = Wrapper;
+    using pointer           = Wrapper * ;
+    using reference         = Wrapper & ;
 
 //
 // CTORs
@@ -50,6 +50,7 @@ public:
         m_toIndex   = D::indexOf(to);
         m_order     = m_fromIndex > m_toIndex ? -1 : +1;
     }
+
 //
 // Consistent API
 //
@@ -79,7 +80,6 @@ public:
     }
 
 public:
-
     //
     // Comparsion operators
     //
@@ -140,10 +140,11 @@ public:
     //
 
     friend inline constexpr IteratorT
-    operator + (IteratorT lh, IteratorT const & rh) noexcept
+    operator + (IteratorT const & lh, IteratorT const & rh) noexcept
     {
-        lh += rh;
-        return lh;
+        IteratorT iter;
+        iter.m_index = lh.m_index + rh.m_index;
+        return iter;
     }
 
     friend inline constexpr IteratorT &
@@ -248,18 +249,18 @@ public:
     // Wrap operations
     //
 
-    constexpr inline EnumItemWrapper const &
-    operator * () const noexcept
+    constexpr inline Wrapper const &
+    operator * () const
     {
         C::ifIndexOutOfRangeDoThrow(m_index, QQ_FULL_FUNC_SIG, "m_index");
-        return D::wrapper(m_index);
+        return D::wrapperNoCheck(m_index);
     }
 
-    constexpr inline EnumItemWrapper const *
-    operator -> () const noexcept
+    constexpr inline Wrapper const *
+    operator -> () const
     {
         C::ifIndexOutOfRangeDoThrow(m_index, QQ_FULL_FUNC_SIG, "m_index");
-        return & D::wrapper(m_index);
+        return & D::wrapperNoCheck(m_index);
     }
 
 //

@@ -57,7 +57,7 @@ public:
     static inline constexpr int
     ifEnumInNotRangeDoThrow(
         TEnum        e,
-        char const * methodName)
+        char const * exceptionMethodName = nullptr)
     {
         auto it = D::eiMap().find(e);
         if (it == D::eiMap().end())
@@ -66,7 +66,7 @@ public:
                 QqEnumStringLiteral{ "The %1(as int) is not a member of enumeration %2\nMETHOD: %3" }
                     .arg(static_cast<TInt>(e))
                     .arg(D::className())
-                    .arg(methodName)
+                    .arg(exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG)
                     .toLatin1()
             )
 
@@ -77,7 +77,7 @@ public:
     static inline constexpr int
     ifIndexOutOfRangeDoThrow(
         int          index,
-        char const * methodName,
+        char const * exceptionMethodName,
         char const * paramName = "index")
     {
         if (D::indexInRange(index)) //-V3504
@@ -88,7 +88,7 @@ public:
             QqEnumStringLiteral{ "The %1 = %2 is out of range.\nMETHOD: %3" }
                 .arg(paramName)
                 .arg(index)
-                .arg(methodName)
+                .arg(exceptionMethodName)
                 .toLatin1()
         );
     }
@@ -98,15 +98,15 @@ public:
     //
 
     static inline constexpr int
-    ctor_index(int index, char const * methodName = nullptr) noexcept
+    ctor_index(int index, char const * exceptionMethodName = nullptr)
     {
-        return ifIndexOutOfRangeDoThrow(index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+        return ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
     }
 
     static inline constexpr int
-    ctor_enum(TEnum e, char const * methodName = nullptr) noexcept
+    ctor_enum(TEnum e, char const * exceptionMethodName = nullptr)
     {
-        return ifEnumInNotRangeDoThrow(e, methodName ? methodName : QQ_FULL_FUNC_SIG);
+        return ifEnumInNotRangeDoThrow(e, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
     }
 
     //
@@ -114,13 +114,13 @@ public:
     //
 
     static inline constexpr TClass &
-    op_assignmentInt(TClass & c, TInt i, char const * methodName = nullptr) noexcept
+    op_assignmentInt(TClass & c, TInt i, char const * exceptionMethodName = nullptr)
     {
-        return op_assignmentEnum(c, static_cast<TEnum>(i), methodName);
+        return op_assignmentEnum(c, static_cast<TEnum>(i), exceptionMethodName);
     }
 
     static inline constexpr TClass &
-    op_assignmentEnum(TClass & c, TEnum e, char const * methodName = nullptr)
+    op_assignmentEnum(TClass & c, TEnum e, char const * exceptionMethodName = nullptr)
     {
         c.m_index = D::indexOf(e);
         if (Const::badIndex == c.m_index)
@@ -129,7 +129,7 @@ public:
                 QqEnumStringLiteral{ "The %1(as int) is not a member of enumeration %2\nMETHOD: %3" }
                     .arg(static_cast<TInt>(e))
                     .arg(D::className())
-                    .arg(methodName ? methodName : QQ_FULL_FUNC_SIG)
+                    .arg(exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG)
                     .toLatin1()
             )
 
@@ -137,11 +137,11 @@ public:
     }
 
     static inline constexpr TClass &
-    op_assignmentOther(TClass & lh, TClass const & rh, char const * methodName = nullptr) noexcept
+    //- op_assignmentOther(TClass & lh, TClass const & rh, char const * exceptionMethodName = nullptr)
+    op_assignmentOther(TClass & lh, TClass const & rh) noexcept
     {
         lh.m_index = rh.m_index;
-        ifIndexOutOfRangeDoThrow(lh.m_index, methodName ? methodName : QQ_FULL_FUNC_SIG);
-
+        //- ifIndexOutOfRangeDoThrow(lh.m_index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
         return lh;
     }
 
@@ -150,19 +150,19 @@ public:
     //
 
     static inline constexpr TClass &
-    op_add(TClass & lh, TClass const & rh, char const * methodName = nullptr) noexcept
+    //- op_add(TClass & lh, TClass const & rh, char const * exceptionMethodName = nullptr)
+    op_add(TClass & lh, TClass const & rh) noexcept
     {
         lh.m_index += rh.m_index;
-        ifIndexOutOfRangeDoThrow(lh.m_index, methodName ? methodName : QQ_FULL_FUNC_SIG);
-
+        //- ifIndexOutOfRangeDoThrow(lh.m_index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
         return lh;
     }
 
     static inline constexpr TClass &
-    op_add(TClass & lh, int n, char const * methodName = nullptr) noexcept
+    op_add(TClass & lh, int n, char const * exceptionMethodName = nullptr)
     {
         lh.m_index += n;
-        ifIndexOutOfRangeDoThrow(lh.m_index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+        ifIndexOutOfRangeDoThrow(lh.m_index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
 
         return lh;
     }
@@ -172,10 +172,10 @@ public:
     //
 
     static inline constexpr int
-    op_add_assignment(int index, int n, char const * methodName = nullptr) noexcept
+    op_add_assignment(int index, int n, char const * exceptionMethodName = nullptr)
     {
         index += n;
-        return ifIndexOutOfRangeDoThrow(index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+        return ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
     }
 
     //
@@ -183,10 +183,10 @@ public:
     //
 
     static inline constexpr int
-    op_inc(int index, char const * methodName = nullptr) noexcept
+    op_inc(int index, char const * exceptionMethodName = nullptr)
     {
         ++index;
-        return ifIndexOutOfRangeDoThrow(index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+        return ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
     }
 
     //
@@ -194,19 +194,19 @@ public:
     //
 
     static inline constexpr TClass &
-    op_sub(TClass & lh, TClass const & rh, char const * methodName = nullptr) noexcept
+    op_sub(TClass & lh, TClass const & rh, char const * exceptionMethodName = nullptr)
     {
         lh.m_index -= rh.m_index;
-        ifIndexOutOfRangeDoThrow(lh.m_index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+        ifIndexOutOfRangeDoThrow(lh.m_index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
 
         return lh;
     }
 
     static inline constexpr TClass &
-    op_sub/*_asFriend*/(TClass & lh, int n, char const * methodName = nullptr) noexcept
+    op_sub/*_asFriend*/(TClass & lh, int n, char const * exceptionMethodName = nullptr)
     {
         lh.m_index -= n;
-        ifIndexOutOfRangeDoThrow(lh.m_index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+        ifIndexOutOfRangeDoThrow(lh.m_index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
 
         return lh;
     }
@@ -216,10 +216,10 @@ public:
     //
 
     static inline constexpr int
-    op_sub_assignment(int index, int n, char const * methodName = nullptr) noexcept
+    op_sub_assignment(int index, int n, char const * exceptionMethodName = nullptr)
     {
         index -= n;
-        return ifIndexOutOfRangeDoThrow(index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+        return ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
     }
 
     //
@@ -227,25 +227,31 @@ public:
     //
 
     static inline constexpr int
-    op_dec(int index, char const * methodName = nullptr) noexcept
+    op_dec(int index, char const * exceptionMethodName = nullptr)
     {
         --index;
-        return ifIndexOutOfRangeDoThrow(index, methodName ? methodName : QQ_FULL_FUNC_SIG);
+        return ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
     }
 
     //
     // Comparsion operators
     //
     static inline constexpr bool
-    op_compare(int index, TEnum e, char const * methodName = nullptr) noexcept
+    op_compare(int index, TEnum e, char const * exceptionMethodName = nullptr)
     {
-        return index == ifEnumInNotRangeDoThrow(e, methodName ? methodName : QQ_FULL_FUNC_SIG);
+        return index == ifEnumInNotRangeDoThrow(e, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
     }
 
+    // static inline constexpr bool
+    // op_great(TClass const c, TInt i, char const * exceptionMethodName = nullptr) noexcept
+    // {
+    //     return c._value() > D::valueByInt(i, exceptionMethodName);
+    // }
 
     //
     // Other
     //
+
     static constexpr int
     findNameIndex(char const * nameStr, bool caseInsensitive = true)
     {
@@ -330,7 +336,10 @@ public:
     }
 
     static constexpr TClass
-    parse(char const * name, bool caseInsensitive = true)
+    parse(
+        char const * name,
+        bool         caseInsensitive     = true,
+        char const * exceptionMethodName = nullptr)
     {
         int idx = findNameIndex(name, caseInsensitive);
 
@@ -340,7 +349,7 @@ public:
                 QqEnumStringLiteral{ "The string '%1' was not found in the list of names of the '%2' enum when parsing.\nMETHOD: %3" }
                     .arg(name)
                     .arg(D::className())
-                    .arg(QQ_FULL_FUNC_SIG)
+                    .arg(exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG)
                     .toLatin1()
             );
 

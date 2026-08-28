@@ -83,5 +83,6 @@ CMakeLists.txt.user*
 .uic/
 /build*/
 
+.odt
 #
 #export/
