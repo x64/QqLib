@@ -84,5 +84,6 @@ CMakeLists.txt.user*
 /build*/
 
 .odt
+.bak
 #
 #export/

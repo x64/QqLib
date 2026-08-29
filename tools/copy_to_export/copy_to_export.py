@@ -4,7 +4,7 @@
 # use:
 #    copy_to_export.py
 #    or
-#    copy_to_export.py <path to source dir> <path to "files_for_copy_to_export.txt">
+#    copy_to_export.py <path to source dir> <path to "files_for_copy_to_export.txt" file>
 
 import shutil
 import os
