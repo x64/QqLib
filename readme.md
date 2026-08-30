@@ -31,11 +31,13 @@ struct EnumStruct
 
 #### <div align="center">Rules for naming fields in QqEnum</div>
 1. All enum element names are without underscores and can begin with either a capital or lowercase letter: ```None```, ```One```, ```one```, ```two```, etc.
-2. Only internal methods, fields, types, etc. begin with an underscore: ```QqEnum``` (```_first()```, ```_last()```, etc.).
+2. Only internal methods, fields, types, etc. begin with an underscore ```QqEnum```: ```_first()```, ```_last()```, etc.
 3. Public ```QqEnum``` types always begin with an underscore and then a CAPITAL letter (```_Enum```, ```_Class```, ```_Int```, etc.). Everything else begins with an underscore and a lowercase letter.
 
 #### <div align="center">How to start using</div>
-Download or clone the repository. Place the "```export/QqLib```" directory in a convenient location so you can include ```QqLib``` with the standard ```#include``` command: ```#include <QqLib/QqEnum.h>```
+0. Your compiler must support C++ version 17 or higher.
+1. Download or clone the repository.
+2. Place the "```export/QqLib```" directory in a convenient location so you can include ```QqLib``` with the standard ```#include``` command: ```#include <QqLib/QqEnum.h>```
 
 #### <div align="center">File naming style in the library</div>
 The library uses regular ```.h``` and ```.cpp``` files with the suffixes "```.h```" and "```.cpp```" respectively.
