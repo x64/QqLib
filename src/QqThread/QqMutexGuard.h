@@ -8,15 +8,18 @@ namespace Qq::Thread
 
 
 template <class TMutex>
-struct QqMutexGuard
+class QqMutexGuard
 {
-    QqMutexGuard(TMutex & mutex) noexcept
+public:
+    QqMutexGuard(QqMutexGuard const &) = delete;
+
+    QqMutexGuard(TMutex & mutex)
         : m_mutex{ mutex }
     {
         m_mutex.lock();
     }
 
-    virtual ~QqMutexGuard() noexcept
+    ~QqMutexGuard()
     {
         m_mutex.unlock();
     }
@@ -26,6 +29,9 @@ struct QqMutexGuard
         return true;
     }
 
+    QqMutexGuard & operator = (const QqMutexGuard&) = delete;
+
+private:
     TMutex & m_mutex;
 };
 

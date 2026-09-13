@@ -9,4 +9,4 @@
 #endif
 
 
-#define qq_lock     if ( static QQ_LOCK_MUTEX_TYPE _qq_mutex; Qq::Thread::QqMutexGuard{ _qq_mutex } )
+#define qq_lock     if ( static QQ_LOCK_MUTEX_TYPE __qq_mutex; Qq::Thread::QqMutexGuard { __qq_mutex } )

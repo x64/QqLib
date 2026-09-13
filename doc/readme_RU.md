@@ -183,7 +183,7 @@ struct EnumStruct
 ```Class & operator += (Class const & other)``` – возвращает текущий экземпляр, в котором ```m_index``` уже увеличен на ```other.m_index```. Если сумма ```m_index+other.m_index``` будет больше ```Class::_lastIndex()```, то транзитный метод выкинет исключение ```std::out_of_range```.
 
 ##### 9.4. Операторы вычитания.
-```friend Class operator - (Class & lh, Class const & rh)``` – экземпляр ```Class```, в котором будет разница ```lh.m_index–rh.m_index```. Если ```lh.m_index–rh.m_index``` меньше нуля или больше ```Class::_lastIndex()```, то транзитный метод выкинет исключение ```std::out_of_range```.
+```friend Class operator - (Class const & lh, Class const & rh)``` – экземпляр ```Class```, в котором будет разница ```lh.m_index–rh.m_index```. Если ```lh.m_index–rh.m_index``` меньше нуля или больше ```Class::_lastIndex()```, то транзитный метод выкинет исключение ```std::out_of_range```.
 ```friend Class operator – (Class const & c, int n)``` – возвращает новый экземпляр ```Class```, в котором будет разница ```c.m_index–n```. Если значение будет меньше нуля или больше ```Class::_lastIndex()```, тогда транзитный метод выкинет исключение ```std::out_of_range```.
 ```friend Class operator – (int n, Class const & c)``` – возвращает новый экземпляр ```Class```, в котором будет разница ```n– c.m_index```. Если значение будет меньше нуля или больше ```Class::_lastIndex()```, тогда транзитный метод выкинет исключение ```std::out_of_range```.
 ```Class & operator –= (int n)``` – возвращает текущий экземпляр, в котором ```m_index``` уже уменьшен на ```n```. Если разница ```n-m_index``` будет меньше нуля или больше ```_lastIndex()```, то транзитный метод выкинет исключение ```std::out_of_range```.
