@@ -323,7 +323,7 @@ Mars = 4        , isDefault: 0, isInvalid: 0
 That is, the ```_range()``` and ```_range_r()``` methods return a ```Qq::Enum::IterationRange``` object, which has ```begin()``` and ```end()``` methods for executing the foreach loop.
 
 ##### 4. qq_lock.
-A macro for using mutex-based critical sections. Example usage: Let's say you need to ensure exclusive execution of some code. For this, you can use ```qq_lock```:
+A macro for using mutex-based critical sections. It works globally across all threads (!). In other words, it can only be used with static variables or Singleton objects. Example usage: Let's say you need to ensure exclusive execution of some code. For this, you can use ```qq_lock```:
 ```C++
 #include <QqLib/QqThread/qq_lock.M.h>
 ...
