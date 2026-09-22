@@ -44,7 +44,15 @@ public:
     }
 
     static inline constexpr void
-    toPositiveRange(int & index) noexcept
+    makePositiveRange(int & index) noexcept
+    {
+        index = index < 0
+            ? D::lastValidIndex() + index +1
+            : index;
+    }
+
+    static inline constexpr void
+    makePositiveIndex(int & index) noexcept
     {
         index = index < 0
             ? D::lastValidIndex() + index +1
