@@ -34,6 +34,8 @@ struct IterationRangeT
         if (std::abs(toIndex) >= D::count())
             throw std::out_of_range("IterationRangeT::.ctor(...): `int toIndex` is out of range.");
 
+        m_fromIndex = fromIndex;
+        m_toIndex   = toIndex;
         m_order     = m_fromIndex > m_toIndex ? -1 : +1;
     }
 
