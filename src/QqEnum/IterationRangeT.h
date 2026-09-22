@@ -20,21 +20,38 @@ struct IterationRangeT
         : IterationRangeT{ 0 }
     {}
 
-    constexpr IterationRangeT(int fromIndex, int toIndex = Const::badIndex) noexcept
+    constexpr IterationRangeT(int fromIndex, int toIndex = Const::badIndex)
     {
         using C = CoreT<TClass,TEnum,TInt>;
+        using D = MetadataT<TClass,TEnum,TInt>;
 
-        m_fromIndex = C::toRange(fromIndex, true);
-        m_toIndex   = C::toRange(toIndex,   true);
+        C::makePositiveIndex(fromIndex);
+        C::makePositiveIndex(toIndex);
+
+        if (std::abs(fromIndex) >= D::count())
+            throw std::out_of_range("IterationRangeT::.ctor(...): `int fromIndex` is out of range.");
+
+        if (std::abs(toIndex) >= D::count())
+            throw std::out_of_range("IterationRangeT::.ctor(...): `int toIndex` is out of range.");
+
         m_order     = m_fromIndex > m_toIndex ? -1 : +1;
     }
 
-    constexpr IterationRangeT(TEnum from, TEnum to) noexcept
+    constexpr IterationRangeT(TEnum from, TEnum to)
     {
         using D = MetadataT<TClass,TEnum,TInt>;
 
-        m_fromIndex = D::indexOf(from);
-        m_toIndex   = D::indexOf(to);
+        fromIndex = D::indexOf(from);
+        toIndex   = D::indexOf(to);
+
+        if (Const::badIndex == fromIndex)
+            throw std::out_of_range("IterationRangeT::.ctor(...): `_Enum from` is out of range.");
+
+        if (Const::badIndex == toIndex)
+            throw std::out_of_range("IterationRangeT::.ctor(...): `_Enum to` is out of range.");
+
+        m_fromIndex = fromIndex;
+        m_toIndex   = toIndex;
         m_order     = m_fromIndex > m_toIndex ? -1 : +1;
     }
 
