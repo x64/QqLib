@@ -183,28 +183,28 @@ public:
     static inline constexpr TEnum
     value(int index, char const * exceptionMethodName = nullptr)
     {
-        C::ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        C::ThrowIfIndexOutOfRange(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
         return m_values[index];
     }
 
     static inline constexpr QqEnumString const &
     name(int index, char const * exceptionMethodName = nullptr)
     {
-        C::ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        C::ThrowIfIndexOutOfRange(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
         return m_names[index];
     }
 
     static inline constexpr QqEnumString const &
     nameByValue(TEnum e, char const * exceptionMethodName = nullptr)
     {
-        int index = C::ifEnumInNotRangeDoThrow(e, exceptionMethodName);
+        int index = C::ThrowIfEnumOutOfRange(e, exceptionMethodName);
         return m_names[index];
     }
 
     static inline constexpr Wrapper const &
     wrapper(int index, char const * exceptionMethodName = nullptr)
     {
-        C::ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        C::ThrowIfIndexOutOfRange(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
         return m_wrappers[index];
     }
 
@@ -212,6 +212,12 @@ public:
     wrapperNoCheck(int index) noexcept
     {
         return m_wrappers[index];
+    }
+
+    static inline constexpr bool
+    isValueDefined(TEnum e) noexcept
+    {
+        return Const::badIndex != indexOf(e);
     }
 
 
@@ -230,7 +236,7 @@ public:
     valueByInt(TInt i, char const * exceptionMethodName = nullptr)
     {
         TEnum e = static_cast<TEnum>(i);
-        C::ifEnumInNotRangeDoThrow(e, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        C::ThrowIfEnumOutOfRange(e, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
         return e;
     }
 
@@ -409,7 +415,7 @@ private:
     static inline constexpr void
     setInvalidValue(TEnum newInvalidValue)
     {
-        int index = C::ifEnumInNotRangeDoThrow(newInvalidValue, QQ_FULL_FUNC_SIG);
+        int index = C::ThrowIfEnumOutOfRange(newInvalidValue, QQ_FULL_FUNC_SIG);
         if (index != 0)
         {
             if (indexInRange(index))
@@ -464,7 +470,7 @@ private:
     static inline constexpr void
     setDefaultValue(TEnum newDefaultValue)
     {
-        int index = C::ifEnumInNotRangeDoThrow(newDefaultValue, QQ_FULL_FUNC_SIG);
+        int index = C::ThrowIfEnumOutOfRange(newDefaultValue, QQ_FULL_FUNC_SIG);
 
         if (0 == m_wrappers.size())
             qq_throw_l(

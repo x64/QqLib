@@ -33,7 +33,7 @@ struct IteratorT
 //
 public:
     constexpr IteratorT(int fromIndex = 0, int toIndex = Const::badIndex)
-        : m_index    { fromIndex }
+        : m_index { fromIndex }
     {
         m_fromIndex = C::toRange(fromIndex, true);
         m_toIndex   = C::toRange(toIndex,   true);
@@ -252,14 +252,14 @@ public:
     constexpr inline Wrapper const &
     operator * () const
     {
-        C::ifIndexOutOfRangeDoThrow(m_index, QQ_FULL_FUNC_SIG, "m_index");
+        C::ThrowIfIndexOutOfRange(m_index, QQ_FULL_FUNC_SIG, "m_index");
         return D::wrapperNoCheck(m_index);
     }
 
     constexpr inline Wrapper const *
     operator -> () const
     {
-        C::ifIndexOutOfRangeDoThrow(m_index, QQ_FULL_FUNC_SIG, "m_index");
+        C::ThrowIfIndexOutOfRange(m_index, QQ_FULL_FUNC_SIG, "m_index");
         return & D::wrapperNoCheck(m_index);
     }
 

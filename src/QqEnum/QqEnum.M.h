@@ -123,6 +123,12 @@ public:                                                                     \
         return _D::intTypeName();                                           \
     }                                                                       \
                                                                             \
+    static inline constexpr bool                                            \
+    _isDefined(_Enum e) noexcept                                            \
+    {                                                                       \
+        return D::isValueDefined(e);                                        \
+    }                                                                       \
+                                                                            \
     /*                                                                      \
      * Bounds API                                                           \
      */                                                                     \

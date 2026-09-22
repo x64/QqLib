@@ -73,10 +73,10 @@ public:
     }
 
     //
-    // \brief Searching \arg e in values and return its index. If e in not range then do throw.
+    // \brief Searching \arg e in values and return its index. If e in not range then make throw.
     //
     static inline constexpr int
-    ifEnumInNotRangeDoThrow(
+    ThrowIfEnumOutOfRange(
         TEnum        e,
         char const * exceptionMethodName = nullptr)
     {
@@ -94,9 +94,11 @@ public:
         return it->second;
     }
 
-    // ret: if index in range then don't throws the exception
+    //
+    // \ret: if index in range then don't throws the exception
+    //
     static inline constexpr int
-    ifIndexOutOfRangeDoThrow(
+    ThrowIfIndexOutOfRange(
         int          index,
         char const * exceptionMethodName,
         char const * paramName = "index")
@@ -121,13 +123,13 @@ public:
     static inline constexpr int
     ctor_index(int index, char const * exceptionMethodName = nullptr)
     {
-        return ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        return ThrowIfIndexOutOfRange(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
     }
 
     static inline constexpr int
     ctor_enum(TEnum e, char const * exceptionMethodName = nullptr)
     {
-        return ifEnumInNotRangeDoThrow(e, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        return ThrowIfEnumOutOfRange(e, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
     }
 
     //
@@ -183,7 +185,7 @@ public:
     op_add(TClass & lh, int n, char const * exceptionMethodName = nullptr)
     {
         lh.m_index += n;
-        ifIndexOutOfRangeDoThrow(lh.m_index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        ThrowIfIndexOutOfRange(lh.m_index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
 
         return lh;
     }
@@ -196,7 +198,7 @@ public:
     op_add_assignment(int index, int n, char const * exceptionMethodName = nullptr)
     {
         index += n;
-        return ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        return ThrowIfIndexOutOfRange(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
     }
 
     //
@@ -207,7 +209,7 @@ public:
     op_inc(int index, char const * exceptionMethodName = nullptr)
     {
         ++index;
-        return ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        return ThrowIfIndexOutOfRange(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
     }
 
     //
@@ -218,7 +220,7 @@ public:
     op_sub(TClass & lh, TClass const & rh, char const * exceptionMethodName = nullptr)
     {
         lh.m_index -= rh.m_index;
-        ifIndexOutOfRangeDoThrow(lh.m_index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        ThrowIfIndexOutOfRange(lh.m_index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
 
         return lh;
     }
@@ -227,7 +229,7 @@ public:
     op_sub/*_asFriend*/(TClass & lh, int n, char const * exceptionMethodName = nullptr)
     {
         lh.m_index -= n;
-        ifIndexOutOfRangeDoThrow(lh.m_index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        ThrowIfIndexOutOfRange(lh.m_index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
 
         return lh;
     }
@@ -240,7 +242,7 @@ public:
     op_sub_assignment(int index, int n, char const * exceptionMethodName = nullptr)
     {
         index -= n;
-        return ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        return ThrowIfIndexOutOfRange(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
     }
 
     //
@@ -251,7 +253,7 @@ public:
     op_dec(int index, char const * exceptionMethodName = nullptr)
     {
         --index;
-        return ifIndexOutOfRangeDoThrow(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        return ThrowIfIndexOutOfRange(index, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
     }
 
     //
@@ -260,7 +262,7 @@ public:
     static inline constexpr bool
     op_compare(int index, TEnum e, char const * exceptionMethodName = nullptr)
     {
-        return index == ifEnumInNotRangeDoThrow(e, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
+        return index == ThrowIfEnumOutOfRange(e, exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG);
     }
 
     // static inline constexpr bool
