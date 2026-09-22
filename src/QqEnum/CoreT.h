@@ -43,20 +43,33 @@ public:
         return index;
     }
 
-    static inline constexpr void
-    makePositiveRange(int & index) noexcept
+    static inline constexpr int
+    toPositiveRange(int index) noexcept
     {
-        index = index < 0
+        return index < 0
             ? D::lastValidIndex() + index +1
             : index;
     }
 
     static inline constexpr void
-    makePositiveIndex(int & index) noexcept
+    makePositiveRange(int & index) noexcept
     {
-        index = index < 0
+        index = toPositiveRange(index);
+    }
+
+    static inline constexpr int
+    toPositiveIndex(int index) noexcept
+    {
+        return index < 0
             ? D::lastValidIndex() + index +1
             : index;
+
+    }
+
+    static inline constexpr void
+    makePositiveIndex(int & index) noexcept
+    {
+        index = toPositiveIndex(index);
     }
 
     //
@@ -336,7 +349,7 @@ public:
     {
         int idx = findNameIndex(name, caseInsensitive);
 
-        if (idx == Const::badIndex) return false;
+        if (Const::badIndex == idx) return false;
 
         if (out) out->m_index = idx;
 
@@ -351,10 +364,10 @@ public:
     {
         int idx = findNameIndex(name, caseInsensitive);
 
-        if (idx == Const::badIndex)
+        if (Const::badIndex == idx)
             qq_throw_l(
                 Qq::Exceptions::ParseException,
-                QqEnumStringLiteral{ "The string '%1' was not found in the list of names of the '%2' enum when parsing.\nMETHOD: %3" }
+                QqEnumStringLiteral{ "The string `%1` was not found in the list of names of the `%2` enum when parsing.\nMETHOD: %3" }
                     .arg(name)
                     .arg(D::className())
                     .arg(exceptionMethodName ? exceptionMethodName : QQ_FULL_FUNC_SIG)
