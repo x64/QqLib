@@ -29,7 +29,7 @@ public:
         return true;
     }
 
-    QqMutexGuard & operator = (const QqMutexGuard&) = delete;
+    QqMutexGuard & operator = (QqMutexGuard const &) = delete;
 
 private:
     TMutex & m_mutex;

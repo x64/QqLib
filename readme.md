@@ -22,10 +22,12 @@ struct EnumStruct
         Two,
         Three,
         Four)
+
     QQ_ENUM_INVALID_VALUE(None) // defined an invalid value for this enum type.
     QQ_ENUM_DEFAULT_VALUE(One) // defined a default value for this enum type so that it is assigned immediately when the EnumStruct is created.
-    _myMethod01();
-    _myMethod02();
+
+    _myMethod01() { ... }
+    _myMethod02() { ... }
 };
 ```
 
@@ -246,6 +248,7 @@ struct SolarSystemObject
         S_2021_N_1,
         Moons_end = S_2021_N_1
     );
+
     QQ_ENUM_INVALID_VALUE(Unknown);
     QQ_ENUM_DEFAULT_VALUE(Sun);
 };
@@ -255,7 +258,9 @@ struct SolarSystemObject
 void Iterator_example_02()
 {
     using namespace std;
+
     SolarSystemObject::_Iterator iter1, iter2{ 4 }, iter3;
+    
     iter1 += 2;
     cout << "value: "       << iter1->value()
          << "\nname: "      << iter1->name()

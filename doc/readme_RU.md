@@ -24,10 +24,12 @@ struct EnumStruct
         Two,
         Three,
         Four)
+
     QQ_ENUM_INVALID_VALUE(None) // определили невалидное значение для данного типа enum
     QQ_ENUM_DEFAULT_VALUE(One) // определили значение по умолчанию для данного типа enum, чтобы при создании EnumStruct оно сразу же присваивалось.
-    _myMethod01();
-    _myMethod02();
+    
+    _myMethod01() { ... }
+    _myMethod02() { ... }
 };
 ```
 
@@ -258,6 +260,7 @@ struct SolarSystemObject
         S_2021_N_1,
         Moons_end = S_2021_N_1
     );
+    
     QQ_ENUM_INVALID_VALUE(Unknown);
     QQ_ENUM_DEFAULT_VALUE(Sun);
 };
@@ -268,7 +271,9 @@ struct SolarSystemObject
 void Iterator_example_02()
 {
     using namespace std;
+
     SolarSystemObject::_Iterator iter1, iter2{ 4 }, iter3;
+
     iter1 += 2;
     cout << "value: "       << iter1->value()
          << "\nname: "      << iter1->name()
@@ -317,7 +322,7 @@ void IteratorWrapper_example()
     for (SolarSystemObject::_Wrapper const & w : e1._range(0,5)) // Prints first 5 _Enum elements
     //for (SolarSystemObject::_Wrapper const & w : e1._range_r(0,5)) // Prints first 5 _Enum elements in reverse order
     {
-        cout << w.name()TO_STD_STRING << " = " << w.asInt()<< "\t, isDefault: " << w.isDefault() << ", isInvalid: " << w.isInvalid() << endl;
+        cout << w.name() << " = " << w.asInt()<< "\t, isDefault: " << w.isDefault() << ", isInvalid: " << w.isInvalid() << endl;
     } 
 }
 ```
