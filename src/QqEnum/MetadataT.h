@@ -217,7 +217,7 @@ public:
     static inline constexpr bool
     isValueDefined(TEnum e) noexcept
     {
-        return Const::badIndex != indexOf(e);
+        return indexOf(e) != Const::badIndex;
     }
 
 

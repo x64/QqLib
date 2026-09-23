@@ -73,6 +73,7 @@ The suffix "```.M.h```" denotes a header file with macros. This means that every
 ```char const * _className() noexcept``` – returns the name of the class containing ```QqEnum```.  
 ```char const * _fullClassName() noexcept``` – returns the fully qualified name of the class.  
 ```char const * _intTypeName() noexcept``` – returns the name of the type from which ```_Enum``` is derived.  
+```bool _isDefined(_Enum e) noexcept``` – returns ```true``` if value ```e``` is defined is _Enum.
 
 ##### 2. Boundaries.
 ```_Enum _first() noexcept``` – returns the first element in ```_Enum```.  

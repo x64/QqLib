@@ -126,7 +126,7 @@ public:                                                                     \
     static inline constexpr bool                                            \
     _isDefined(_Enum e) noexcept                                            \
     {                                                                       \
-        return D::isValueDefined(e);                                        \
+        return _D::isValueDefined(e);                                       \
     }                                                                       \
                                                                             \
     /*                                                                      \

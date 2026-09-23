@@ -77,6 +77,7 @@ struct EnumStruct
 ```char const * _className() noexcept``` – возвращает имя класса, содержащего ```QqEnum```.
 ```char const * _fullClassName() noexcept``` – возвращает квалифицированное имя класса (полное).
 ```char const * _intTypeName() noexcept``` – возвращает название типа от которого происходит тип ```_Enum```.
+```bool _isDefined(_Enum e) noexcept``` – возращает ```true```, если значение ```e``` есть в _Enum.
 
 
 ##### 2. Границы.

@@ -43,8 +43,8 @@ struct IterationRangeT
     {
         using D = MetadataT<TClass,TEnum,TInt>;
 
-        fromIndex = D::indexOf(from);
-        toIndex   = D::indexOf(to);
+        int fromIndex = D::indexOf(from);
+        int toIndex   = D::indexOf(to);
 
         if (Const::badIndex == fromIndex)
             throw std::out_of_range("IterationRangeT::.ctor(...): `_Enum from` is out of range.");
