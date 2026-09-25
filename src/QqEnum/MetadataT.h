@@ -71,7 +71,7 @@ public:
                     .arg("TEnum")
                     .arg(intTypeName)
                     .toLatin1()
-            )
+            );
 
         if (not valueList.size())
             qq_throw_l(
@@ -81,7 +81,6 @@ public:
                     .arg("TEnum")
                     .arg(intTypeName)
                     .toLatin1()
-
             );
 
         qq_lock
