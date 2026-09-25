@@ -6,6 +6,7 @@
 
 #include "../Macros/_MainMacro.M.h"
 #include "../Macros/Variadic/ForEach.M.h"
+#include "../Macros/Variadic/Size.M.h"
 #include "../Macros/Expand.M.h"
 #include "../Macros/Cat.M.h"
 
@@ -49,6 +50,14 @@ public:                                                                     \
     using _IterationRange  = Qq::Enum::IterationRangeT<_Class,_Enum,_Int>;  \
                                                                             \
 private:                                                                    \
+    static constexpr inline void __va_args__isNull()                        \
+    {                                                                       \
+        static_assert(                                                      \
+            1 < QQ_PP_VARIADIC_SIZE(__VA_ARGS__),                           \
+            "QQ_ENUM connot be contain 0 elements."                         \
+        );                                                                  \
+    }                                                                       \
+                                                                            \
     static inline char const * __gfcn() {                                   \
         return QQ_FULL_FUNC_SIG;                                            \
     }                                                                       \
