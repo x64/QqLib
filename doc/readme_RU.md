@@ -276,12 +276,12 @@ void Iterator_example_02()
     SolarSystemObject::_Iterator iter1, iter2{ 4 }, iter3;
 
     iter1 += 2;
-    cout << "value: "       << iter1->value()
-         << "\nname: "      << iter1->name()
-         << "\nasInt: "     << iter1->asInt()
-         << "\nisInvalid: " << iter1->isInvalid()
-         << "\nisDefault: " << iter1->isDefault()
-         << endl;
+    cout << "value: "     << iter1->value()     << "\n"
+         << "name: "      << iter1->name()      << "\n"
+         << "asInt: "     << iter1->asInt()     << "\n"
+         << "isInvalid: " << iter1->isInvalid() << "\n"
+         << "isDefault: " << iter1->isDefault() << "\n"
+         ;
 
     iter3 = iter1+iter2;
     cout << "iter3->index(): " << iter3->index() << endl;
