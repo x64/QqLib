@@ -50,10 +50,10 @@ public:                                                                     \
     using _IterationRange  = Qq::Enum::IterationRangeT<_Class,_Enum,_Int>;  \
                                                                             \
 private:                                                                    \
-    static inline int __va_args__isNull()                                   \
+    static inline void __va_args__isNull()                                  \
     {                                                                       \
         static_assert(                                                      \
-            count > 0,                                                      \
+            0 < QQ_PP_VARIADIC_SIZE(__VA_ARGS__),                           \
             "QQ_ENUM connot be contain 0 elements."                         \
         );                                                                  \
     }                                                                       \
