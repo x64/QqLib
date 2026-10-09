@@ -54,7 +54,6 @@ struct EnumStruct
 тип ```_Class``` – алиас класса.
 тип ```_Enum``` – сам enum (перечисление).
 тип ```_Int``` – алиас типа от которого происходит ```_Enum``` (его размер).
-тип ```_``` – алиас для ```_Enum```. Необходим для нормальной работы некоторых IDE.
 тип ```_Wrapper``` – алиас для ```Qq::Enum::EnumItemWrapperT<_Enum,_Int>```.
 ```_Iterator``` – алиас для ```Qq::Enum::IteratorT<_Class,_Enum,_Int>```.
 ```_IterationRange``` – алиас для ```Qq::Enum::IterationRangeT<_Class,_Enum,_Int>```.

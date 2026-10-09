@@ -43,7 +43,6 @@ public:                                                                     \
     using _Class = Class;                                                   \
     enum  _Enum  : Int { __VA_ARGS__ };                                     \
     using _Int   = Int;                                                     \
-    using _      = _Enum;                                                   \
                                                                             \
     using _Wrapper         = Qq::Enum::EnumItemWrapperT<_Enum,_Int>;        \
     using _Iterator        = Qq::Enum::IteratorT<_Class,_Enum,_Int>;        \

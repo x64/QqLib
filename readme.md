@@ -51,7 +51,6 @@ The suffix "```.M.h```" denotes a header file with macros. This means that every
 ```_Class``` – class alias.  
 ```_Enum``` – the enum itself (an enumeration).  
 ```_Int``` – alias of the type from which ```_Enum``` derives (its size).  
-```_``` – alias for ```_Enum```. Required for proper operation of some IDEs.  
 ```_Wrapper``` – alias for ```Qq::Enum::EnumItemWrapperT<_Enum,_Int>```.  
 ```_Iterator``` – alias for ```Qq::Enum::IteratorT<_Class,_Enum,_Int>```.  
 ```_IterationRange``` – alias for ```Qq::Enum::IterationRangeT<_Class,_Enum,_Int>```.  
