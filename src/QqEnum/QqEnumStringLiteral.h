@@ -4,6 +4,7 @@
 #include "./_CompileConfig.h"
 #include "./QqEnumString.h"
 #include <vector>
+#include <iostream>
 
 
 #ifdef QQ_DONT_USE_QT
@@ -92,6 +93,12 @@ public:
     inline StringLiteral & arg(std::string const & argStr) noexcept
     {
         return argCore(argStr.c_str());
+    }
+
+    friend std::ostream & operator << (std::ostream & out, StringLiteral const & str)
+    {
+        std::cout << str.m_str;
+        return out;
     }
 
 protected:
